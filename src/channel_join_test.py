@@ -1,7 +1,8 @@
 import pytest
-from channels import create, list
+from channels import channels_create, channels_list
 from error import InputError, AccessError
-from auth import register
+from auth import auth_register
+from channel import channel_join
 '''
 channel_join(token, channel_id) -> {}
 
@@ -22,32 +23,32 @@ Tests:
 def test_channel_join_success():
 
     # Register for user1
-    user1 = register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
     u_id1 = user1['u_id']
     token1 = user1['token']
 
-    channel_id = (create(token, 'channel1', True))['channel_id']
+    channel_id = (channels_create(token1, 'channel1', True))['channel_id']
 
     # Register for user2
-    user2 = register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    user2 = auth_register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
     u_id2 = user2['u_id']
     token2 = user2['token']
 
     # user2 join user1's channel now
 
-    join(token2, channel_id)
+    channel_join(token2, channel_id)
 
-    list1 = list(token1)
-    list2 = list(token2)
+    list1 = channels_list(token1)
+    list2 = channels_list(token2)
 
     assert list1 == list2
 
 def test_channel_inputError():
     # Register for user1
-    user1 = register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
     u_id1 = user1['u_id']
     token1 = user1['token']
 
     with pytest.raises(InputError):
-        join(token1, 123456)
+        channel_join(token1, 123456)
         
