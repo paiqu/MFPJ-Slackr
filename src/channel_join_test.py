@@ -51,4 +51,22 @@ def test_channel_inputError():
 
     with pytest.raises(InputError):
         channel_join(token1, 123456)
+
+def test_channel_accessError():
+    # Register for user1
+    user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    u_id1 = user1['u_id']
+    token1 = user1['token']
+
+    # user1 creates a PRIVATE channel
+    channel_id = (channels_create(token1, 'channel1', False))['channel_id']
+
+    # Register for user2
+    user2 = auth_register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    u_id2 = user2['u_id']
+    token2 = user2['token']
+
+    with pytest.raises (AccessError):
+        channel_join(token2, channel_id)
+
         
