@@ -14,8 +14,9 @@ and the testing the Email entered is not valid, the last for testing the repeate
 """
 #This function is to test the successful case when user type the right format email
 
+
 def test_user_success():
-    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'    
 #create the user    
     user_zero = auth_register("hello123@icloud.com", "Helloihhvh", "Jaky", "Chan")
     user_id_zero = user_zero["u_id"]
@@ -31,8 +32,8 @@ def test_user_inputError_one():
     user_id_one = user_one["u_id"]
     token_one = user_one["token"]
 #if the user entered the invalid email->InputError
-    with pytest.raise(InputError)
-        user_profile_setname(token_one,ctrressh456.com)
+    with pytest.raises(InputError):
+        user_profile_setemail(token_one,'ctrressh456.com')
 
 #This function is to test the second case
 def test_user_inputError_two():
@@ -45,6 +46,6 @@ def test_user_inputError_two():
     user_id_three = user_three["u_id"]
     token_three = user_three["token"]
 #When the user use another user's email->InputError
-    with pytest.raise(InputError)
-        user_profile_setname(token_three, Ivan@icloud.com)   
+    with pytest.raises(InputError):
+        user_profile_setemail(token_three,'Ivan@icloud.com')   
 
