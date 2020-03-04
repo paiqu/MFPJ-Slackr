@@ -13,6 +13,7 @@ InputError: User with u_id is not a valid user
     their email, first name, last name, and handle)
     
 2. test for InputError
+    when user with u_id is not a valid user
 '''
 
 def test_user_profile():
