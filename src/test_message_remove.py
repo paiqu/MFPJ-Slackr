@@ -75,3 +75,22 @@ def test_message_remove_case2():
     message_remove(newUser1_token, message_id1)
     assert message_id1 == None 
 
+def test_message_remove_inputError():
+
+    # register for a new user
+    newUser3 = auth_register('z47123898@unsw.edu.au', 'safjiefijew322', 'Lei', 'Zhang')
+    newUser3_id = newUser3['u_id']
+    newUser3_token = newUser3['token']
+    
+    # create a channel
+    newChannel2 = channels_create(newUser3_token, 'General', True)
+    channel_ID2 = newChannel2['channel_id']
+
+    # send message 
+    sending2 = message_send(newUser3_token, channel_ID2, 'Nice to meet u')
+    message_id2 = sending2['message_id']
+
+    # remove message (Inputerror)
+    with pytest.raises(InputError):
+        message_remove(newUser3_token, message_id2 + 5)
+
