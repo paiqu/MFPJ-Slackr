@@ -37,6 +37,24 @@ def test_message_send_inputError():
     # send message (inputerror)
     with pytest.raises(InputError):
         message_send(newUser1_token, channel_ID, 'a' * 1001)
+
+def test_message_send_accessError():
     
+    # register for new users
+    newUser2 = auth_register('z1234567@unsw.edu.au', 'dfhsiH4723', 'First', 'Last')
+    newUser2_id = newUser2['u_id']
+    newUser2_token = newUser2['token']
+
+    newUser3 = auth_register('z7654321@unsw.edu.au', '4298dhihiHIh', 'Foster', 'Chen')
+    newUser3_id = newUser3['u_id']
+    newUser3_token = newUser3['token']
+        
+    # create a channel
+    newChannel_1 = channels_create(newUser2_token, 'Random', True)
+    channel_ID_1 = newChannel_1['channel_id']
+
+    # send message (inputerror)
+    with pytest.raises(AccessError):
+        message_send(newUser3_token, channel_ID_1, 'Hello World')    
 
 
