@@ -40,19 +40,17 @@ def test_channel_addowner_success():
     # user1 creates a public channel
     channel_id = (channels_create(token1, 'channel1', True))['channel_id']
 
+    owners = (channel_details(token1, u_id1))['owner_members']
+
     # add user2 as an owner
     channel_addowner(token1, channel_id, u_id2)
 
     # owner is a list of dictionaries, 
     # where each dictionary contains types { u_id, name_first, name_last } 
-    owners = (channel_details(token1, u_id1))['owner_members']
+    new_owners = (channel_details(token1, u_id1))['owner_members']
 
-    is_in = False
-    for x in owners:
-        if x['u_id'] == u_id2:
-            is_in = True
-
-    assert is_in == True
+    assert len(owners) < len(new_owners)
+    assert len(new_owners) == 2
 
 def test_channel_addowner_inputError_1():
     # Register for user1
@@ -93,4 +91,4 @@ def test_channel_addowner_accessError_1():
 
     # authorised user is not owner of slackr or channel
     with pytest.raises(AccessError):
-        channel_addowner(token2, channel_id, u_id1)
+        channel_addowner(token2, channel_id, u_id2)
