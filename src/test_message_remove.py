@@ -94,3 +94,34 @@ def test_message_remove_inputError():
     with pytest.raises(InputError):
         message_remove(newUser3_token, message_id2 + 5)
 
+def test_message_remove_accessError():
+
+    # register for new users
+    newUser4 = auth_register('z5237609@unsw.edu.au', 'Zxl471238986', 'Matty', 'Zhang')
+    newUser4_id = newUser4['u_id']
+    newUser4_token = newUser4['token']
+
+    newUser5 = auth_register('z1234567@unsw.edu.au', 'dfhsiH4723', 'First', 'Last')
+    newUser5_id = newUser5['u_id']
+    newUser5_token = newUser5['token']
+
+    newUser6 = auth_register('z5453673@unsw.edu.au', 'dfh4f324r23', 'Fan', 'LI')
+    newUser6_id = newUser6['u_id']
+    newUser6_token = newUser6['token']
+            
+    # user4 create a channel
+    newChannel3 = channels_create(newUser4_token, 'General', True)
+    channel_ID3 = newChannel3['channel_id']
+
+    # user5 6 join this channel
+    channel_join(newUser5_token, channel_ID3)
+    channel_join(newUser6_token, channel_ID3)
+    
+    # user6 send a message 
+    sending3 = message_send(newUser6_token, channel_ID3, 'Nice to meet u')
+    message_id3 = sending3['message_id'] 
+    
+    # remove message (Accesserror)
+    with pytest.raises(AccessError):  
+        message_remove(newUser5_token, message_id3)
+
