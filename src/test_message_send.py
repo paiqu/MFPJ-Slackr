@@ -23,6 +23,22 @@ AccessError: The authorised user has not joined the channel
     they are trying to post to
 '''
 
+def test_message_send():
+
+    # register for a new user
+    newUser = auth_register('z47123898@unsw.edu.au', 'safjiefijew322', 'Lei', 'Zhang')
+    newUser_id = newUser['u_id']
+    newUser_token = newUser['token']
+    
+    # create a channel
+    newChannel_2 = channels_create(newUser_token, 'General', True)
+    channel_ID_2 = newChannel_2['channel_id']
+
+    # send message 
+    sending = message_send(newUser_token, channel_ID_2, 'Nice to meet u')
+    message_id = sending['message_id']
+    assert message_id != None
+
 def test_message_send_inputError():
     
     # register for a new user
@@ -53,7 +69,7 @@ def test_message_send_accessError():
     newChannel_1 = channels_create(newUser2_token, 'Random', True)
     channel_ID_1 = newChannel_1['channel_id']
 
-    # send message (inputerror)
+    # send message (accesserror)
     with pytest.raises(AccessError):
         message_send(newUser3_token, channel_ID_1, 'Hello World')    
 
