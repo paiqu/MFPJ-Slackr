@@ -49,6 +49,7 @@ def test_channel_inputError():
     u_id1 = user1['u_id']
     token1 = user1['token']
 
+    # invalid channel_id
     with pytest.raises(InputError):
         channel_join(token1, 123456)
 
@@ -66,6 +67,7 @@ def test_channel_accessError():
     u_id2 = user2['u_id']
     token2 = user2['token']
 
+    # user2 joins user1's private channel
     with pytest.raises (AccessError):
         channel_join(token2, channel_id)
 
