@@ -24,9 +24,9 @@ from auth import auth_register
 
 def test_channel_leave_success():
     # Register for a user
-    reg = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
-    u_id = reg['u_id']
-    token = reg['token']
+    user = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    u_id = user['u_id']
+    token = user['token']
 
     # create a public channel named "Channel1"
     channel_id = (channels_create(token, 'channel1', True))['channel_id']
