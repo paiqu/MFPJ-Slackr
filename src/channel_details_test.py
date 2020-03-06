@@ -7,10 +7,11 @@ from error import InputError, AccessError
 
 ## THE FOLLOWING FUNCTIONS ARE TESTS FOR CHANNEL_DETAILS
 
-"""
-This test performs a test on the channel_details function . This test is correct.
-"""
+
 def test_channel_details_correct():
+    """
+    This test performs a test on the channel_details function . This test is correct.
+    """
     user1 = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     u_id1=user1['u_id']
     
