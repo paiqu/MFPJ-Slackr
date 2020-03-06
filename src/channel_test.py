@@ -68,8 +68,8 @@ def test_channel_details_correct():
     
     assert channel_details('token', c_id1) == {
         'name' : 'Channel1',
-        'owner_members': [u_id1], 
-        'all_members': [u_id1],
+        'owner_members': user1['u_id1's], 
+        'all_members': user1['u_id1'],
     }    
         
     
