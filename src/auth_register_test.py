@@ -39,7 +39,6 @@ def test_register_twice():
     """
     Testing when the user registers twice (with same email, password, F-Name, L-Name)
     """
-
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
 
     with pytest.raises(InputError) as e:

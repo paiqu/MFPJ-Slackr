@@ -1,6 +1,7 @@
-from auth import auth_login, auth_register, auth_logout 
 import pytest
-from error import InputError
+
+from auth import auth_login, auth_register, auth_logout 
+from error import InputError, AccessError
 
 #Tests for the function auth_login     
 #check that the user has registered an account 
@@ -33,17 +34,18 @@ def test_login_incorrect_password():
     """
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     
-    login_user = auth_login('student.test@unsw.edu.au','hello')
-    
-    assert user_one['password'] != login_user['password']
+    with pytest.raises(InputError) as e:
+        auth_login('student.test@unsw.edu.au','I_am_incorrect')
     
     
 def test_login_no_email_domain():
     """
     Testing when user attempts to log in without entering their email domain
-    """
-     with pytest.raises(InputError) as e:
-        login_user = login('student.test@','!@678hello')
+    """     
+    user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
+
+    with pytest.raises(InputError) as e:
+        login_user = auth_login('student.test@','!@678hello')
         
         
         
@@ -54,4 +56,4 @@ def test_login_no_email_atsign():
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     
     with pytest.raises(InputError) as e:
-        login_user = auth_login('student.testunsw.edu.au','!@678hello', 'Student', 'Test')
+        login_user = auth_login('student.testunsw.edu.au','!@678hello')
