@@ -43,7 +43,7 @@ def test_user_profile():
   
 def test_user_profile_inputError():
 
-    # register for a new user
+    # register for a new user 2
     newUser2 = auth_register('z1234567@unsw.edu.au', 'dfdsbuS123', 'Haofu', 'Chen')
     newUser2_id = newUser2['u_id']
     newUser2_token = newUser2['token']
