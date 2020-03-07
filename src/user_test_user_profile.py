@@ -29,10 +29,10 @@ def test_user_profile():
     returnUser1 = user_profile(newUser1_token, newUser1_id)
     
     # get my return value
-    returnUser1_email = returnUser1['email']
-    returnUser1_first = returnUser1['name_first']
-    returnUser1_last = returnUser1['name_last']  
-    returnUser1_handle = returnUser1['handle_str']
+    returnUser1_email = returnUser1['user']['email']
+    returnUser1_first = returnUser1['user']['name_first']
+    returnUser1_last = returnUser1['user']['name_last']
+    returnUser1_handle = returnUser1['user']['handle_str']
     
     # check whether they are same
     assert returnUser1_email == 'z5237609@unsw.edu.au'
