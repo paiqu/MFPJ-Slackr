@@ -92,4 +92,29 @@ def test_channel_invite_user_twice():
     
     with pytest.raises(InputError) as e:
         channel_invite(user1_token, c_id1,u_id2)
-       
+
+def test_nonmember_adds_user():
+    '''
+    A user who is not part of a channel himself, is not allowed to invite another user to that channel.
+    I.e. A user must be a member of the channel themselves before inviting someone else.
+    '''   
+    user1 = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
+    u_id1=user1['u_id']
+    user1_token = user1['token']
+
+    user2= auth_register('MFPJ@unsw.edu.au','!987bye', 'Student', 'Test')
+    u_id2=user2['u_id']
+    user2_token = user2['token']
+    
+    user3 = auth_register('git@unsw.edu.au','!987password', 'Jane', 'Smith')
+    u_id3=user3['u_id']
+    user3_token = user3['token']
+    
+    Invalid_User = 9999
+
+    channel1 = channels_create(user1_token, 'Channel1', True)
+    c_id1=channel1['channel_id']
+    
+    
+    with pytest.raises(InputError) as e:
+        channel_invite(user2_token, c_id1,u_id3)
