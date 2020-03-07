@@ -45,7 +45,7 @@ def test_message_remove_case1():
     sending = message_send(newUser_token, channel_ID, 'Nice to meet u')
     message_id = sending['message_id']
 
-    # remove message
+    # remove message (the sender)
     message_remove(newUser_token, message_id)
     assert message_id == None
     
@@ -90,7 +90,7 @@ def test_message_remove_inputError():
     sending2 = message_send(newUser3_token, channel_ID2, 'Nice to meet u')
     message_id2 = sending2['message_id']
 
-    # remove message (Inputerror)
+    # remove message with non-existent message_id (Inputerror)
     with pytest.raises(InputError):
         message_remove(newUser3_token, message_id2 + 5)
 
@@ -121,7 +121,7 @@ def test_message_remove_accessError():
     sending3 = message_send(newUser6_token, channel_ID3, 'Nice to meet u')
     message_id3 = sending3['message_id'] 
     
-    # remove message (Accesserror)
+    # user5 remove message (user5 is not the admin and the sender) (Accesserror)
     with pytest.raises(AccessError):  
         message_remove(newUser5_token, message_id3)
 
