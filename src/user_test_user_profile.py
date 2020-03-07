@@ -39,14 +39,16 @@ def test_user_profile():
     assert returnUser1_first == 'Matty'
     assert returnUser1_last == 'Zhang'
     assert returnUser1_handle == 'MattyLei'
-    
+
+  
 def test_user_profile_inputError():
 
     # register for a new user
     newUser2 = auth_register('z1234567@unsw.edu.au', 'dfdsbuS123', 'Haofu', 'Chen')
     newUser2_id = newUser2['u_id']
     newUser2_token = newUser2['token']
-          
+    
+    # test Inputerror (wrong user ID)
     with pytest.raises(InputError):
         user_profile(newUser2_token, newUser2_id + 4)
     
