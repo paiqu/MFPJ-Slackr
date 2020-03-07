@@ -19,10 +19,10 @@ def test_channel_invite_correct():
     user2_token = user2['token']
 
     channel1 = channels_create(user1_token, 'Channel_MFPJ', True)
-    c_id1=channe1['channel_id']
+    c_id1=channel1['channel_id']
     
     
-    channel_invite(user_token, c_id1,u_id2)
+    channel_invite(user1_token, c_id1,u_id2)
 
 
 def test_channel_exists_invite():
@@ -41,7 +41,7 @@ def test_channel_exists_invite():
     Invalid_Channel = 8888
     
     channel1 = channels_create(user1_token , 'Channel_MFPJ', True)
-    c_id1=channe1['channel_id']
+    c_id1=channel1['channel_id']
     
     
     with pytest.raises(InputError) as e:
@@ -64,7 +64,7 @@ def test_channel_invite_invalid_user():
     Invalid_User = 9999
 
     channel1 = channels_create(user1_token, 'Channel1', True)
-    c_id1=channe1['channel_id']
+    c_id1=channel1['channel_id']
     
     with pytest.raises(InputError) as e:
         channel_invite(user1_token, c_id1, Invalid_User)
@@ -86,7 +86,7 @@ def test_channel_invite_user_twice():
     Invalid_User = 9999
 
     channel1 = channels_create(user1_token, 'Channel1', True)
-    c_id1=channe1['channel_id']
+    c_id1=channel1['channel_id']
     
     channel_invite(user1_token, c_id1,u_id2)
     
