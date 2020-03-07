@@ -34,10 +34,11 @@ def test_message_send():
     newChannel_2 = channels_create(newUser_token, 'General', True)
     channel_ID_2 = newChannel_2['channel_id']
 
-    # send message 
+    # send message
     sending = message_send(newUser_token, channel_ID_2, 'Nice to meet u')
     message_id = sending['message_id']
     assert message_id != None
+
 
 def test_message_send_inputError():
     
@@ -50,9 +51,10 @@ def test_message_send_inputError():
     newChannel = channels_create(newUser1_token, 'General', True)
     channel_ID = newChannel['channel_id']
 
-    # send message (inputerror)
+    # send message with more than 1000 characters (inputerror)
     with pytest.raises(InputError):
         message_send(newUser1_token, channel_ID, 'a' * 1001)
+
 
 def test_message_send_accessError():
     
@@ -69,7 +71,7 @@ def test_message_send_accessError():
     newChannel_1 = channels_create(newUser2_token, 'Random', True)
     channel_ID_1 = newChannel_1['channel_id']
 
-    # send message (accesserror)
+    # send message with an unauthorised user (accesserror)
     with pytest.raises(AccessError):
         message_send(newUser3_token, channel_ID_1, 'Hello World')    
 
