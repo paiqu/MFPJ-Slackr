@@ -16,7 +16,7 @@ and the testing the Email entered is not valid, the last for testing the repeate
 def test_user_success():
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'    
     #create the user    
-    user_zero = auth_register("hello123@icloud.com", "Helloihhvh", "Jaky", "Chan")
+    user_zero = auth_register("z6745462@unsw.edu.au", "Helloihhvh", "Jaky", "Chan")
     user_id_zero = user_zero["u_id"]
     token_zero = user_zero["token"]
     #check whether the email format is correct   
@@ -25,7 +25,7 @@ def test_user_success():
     #This function is to test the first case 
 def test_user_inputError_one():
     #create the user
-    user_one = auth_register("timmy123@icloud.com", "TimmyLiew", "Timmy", "Liew")
+    user_one = auth_register("z5674897@unsw.edu.au", "TimmyLiew", "Timmy", "Liew")
     user_id_one = user_one["u_id"]
     token_one = user_one["token"]
     #if the user entered the invalid email->InputError
@@ -35,7 +35,7 @@ def test_user_inputError_one():
     #This function is to test the second case
 def test_user_inputError_two():
     #create the user
-    user_two = auth_register("Ivan@icloud.com", "Ivanxxx", "Ivan", "Liew")
+    user_two = auth_register("z5467367@unsw.edu.au", "Ivanxxx", "Ivan", "Liew")
     user_id_two = user_two["u_id"]
     token_two = user_two["token"]
     #create the another user    
