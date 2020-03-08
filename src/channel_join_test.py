@@ -20,28 +20,59 @@ Tests:
 
 '''
 
-def test_channel_join_success():
+def test_channel_join_success_1():
+    # test user2 joins user1's channel
 
     # Register for user1
-    user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    user1 = auth_register('user1@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
     u_id1 = user1['u_id']
     token1 = user1['token']
 
     channel_id = (channels_create(token1, 'channel1', True))['channel_id']
 
     # Register for user2
-    user2 = auth_register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    user2 = auth_register('user2@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
     u_id2 = user2['u_id']
     token2 = user2['token']
 
     # user2 join user1's channel now
-
     channel_join(token2, channel_id)
 
-    list1 = channels_list(token1)
-    list2 = channels_list(token2)
+    list2 = channels_list(token2)["channels"]
 
-    assert list1 == list2
+    assert len(list2) == 1
+    assert list2[0]["channel_id"] == channel_id
+    assert list2[0]["name"] == "channel1"
+
+def test_channel_join_success_2():
+    # test user2 joins 3 channels
+
+    # Register for user1
+    user1 = auth_register('user1@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    u_id1 = user1['u_id']
+    token1 = user1['token']
+
+    channel_id1 = (channels_create(token1, 'channel1', True))['channel_id']
+    channel_id2 = (channels_create(token1, 'channel2', True))['channel_id']
+    channel_id3 = (channels_create(token1, 'channel3', True))['channel_id']
+
+    # Register for user2
+    user2 = auth_register('user2@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    u_id2 = user2['u_id']
+    token2 = user2['token']
+
+    # user2 join user1's channels now
+    channel_join(token2, channel_id1)
+    channel_join(token2, channel_id2)
+    channel_join(token2, channel_id3)
+
+    list1 = channels_list(token1)["channels"]
+    list2 = channels_list(token2)["channels"]
+
+    assert len(list1) == len(list2)
+    assert len(list2) == 3
+
+
 
 def test_channel_inputError():
     # Register for user1
@@ -49,9 +80,16 @@ def test_channel_inputError():
     u_id1 = user1['u_id']
     token1 = user1['token']
 
+    # Register for user2
+    user2 = auth_register('user2@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    u_id2 = user2['u_id']
+    token2 = user2['token']
+
+    channel_id1 = (channels_create(token1, 'channel1', True))['channel_id']
+
     # invalid channel_id
     with pytest.raises(InputError):
-        channel_join(token1, 123456)
+        channel_join(token2, channel_id1 + 5)
 
 def test_channel_accessError():
     # Register for user1
