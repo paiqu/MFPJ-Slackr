@@ -45,7 +45,7 @@ def test_channel_removeowner_success():
     owners = (channel_details(token1, channel_id))['owner_members']
 
     # user1, as owner of slack, removes himself from channel1
-    channel_removeowner(token1, channel_id, u_id2)
+    channel_removeowner(token1, channel_id, u_id1)
 
     # newOwners after removing
     newOwners = channel_details(token1, channel_id)['owner_members']
