@@ -4,10 +4,12 @@ from auth import auth_login, auth_register, auth_logout
 
 from error import InputError
 
-
-#Tests for the function auth_register 
 def test_register_correct():
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
+
+    
+
+    ##ADD THE ASSERT -- WE ARE NOT TESTING SOMETHING HERE 
 
 def test_register_invalid_email():
     """
@@ -21,6 +23,8 @@ def test_register_twice():
     Testing when the user registers twice (with same email, password, F-Name, L-Name)
     Email address is already being used by another user.
     """
+
+    ###DON"T NEED TO ASSIGN A VARIABLE IF IM NOT GOING TO CALL IT AGAIN 
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
 
     with pytest.raises(InputError) as e:
@@ -45,6 +49,8 @@ def test_register_long_fname():
     """
     Testing when registering with a first name > 50 characters
     """
+
+    ###ASSIGN LONG AND SHORT PASSWORDS TO A VARIABLE 
     with pytest.raises(InputError) as e:
         auth_register('student.test@unsw.edu.au','!@678hello', '***Thisfirstnameistoolonganditshouldreturninvalid***', 'Test')
         

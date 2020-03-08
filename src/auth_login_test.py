@@ -1,16 +1,17 @@
 import pytest
 
 from auth import auth_login, auth_register, auth_logout 
-from error import InputError, AccessError
+from error import InputError
 
-#Tests for the function auth_login     
-#check that the user has registered an account 
 def test_login_correct():
     """
     Testing when the user logs in correctly (correct email syntax, correct password)
     """
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     login_user = auth_login('student.test@unsw.edu.au','!@678hello')
+### Using assert - check the user ID and token are the same 
+###Register token and log in token are the same 
+
 
 
 def test_login_no_email_domain():
