@@ -3,13 +3,10 @@ from auth import auth_register
 from error import InputError, AccessError
 from message import message_send, message_remove
 from channels import channels_create
-from channel import channel_join
+from channel import channel_join, channel_messages
 
 '''
 This is a test file for message_remove function
-
-InputError: Message (based on ID) no longer exists
-AccessError: 
 
 1. test for normal case 
     (Given a message_id for a message, 
@@ -31,14 +28,17 @@ AccessError:
 '''
 
 def test_message_remove_case1():
-
+    
+    '''
+    a normal case test (the sender remove the message he sent in a private channel)
+    '''
     # register for a new user
     newUser = auth_register('z47123898@unsw.edu.au', 'safjiefijew322', 'Lei', 'Zhang')
     newUser_id = newUser['u_id']
     newUser_token = newUser['token']
     
     # create a channel
-    newChannel = channels_create(newUser_token, 'General', True)
+    newChannel = channels_create(newUser_token, 'General', False)
     channel_ID = newChannel['channel_id']
 
     # send message 
@@ -47,10 +47,19 @@ def test_message_remove_case1():
 
     # remove message (the sender)
     message_remove(newUser_token, message_id)
-    assert message_id == None
+
+    # list channel messages
+    messageReturn = channel_messages(newUser_token, channel_ID, 0)
+    
+    # checking
+    assert len(messageReturn['messages']) == 0
     
 def test_message_remove_case2():
-    
+
+    '''
+    a normal case test (the admin remove the message in a public channel)
+    '''
+       
     # register for a new user
     newUser1 = auth_register('z5237609@unsw.edu.au', 'Zxl471238986', 'Matty', 'Zhang')
     newUser1_id = newUser1['u_id']
@@ -73,10 +82,19 @@ def test_message_remove_case2():
     
     # user1 (admin) remove it    
     message_remove(newUser1_token, message_id1)
-    assert message_id1 == None 
+
+    # list channel messages
+    messageReturn1 = channel_messages(newUser1_token, channel_ID1, 0)
+    
+    # checking
+    assert len(messageReturn1['messages']) == 0
 
 def test_message_remove_inputError():
 
+    '''
+    test for the inputError case when message ID no longer exists.
+    '''
+    
     # register for a new user
     newUser3 = auth_register('z47123898@unsw.edu.au', 'safjiefijew322', 'Lei', 'Zhang')
     newUser3_id = newUser3['u_id']
@@ -96,6 +114,11 @@ def test_message_remove_inputError():
 
 def test_message_remove_accessError():
 
+    '''
+    test for the accessError case when authorised user is not the admin as well
+    as the sender
+    '''
+    
     # register for new users
     newUser4 = auth_register('z5237609@unsw.edu.au', 'Zxl471238986', 'Matty', 'Zhang')
     newUser4_id = newUser4['u_id']
