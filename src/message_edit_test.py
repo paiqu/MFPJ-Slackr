@@ -30,6 +30,7 @@ def test_message_edit():
     
     # 2. update with empty string, which will delete message_edit
     message_edit(user01_token, msg_id, '')
+    chan_msg = channel_messages(user01_token, channel01_id, 0)
     msg_end = chan_msg['end']
     assert msg_end == -1
 
