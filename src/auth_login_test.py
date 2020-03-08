@@ -2,7 +2,7 @@ import pytest
 
 from auth import auth_login, auth_register, auth_logout 
 from error import InputError
-from email_test import check 
+
 
 def test_login_correct():
     """
