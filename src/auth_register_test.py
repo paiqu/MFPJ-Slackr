@@ -17,7 +17,7 @@ def test_register_correct():
     user1_profile = user_profile(user1_token, user1_id)
 
     # Testing that user_1 has been correctly registered by checking the handle 
-    assert user1_profile['handle'] =='studenttest'
+    assert user1_profile['user']['handle_str'] =='studenttest'
 
 
 def test_register_invalid_email():
