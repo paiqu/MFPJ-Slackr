@@ -87,7 +87,7 @@ def test_channel_addowner_accessError_1():
     u_id2 = user2['u_id']
     token2 = user2['token']
 
-    channel_id = channels_create(token2, 'newChannel', True)
+    channel_id = channels_create(token1, 'newChannel', True)
 
     # authorised user is not owner of slackr or channel
     with pytest.raises(AccessError):
