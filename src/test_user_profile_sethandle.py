@@ -24,7 +24,7 @@ def test_user_handle_success_one():
     user_zero_handle = user_profile_sethandle(token_zero,'Hemil')
     
     #check whether the handle can be setted
-    user_dict = user_profile(token_zero, 'u_id')
+    user_dict = user_profile(token_zero, user_id_zero)
     
     assert user_dict['user']['handle_str'] == 'Hem'
     
@@ -47,10 +47,10 @@ def test_user_handle_success_two():
     user_two_handle = user_profile_sethandle(token_two,'Dlle')
     
     #check whether the handle can be setted for first user
-    user_dict = user_profile(token_one, 'u_id')
+    user_dict = user_profile(token_one, user_id_one)
     
     #check whether the handle can be setted for second user
-    user_dict_two = user_profile(token_two, 'u_id')
+    user_dict_two = user_profile(token_two, user_id_two)
     
     assert user_dict['user']['handle_str'] == 'Grhy'
     assert user_dict['user']['handle_str'] == 'Dlle'
