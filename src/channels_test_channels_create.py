@@ -1,7 +1,7 @@
 import pytest
 from auth import auth_register
 from error import InputError
-from channels import channels_create, channels_listall, channels_list
+from channels import channels_create, channels_listall
 from channel import channel_join
 
 '''
@@ -19,6 +19,10 @@ InputError: name is more than 20 characters long
 
 def test_channels_create_case1():
     
+    '''
+    create a public channel and test whether it is created successfully
+    '''
+    
     # register for new users
     newUser1 = auth_register('z5237609@unsw.edu.au', 'Zxl471238986', 'Matty', 'Zhang')
     newUser1_id = newUser1['u_id']
@@ -31,30 +35,46 @@ def test_channels_create_case1():
     # list all the channels 
     channelsReturn = channels_listall(newUser1_token)
     
+    # checking
     assert len(channelsReturn) == 1
     assert channelsReturn['channels'][0]['channel_id'] == channel_ID
     
 def test_channels_create_case2():
 
+    '''
+    two users create a public and a private channel and 
+    test whether they are created successfully
+    '''
+    
     # register for new users
     newUser2 = auth_register('z1234567@unsw.edu.au', 'Zfheiu3H33', 'Foster', 'Chen')
     newUser2_id = newUser2['u_id']
     newUser2_token = newUser2['token']   
 
-    # create two channels
+    newUser4 = auth_register('z1344327@unsw.edu.au', 'fdgrweUY32', 'Fos', 'Che')
+    newUser4_id = newUser4['u_id']
+    newUser4_token = newUser4['token'] 
+    
+    # create two channels (one public and one private)
     newChannel1 = channels_create(newUser2_token, 'General', True)
     channel_ID1 = newChannel1['channel_id']
 
-    newChannel2 = channels_create(newUser2_token, 'Random', True)
+    newChannel2 = channels_create(newUser4_token, 'Random', False)
     channel_ID2 = newChannel2['channel_id']
         
     # list all the channels 
-    channelsReturn1 = channels_list(newUser2_token)
+    channelsReturn1 = channels_listall(newUser2_token)
     
-    # when user2 creates the second cannel, whether it will leave the first channel is creates
+    # checking
     assert len(channelsReturn1) == 2
-        
+    assert channelsReturn1['channels'][0]['channel_id'] == channel_ID1
+    assert channelsReturn1['channels'][1]['channel_id'] == channel_ID2
+            
 def test_channels_create_inputError():
+    
+    '''
+    when the length of the channel name is more than 20 characters, inputerror raises.
+    '''
     
     # register for a new user
     newUser3 = auth_register('z7654321@unsw.edu.au', 'dhf4830ZH6', 'First', 'Last')
