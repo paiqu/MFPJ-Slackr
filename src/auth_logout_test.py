@@ -11,21 +11,34 @@ def test_logout_correct():
     A valid token is given, the user successfully logs out & it returns true.
     """
 
-    #### This function retrns is_success - not token 
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     login_user = auth_login('student.test@unsw.edu.au','!@678hello')
     u_id1 = login_user['u_id']
     token1 = login_user['token']
     
     auth_logout(login_user['token'])
-    assert login_user['token'] == True
+    assert login_user['is_success'] == True
+
+def test_logout_invalid_token():
+    """
+    An invalid token is given. The user is not able to log out.
+    Is_Success returns false
+    """
+    user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
+    login_user = auth_login('student.test@unsw.edu.au','!@678hello')
+    u_id1 = login_user['u_id']
+    token1 = login_user['token']
+
+    
+    auth_logout('Invalid Token')
+    assert login_user['is_success'] == False
 
 def test_logout_twice():
     """
     When a user tries to logout of their account twice
+    A invalid token is given, the user attempts to log out & it returns false.
     """
 
-     #### This function retrns is_success - not token 
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
     login_user = auth_login('student.test@unsw.edu.au','!@678hello')
     u_id1 = login_user['u_id']
@@ -33,4 +46,4 @@ def test_logout_twice():
     
     auth_logout(login_user['token'])
     auth_logout(login_user['token'])
-    assert login_user['token'] == False
+    assert login_user['is_success'] == False
