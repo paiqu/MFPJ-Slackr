@@ -24,7 +24,7 @@ def test_user_success_one():
     user_profile_setemail(token_zero,'z6543217@unsw.edu.au')   
     
     #check whether the email can be setted
-    user_dict = user_profile(token_zero, 'u_id')
+    user_dict = user_profile(token_zero, user_id_zero)
     assert user_dict['user']['email'] == 'z6543217@unsw.edu.au'
 
     #This function will test the successful case when two users set the email
@@ -37,7 +37,7 @@ def test_user_success_two():
     
     #create the user    
     user_first = auth_register('z7645462@unsw.edu.au', 'Health', 'Jyru', 'Tenn')
-    user_id_zero = user_first['u_id']
+    user_id_first = user_first['u_id']
     token_first = user_first['token']     
     
     #set the new email for user one
@@ -47,8 +47,8 @@ def test_user_success_two():
     user_profile_setemail(token_first,'z9812347@unsw.edu.au')
     
     #check whether the email can be setted
-    user_dict = user_profile(token_zero, 'u_id')
-    user_dict_two = user_profile(token_first, 'u_id')
+    user_dict = user_profile(token_zero, user_id_zero)
+    user_dict_two = user_profile(token_first, user_id_first)
     assert user_dict ['user']['email'] == 'z1237654@unsw.edu.au'
     assert user_dict_two ['user']['email'] == 'z9812347@unsw.edu.au'
     
