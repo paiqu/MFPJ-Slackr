@@ -47,28 +47,28 @@ def test_channels_create_case2():
     '''
     
     # register for new users
-    newUser2 = auth_register('z1234567@unsw.edu.au', 'Zfheiu3H33', 'Foster', 'Chen')
-    newUser2_id = newUser2['u_id']
-    newUser2_token = newUser2['token']   
+    newUser1 = auth_register('z1234567@unsw.edu.au', 'Zfheiu3H33', 'Foster', 'Chen')
+    newUser1_id = newUser1['u_id']
+    newUser1_token = newUser1['token']   
 
-    newUser4 = auth_register('z1344327@unsw.edu.au', 'fdgrweUY32', 'Fos', 'Che')
-    newUser4_id = newUser4['u_id']
-    newUser4_token = newUser4['token'] 
+    newUser2 = auth_register('z1344327@unsw.edu.au', 'fdgrweUY32', 'Fos', 'Che')
+    newUser2_id = newUser2['u_id']
+    newUser2_token = newUser2['token'] 
     
     # create two channels (one public and one private)
-    newChannel1 = channels_create(newUser2_token, 'General', True)
+    newChannel1 = channels_create(newUser1_token, 'General', True)
     channel_ID1 = newChannel1['channel_id']
 
-    newChannel2 = channels_create(newUser4_token, 'Random', False)
+    newChannel2 = channels_create(newUser2_token, 'Random', False)
     channel_ID2 = newChannel2['channel_id']
         
     # list all the channels 
-    channelsReturn1 = channels_listall(newUser2_token)
+    channelsReturn = channels_listall(newUser1_token)
     
     # checking
-    assert len(channelsReturn1) == 2
-    assert channelsReturn1['channels'][0]['channel_id'] == channel_ID1
-    assert channelsReturn1['channels'][1]['channel_id'] == channel_ID2
+    assert len(channelsReturn) == 2
+    assert channelsReturn['channels'][0]['channel_id'] == channel_ID1
+    assert channelsReturn['channels'][1]['channel_id'] == channel_ID2
             
 def test_channels_create_inputError():
     
@@ -77,10 +77,10 @@ def test_channels_create_inputError():
     '''
     
     # register for a new user
-    newUser3 = auth_register('z7654321@unsw.edu.au', 'dhf4830ZH6', 'First', 'Last')
-    newUser3_id = newUser3['u_id']
-    newUser3_token = newUser3['token']
+    newUser1 = auth_register('z7654321@unsw.edu.au', 'dhf4830ZH6', 'First', 'Last')
+    newUser1_id = newUser1['u_id']
+    newUser1_token = newUser1['token']
     
     # create a channel (inputerror)
     with pytest.raises(InputError):
-        channels_create(newUser3_token, 'GeneralGeneralGeneral', True)
+        channels_create(newUser1_token, 'GeneralGeneralGeneral', True)
