@@ -116,7 +116,7 @@ def test_message_remove_accessError():
 
     '''
     test for the accessError case when authorised user is not the admin as well
-    as the sender
+    as the sender.
     '''
     
     # register for new users
