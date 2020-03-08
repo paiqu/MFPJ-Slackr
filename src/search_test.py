@@ -21,6 +21,7 @@ Tests:
 '''
 
 def test_search_1():
+    # when there is only one channel
     # register a user1
     user1 = auth_register("user1@unsw.edu.au", "superStrongPassword123", "User", "One")
     u_id1 = user1['u_id']
@@ -56,6 +57,7 @@ def test_search_1():
 
 
 def test_search_2():
+    #search msgs from two different channels
     # register a user1
     user1 = auth_register("user1@unsw.edu.au", "superStrongPassword123", "User", "One")
     u_id1 = user1['u_id']
@@ -102,3 +104,36 @@ def test_search_2():
     for x in msgList:
         assert x['message'] == 'hello'
 
+def test_search_3():
+    # test case sensitive
+    # register a user1
+    user1 = auth_register("user1@unsw.edu.au", "superStrongPassword123", "User", "One")
+    u_id1 = user1['u_id']
+    token1 = user1['token']
+
+    # user1 creates a channel
+    channel_1 = channels_create(token1, "channel1", True)
+    channel_id = channel_1['channel_id']
+
+    # user1 sends some msgs
+    msg1 = message_send(token1, channel_id, "hello")
+    msg_id_1 = msg1['message_id']
+
+    msg2 = message_send(token1, channel_id, "Bye")
+    msg_id_2 = msg2['message_id']
+
+    msg3 = message_send(token1, channel_id, "HELLO")
+    msg_id_3 = msg3['message_id']
+
+
+
+    query = 'HELLO'
+    messages = search(token1, query)
+    
+    #msgList is a list of dicts
+    msgList = messages['messages']
+
+    assert len(msgList) == 1
+
+    for x in msgList:
+        assert x['message'] == 'HELLO'
