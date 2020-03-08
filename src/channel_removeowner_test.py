@@ -20,7 +20,7 @@ AccessError:
 Tests:
     1. success case
     2. inputError_1: invalid channel_id
-    3. inputError_2: u_id is not ownee
+    3. inputError_2: u_id is not owner
     4. accessError
 '''
 
@@ -51,8 +51,10 @@ def test_channel_removeowner_success():
     newOwners = channel_details(token1, channel_id)['owner_members']
 
     assert len(newOwners) < len(owners)
+    for x in newOwners:
+        assert x["u_id"] != u_id1
 
-def test_channel_removeowner_inputError_1():
+def test_channel_removeowner_invalidChannelID():
     # Register for user1
     user1 = auth_register('user1@unsw.edu.au', 'thisisaPassword', 'User', 'One')
     u_id1 = user1['u_id']
@@ -65,7 +67,7 @@ def test_channel_removeowner_inputError_1():
     with pytest.raises(InputError):
         channel_removeowner(token1, channel_id + 5, u_id1)
 
-def test_channel_removeowner_inputError_2():
+def test_channel_removeowner_notOwner():
     # Register for user1
     user1 = auth_register('user1@unsw.edu.au', 'thisisaPassword', 'User', 'One')
     u_id1 = user1['u_id']
