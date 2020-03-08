@@ -5,9 +5,6 @@ from auth import auth_login, auth_register, auth_logout
 from channels import channels_create
 
 from error import InputError, AccessError
-##fixture
-
-@pytest.fixture 
 
 def test_channel_details_correct():
     """
@@ -30,7 +27,7 @@ def test_channel_details_correct():
     channel1_details = channel_details(user1_token, c_id1)
     
     ## compare user ID of a user who we know is the owner member 
-    assert u_id1 == channel1_details[0]['owner_members']
+    assert u_id1 == channel1_details['owner_members'][0]['u_id']
 
 def test_invalid_channelID():
     """
