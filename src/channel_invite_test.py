@@ -28,7 +28,8 @@ def test_channel_invite_correct():
     #As the channel invite function doesn't return anything, 
     # we can use the channel_details function to test this. 
     #The invited user is the second member of the channel 
-    assert u_id2 == channel1_details[['all_members']['u_id']][1]
+    assert u_id2 == channel1_details[['all_members'][1]['u_id']]
+    
 def test_channel_exists_invite():
     """
     Returns error when channel_id does not refer to a valid channel.
