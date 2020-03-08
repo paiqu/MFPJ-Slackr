@@ -52,18 +52,60 @@ def test_channel_addowner_success():
     assert len(owners) < len(new_owners)
     assert len(new_owners) == 2
 
-def test_channel_addowner_inputError_1():
+
+def test_channel_addowner_success_2():
+    # Register for user1
+    user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
+    u_id1 = user1['u_id']
+    token1 = user1['token']
+
+    # Register for user2
+    user2 = auth_register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    u_id2 = user2['u_id']
+    token2 = user2['token']
+
+    # Register for user2
+    user3 = auth_register('user3@unsw.edu.au', 'thisisaGoodPassword', 'User', 'Three')
+    u_id3 = user3['u_id']
+    token3 = user3['token']
+
+
+    # user1 creates a public channel
+    channel_id = (channels_create(token1, 'channel1', True))['channel_id']
+
+    owners = (channel_details(token1, u_id1))['owner_members']
+
+    # add user2 as an owner
+    channel_addowner(token1, channel_id, u_id2)
+    channel_addowner(token1, channel_id, u_id3)
+
+    # owner is a list of dictionaries, 
+    # where each dictionary contains types { u_id, name_first, name_last } 
+    new_owners = (channel_details(token1, u_id1))['owner_members']
+
+    assert len(owners) < len(new_owners)
+    assert len(new_owners) == 3
+    
+def test_channel_addowner_invalidChannelID():
     # Register for user1
     # now user1 is the owner of the slackr
     user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
     u_id1 = user1['u_id']
     token1 = user1['token']
 
+    # Register for user2
+    user2 = auth_register('z654321@unsw.edu.au', 'thisisaGoodPassword', 'New', 'Guy')
+    u_id2 = user2['u_id']
+    token2 = user2['token']
+
+    # user1 creates a public channel
+    channel_id = (channels_create(token1, 'channel1', True))['channel_id']
+
     # invalid channel_id
     with pytest.raises(InputError):
-        channel_addowner(token1, 6, u_id1)
+        channel_addowner(token1, channel_id + 6, u_id2)
 
-def test_channel_addowner_inputError_2():
+def test_channel_addowner_alreadyOwner():
     # Register for user1
     user1 = auth_register('z123456@unsw.edu.au', 'thisisaPassword', 'First', 'Last')
     u_id1 = user1['u_id']
