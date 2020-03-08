@@ -12,12 +12,12 @@ def test_logout_correct():
     """
 
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
-    login_user = auth_login('student.test@unsw.edu.au','!@678hello')
-    u_id1 = login_user['u_id']
-    token1 = login_user['token']
+    auth_login('student.test@unsw.edu.au','!@678hello')
+    u_id1 = user_one['u_id']
+    token1 = user_one['token']
     
-    auth_logout(login_user['token'])
-    assert login_user['is_success'] == True
+    return1 = auth_logout(token1)
+    assert return1['is_success'] == True
 
 def test_logout_invalid_token():
     """
@@ -25,25 +25,28 @@ def test_logout_invalid_token():
     Is_Success returns false
     """
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
-    login_user = auth_login('student.test@unsw.edu.au','!@678hello')
-    u_id1 = login_user['u_id']
-    token1 = login_user['token']
+    auth_login('student.test@unsw.edu.au','!@678hello')
+    u_id1 = user_one['u_id']
+    token1 = user_one['token']
 
     
-    auth_logout('Invalid Token')
-    assert login_user['is_success'] == False
+    return1 = auth_logout('Invalid Token')
+    assert return1['is_success'] == False
 
 def test_logout_twice():
     """
-    When a user tries to logout of their account twice
-    A invalid token is given, the user attempts to log out & it returns false.
+    When a user tries to login and logout of their account twice
+    A valid token is given, the user attempts to log out & it returns true.
     """
 
     user_one = auth_register('student.test@unsw.edu.au','!@678hello', 'Student', 'Test')
-    login_user = auth_login('student.test@unsw.edu.au','!@678hello')
-    u_id1 = login_user['u_id']
-    token1 = login_user['token']
+    auth_login('student.test@unsw.edu.au','!@678hello')
+    u_id1 = user_one['u_id']
+    token1 = user_one['token']
     
-    auth_logout(login_user['token'])
-    auth_logout(login_user['token'])
-    assert login_user['is_success'] == False
+    return1 = auth_logout(token1)
+    assert return1['is_success'] == True
+
+    auth_login('student.test@unsw.edu.au','!@678hello')
+    return2 = auth_logout(token1)
+    assert return2['is_success'] == True
