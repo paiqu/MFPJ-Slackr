@@ -21,7 +21,7 @@ def test_user_handle_success_one():
     token_zero = user_zero['token']
     
     #set the new handle string
-    user_zero_handle = user_profile_sethandle(token_zero,'Hemil')
+    user_profile_sethandle(token_zero,'Hemil')
     
     #check whether the handle can be setted
     user_dict = user_profile(token_zero, user_id_zero)
@@ -41,10 +41,10 @@ def test_user_handle_success_two():
     token_two = user_two["token"]
     
     #set the new handle string for first user
-    user_one_handle = user_profile_sethandle(token_one,'Grhy')
+    user_profile_sethandle(token_one,'Grhy')
     
     #set the new handle string for second user
-    user_two_handle = user_profile_sethandle(token_two,'Dlle')
+    user_profile_sethandle(token_two,'Dlle')
     
     #check whether the handle can be setted for first user
     user_dict = user_profile(token_one, user_id_one)
@@ -53,7 +53,7 @@ def test_user_handle_success_two():
     user_dict_two = user_profile(token_two, user_id_two)
     
     assert user_dict['user']['handle_str'] == 'Grhy'
-    assert user_dict['user']['handle_str'] == 'Dlle'
+    assert user_dict_two['user']['handle_str'] == 'Dlle'
        
     #This function is to test when the handle out of 20 character
 def test_user_handle_inputError_one():
@@ -80,7 +80,7 @@ def test_user_handle_inputError_two():
         user_profile_sethandle(token_one,'a' * 2)    
 
 
-    #This function is to test teh second case
+    #This function is to test the second case
 def test_user_handle_inputError_three():
     
     #create the user
@@ -94,7 +94,7 @@ def test_user_handle_inputError_three():
     token_three = user_three['token']
     
     #set the handle for the first user
-    user_two_handle = user_profile_sethandle(token_two,'TimAaab')
+    user_profile_sethandle(token_two,'TimAaab')
     
     #if handle string is already existed->InputError
     with pytest.raises(InputError):
