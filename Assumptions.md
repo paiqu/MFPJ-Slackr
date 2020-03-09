@@ -1,10 +1,9 @@
 # Assumptions
 
-"""
+
 COMP1531 Major Project 
 Markdown for Iteration 1: Test Driven Development 
 By Juliette Inglis, Zebin Chen, Haofu Chen, Xinlei Chang, Pai Qu
-"""
 
 
 ### Assumptions for auth_login (Juliette Inglis): 
