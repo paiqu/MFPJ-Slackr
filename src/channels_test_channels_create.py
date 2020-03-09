@@ -20,7 +20,7 @@ InputError: name is more than 20 characters long
 def test_channels_create_case1():
     
     '''
-    create a public channel and test whether it is created successfully
+    create a public channel and test whether it is created successfully.
     '''
     
     # register for new users
