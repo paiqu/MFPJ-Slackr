@@ -1,8 +1,11 @@
 '''Route implementation for channel/leave'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check
+from check_functions import channel_id_check, channel_member_check, token_to_uid
 from error import InputError, AccessError
+
+from class_file import Channel
+from data import *
 
 LEAVE = Blueprint('leave', __name__)
 
@@ -33,22 +36,26 @@ def channel_leave(token, channel_id):
     if channel_member_check(channel_id, token) == False:
         raise AccessError("Authorised user is not a member of channel with channel_id")
 
-    '''
-    PSEUDOCODE:
-    Assume we have written a channel class:
-                    class Channel:
-                        def __init__(self, channel_id):
-                            self.channel_id = channel_id
-                            self.members = []
-                            self.owners []
+    global DATA
+    DATA = getData()
 
-    channel_1 = Channel(channel_id)
 
-    member_list = channel_1.members
-    member_list.remove(u_id) # u_id is the user id of the member with token
 
+    for channel in DATA['channels']:
+        if channel.channel_id == channel_id:
+            for user in DATA['users']:
+                if user.u_id == token_to_uid(token):
+                    channel.members.remove(user)
+    
     return {}
-    '''
+
+
+
+       
+
+
+
+
     
 
 

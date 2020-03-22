@@ -20,3 +20,7 @@ def channel_id_check(channel_id):
 def channel_member_check(channel_id, token):
     ''' Return True is member with token is in channel with channel_id'''
     return False
+
+def token_to_uid(token):
+    ''' Convert a token to u_id '''
+    return 0
