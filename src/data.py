@@ -9,3 +9,7 @@ SECRET = 'MFPJ'
 def getData():
     global DATA
     return DATA
+
+def getSecret():
+    global SECRET
+    return SECRET

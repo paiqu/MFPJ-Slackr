@@ -8,7 +8,10 @@ This file is to store function:
         -- Check if a memeber with token is in channel with channel_id
 
 '''
-from data import *
+import jwt
+from data import DATA, SECRET, getData
+
+
 
 def token_check(token):
     ''' Return True if the token is valid '''
@@ -29,13 +32,30 @@ def channel_id_check(channel_id):
 def channel_member_check(channel_id, token):
     ''' Return True is member with token is in channel with channel_id'''
     global DATA
-    DATA = getData
+    DATA = getData()
 
+    channels = DATA['channels']
+    users = DATA['users']
+
+    for channel in channels:
+        if channel.channel_id == channel_id:
+            target_channel = channel
+
+    for user in users:
+        if user.u_id == token_to_uid(token):
+            target_member = user
+    
+    for member in target_channel.members:
+        if member.u_id == target_member.u_id:
+            return True
 
     return False
 
 def token_to_uid(token):
     ''' Convert a token to u_id '''
-    return 0
+    global SECRET
 
-def generate_token()
+    decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
+
+    return decoded['u_id']
+
