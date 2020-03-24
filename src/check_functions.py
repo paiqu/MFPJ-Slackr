@@ -17,7 +17,6 @@ def token_check(token):
 
 def channel_id_check(channel_id):
     ''' Return True is the channel_id is valid ''' 
-    global DATA
     DATA = getData()
 
     channels = DATA['channels']
@@ -29,9 +28,22 @@ def channel_id_check(channel_id):
 
 def channel_member_check(channel_id, token):
     ''' Return True is member with token is in channel with channel_id'''
-    global DATA
-    DATA = getData
+    DATA = getData()
 
+    channels = DATA['channels']
+    users = DATA['users']
+
+    for channel in channels:
+        if channel['channel_id'] == channel_id:
+            target_channel = channel
+
+    for user in users:
+        if user['u_id'] == token_to_uid(token):
+            target_member = user
+
+    for member in target_channel['members']:
+        if member['u_id'] == target_member['u_id']:
+            return True
 
     return False
 
