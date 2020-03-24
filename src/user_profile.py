@@ -12,8 +12,8 @@ PROFILE = Blueprint('profile', __name__)
 
 def request_get():
     '''function for route user/profile'''
-    token = request.form.get('token')
-    u_id = request.form.get('u_id')
+    token = request.args.get('token')
+    u_id = request.args.get('u_id')
     return dumps(user_profile(token, u_id))
 
 def user_profile(token, u_id):
@@ -33,17 +33,17 @@ def user_profile(token, u_id):
     global DATA
     DATA = getData()
     
-    user = {}
+    user = {'user':{}}
     
     for existuser in DATA['users']:
         if existuser.u_id == user_id:
-            user['u_id'] = existuser.u_id
-            user['email'] = existuser.email
-            user['name_first'] = existuser.name_first
-            user['name_last'] = existuser.name_last
-            user['handle_str'] = existuser.handle
+            user['user']['u_id'] = existuser.u_id
+            user['user']['email'] = existuser.email
+            user['user']['name_first'] = existuser.name_first
+            user['user']['name_last'] = existuser.name_last
+            user['user']['handle_str'] = existuser.handle
             
-    return {user}
+    return user
 
 
 
