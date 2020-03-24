@@ -16,6 +16,7 @@ class Channel:
         self.members = [] # a list of users who are members
         
         self.owners = []  # a list of users who are owners
+        self.is_public = True
     
 class Message:
     def __init__(self, message_content, message_id, channel_id, sender_token):
