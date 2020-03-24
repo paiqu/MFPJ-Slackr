@@ -3,9 +3,6 @@ from json import dumps
 from flask import Flask, request, blueprints
 from flask_cors import CORS
 from error import InputError
-
-from channel_leave import LEAVE
-
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -24,8 +21,6 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
-APP.register_blueprint(LEAVE)
-
 
 # Example
 @APP.route("/echo", methods=['GET'])
@@ -39,3 +34,4 @@ def echo():
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
+
