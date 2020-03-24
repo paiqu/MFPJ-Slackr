@@ -1,9 +1,11 @@
 # may need a function to transfer token to u_id
 class User:
-    def __init__(self, u_id, name_first, name_last):
+    def __init__(self, u_id, email, name_first, name_last, handle):
         self.u_id = u_id
+        self.email = email
         self.name_first = name_first
         self.name_last = name_last
+        self.handle = handle
         self.is_slack_owner = False
 
 class Channel:
