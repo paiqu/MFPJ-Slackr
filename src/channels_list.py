@@ -10,6 +10,11 @@ from data import *
 CHANNELS_LIST = Blueprint('channels_list', __name__)
 
 @CHANNELS_LIST.route('/channels/list', methods=['GET'])
+def list():
+    # function for route channels/list
+    token = request.form.get('token')
+    channel_id = request.form.get('channnel_id')
+    return dumps(channels_list(token, channel_id))
     
 def channels_list(token):
     '''
@@ -33,9 +38,4 @@ def channels_list(token):
             
     
     
-def list():
-    # function for route channels/list
-    token = request.form.get('token')
-    channel_id = request.form.get('channnel_id')
-    return dumps(channels_list(token, channel_id))
 
