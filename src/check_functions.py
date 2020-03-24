@@ -22,7 +22,7 @@ def channel_id_check(channel_id):
 
     channels = DATA['channels']
     for channel in channels:
-        if channel.channel_id == channel_id:
+        if channel['channel_id'] == channel_id:
             return True
     
     return False
@@ -40,7 +40,3 @@ def token_to_uid(token):
     global SECRET
     decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
-
-if __name__ == "__main__":
-    print(type(token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMTIzNCJ9.WEqV7dw0cazDt8Z_JjR5RnzSa8dI6KzYrc1K7H3zIyo')))
-    print(token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMTIzNCJ9.WEqV7dw0cazDt8Z_JjR5RnzSa8dI6KzYrc1K7H3zIyo'))

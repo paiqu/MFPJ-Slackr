@@ -9,5 +9,3 @@ def generate_token(u_id):
     encoded = jwt.encode({'u_id': str(u_id)}, SECRET, algorithm="HS256")
     return encoded
 
-if __name__ == "__main__":
-    print(generate_token(1234))
