@@ -37,5 +37,3 @@ def channel_member_check(channel_id, token):
 def token_to_uid(token):
     ''' Convert a token to u_id '''
     return 0
-
-def generate_token()
