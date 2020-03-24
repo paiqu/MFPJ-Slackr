@@ -11,8 +11,10 @@ LEAVE = Blueprint('leave', __name__)
 @LEAVE.route('/channel/leave', methods=['POST'])
 def leave():
     '''function for route channle/leave'''
-    token = request.form.get('token')
-    channel_id = request.form.get('channnel_id')
+    info = request.get_json()
+    token = info['token']
+    channel_id = info['channel_id']
+    #channel_id = request.form.get('channnel_id')
 
     channel_leave(token, channel_id)
     return dumps({})
