@@ -7,9 +7,9 @@ from error import InputError, AccessError
 from class_file import Channel
 from data import *
 
-LEAVE = Blueprint('channels_list', __name__)
+CHANNELS_LIST = Blueprint('channels_list', __name__)
 
-@LEAVE.route('/channels/list', methods=['POST'])
+@CHANNELS_LIST.route('/channels/list', methods=['GET'])
     
 def channels_list(token):
     '''
