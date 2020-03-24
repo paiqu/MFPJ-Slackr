@@ -36,6 +36,8 @@ def channel_member_check(channel_id, token):
 
 def token_to_uid(token):
     ''' Convert a token to u_id '''
-    return 0
+    global SECRET
 
-def generate_token()
+    decoded = jwt.decode(token, SECRET, algorithms = ['HS256'])
+
+    return decoded['u_id']
