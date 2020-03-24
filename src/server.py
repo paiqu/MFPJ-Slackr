@@ -4,8 +4,6 @@ from flask import Flask, request, blueprints
 from flask_cors import CORS
 from error import InputError
 
-from channel_leave import LEAVE
-
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -23,8 +21,6 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-
-APP.register_blueprint(LEAVE)
 
 
 # Example
