@@ -9,6 +9,7 @@ This file is to store function:
 
 '''
 from data import *
+import jwt
 
 def token_check(token):
     ''' Return True if the token is valid '''
@@ -36,4 +37,10 @@ def channel_member_check(channel_id, token):
 
 def token_to_uid(token):
     ''' Convert a token to u_id '''
-    return 0
+    global SECRET
+    decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
+    return int(decoded['u_id'])
+
+if __name__ == "__main__":
+    print(type(token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMTIzNCJ9.WEqV7dw0cazDt8Z_JjR5RnzSa8dI6KzYrc1K7H3zIyo')))
+    print(token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMTIzNCJ9.WEqV7dw0cazDt8Z_JjR5RnzSa8dI6KzYrc1K7H3zIyo'))
