@@ -38,14 +38,13 @@ def channel_leave(token, channel_id):
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
 
-    global DATA
     DATA = getData()
 
 
     for channel in DATA['channels']:
-        if channel.channel_id == channel_id:
+        if channel['channel_id'] == channel_id:
             for user in DATA['users']:
-                if user.u_id == token_to_uid(token):
-                    channel.members.remove(user)
+                if user['u_id'] == token_to_uid(token):
+                    channel['members'].remove(user)
 
     return {}
