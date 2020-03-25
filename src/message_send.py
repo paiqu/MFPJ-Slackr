@@ -2,8 +2,8 @@
 from json import dumps
 from flask import Blueprint, request
 from check_functions import token_to_uid, channel_member_check
-from error import InputError
-from class_file import User
+from error import InputError, AccessError
+from class_file import Message
 from data import DATA, getData ,MESSAGE_COUNT
 
 SENDMESSAGE = Blueprint('message_send', __name__)
