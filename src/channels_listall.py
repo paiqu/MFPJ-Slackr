@@ -10,6 +10,11 @@ from data import *
 LEAVE = Blueprint('channels_listall', __name__)
 
 @LEAVE.route('/channels/listall', methods=['POST'])
+def listall():
+    # function for route channels/list
+    token = request.form.get('token')
+    channel_id = request.form.get('channnel_id')
+    return dumps(channels_list(token, channel_id))
     
 def channels_listall(token):
     '''
@@ -25,20 +30,7 @@ def channels_listall(token):
         if user.u_id == token_to_uid(token):
             return DATA['channels']
         
-        
-        '''if channel_member_check(channel.channel_id, token):
-            new_dict = {}
-            new_dict['channel_id'] = channel.channel_id
-            new_dict['name'] = channel.name
-            new_list.append(new_dict)
-            
-    return_dict['channels'] = new_list
-    return return_dict
-         '''   
+           
     
     
-def listall():
-    # function for route channels/list
-    token = request.form.get('token')
-    channel_id = request.form.get('channnel_id')
-    return dumps(channels_list(token, channel_id))
+
