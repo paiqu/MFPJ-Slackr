@@ -8,7 +8,7 @@ from data import DATA, getData
 
 PROFILE = Blueprint('profile', __name__)
 
-@PROFILE.route('/user/profile', methods=['Get'])
+@PROFILE.route('/user/profile', methods=['GET'])
 
 def request_get():
     '''function for route user/profile'''
