@@ -18,3 +18,4 @@ def get_Secret():
     return SECRET
 
 CHANNELS_COUNT = 0
+MESSAGE_COUNT = 0
