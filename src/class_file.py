@@ -26,3 +26,9 @@ class Message:
         self.sender_id = sender_id
         self.time_created = time
         self.is_pin = False
+
+class Time:
+    def _init_(self, start_time, end_time):
+        self.start_time = start_time
+        self.end_time = end_time
+
