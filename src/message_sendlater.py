@@ -17,10 +17,10 @@ def request_get():
     channel_id = int(request['channel_id'])
     message_content = request['message']
     time_send = int(request['time_send'])
-    message_send(token, channel_id, message_content, time_send)
+    message_sendlater(token, channel_id, message_content, time_send)
     return dumps({})
 
-def message_send(token, channel_id, message_content, time_send):
+def message_sendlater(token, channel_id, message_content, time_send):
     ''' Send a message from authorised_user to the channel specified by channel_id'''
     if(len(message_content) > 1000):
         raise InputError('invalid message content')
@@ -51,10 +51,4 @@ def message_send(token, channel_id, message_content, time_send):
     returnvalue['message_id'] = message_id
     
     return returnvalue
-
-
-
-    
-    
-
 
