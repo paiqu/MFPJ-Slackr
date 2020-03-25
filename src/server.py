@@ -5,6 +5,7 @@ from flask_cors import CORS
 from error import InputError
 from channels_create import CREATE
 from channel_addowner import ADDOWNER
+from channel_removeowner import RMVOWNER
 from class_file import User
 
 def defaultHandler(err):
@@ -27,6 +28,7 @@ APP.register_error_handler(Exception, defaultHandler)
 
 APP.register_blueprint(CREATE)
 APP.register_blueprint(ADDOWNER)
+APP.register_blueprint(RMVOWNER)
 
 # Example
 @APP.route("/echo", methods=['GET'])
