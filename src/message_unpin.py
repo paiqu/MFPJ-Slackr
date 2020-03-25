@@ -13,10 +13,10 @@ def request_get():
     request = request.get_json()
     token = request['token']
     message_id = int(request['message_id'])
-    message_pin(token, message_id)
+    message_unpin(token, message_id)
     return dumps({})
 
-def message_pin(token, message_id):
+def message_unpin(token, message_id):
     ''' Given a message within a channel, remove it's mark as unpinned'''
     if not message_id_check(message_id):
         raise InputError("message_id is not a valid message")
