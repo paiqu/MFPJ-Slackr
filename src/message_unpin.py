@@ -7,7 +7,7 @@ from data import DATA, getData
 
 UNPIN = Blueprint('message_unpin', __name__)
 
-@UNPIN.route('/message/unpin', methods=['Post'])
+@UNPIN.route('/message/unpin', methods=['POST'])
 def request_get():
     '''request get for route message pin'''
     request = request.get_json()
