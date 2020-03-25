@@ -5,10 +5,11 @@ from check_functions import token_to_uid, channel_member_check
 from error import InputError, AccessError
 from class_file import Message
 from data import DATA, getData ,MESSAGE_COUNT
+import time, datetime
 
 SENDMESSAGE = Blueprint('message_send', __name__)
 
-@SENDMESSAGE.route('/message/send', methods=['Post'])
+@SENDMESSAGE.route('/message/send', methods=['POST'])
 def request_get():
     '''request get for route message send'''
     request = request.get_json()
@@ -36,7 +37,8 @@ def message_send(token, channel_id, message_content):
     CHANNELS_COUNT += 1
     message_id = CHANNELS_COUNT
     
-    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token)))
+    current_time = time.time()
+    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token), current_time))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
