@@ -8,7 +8,7 @@ from data import DATA, getData
 
 PROFILE = Blueprint('profile', __name__)
 
-@PROFILE.route('/profile', methods=['Get'])
+@PROFILE.route('/user/profile', methods=['Get'])
 
 def request_get():
     '''function for route user/profile'''
@@ -30,7 +30,6 @@ def user_profile(token, u_id):
     if user_id != u_id:
         raise InputError("Invalid u_id")
 
-    global DATA
     DATA = getData()
     
     user = {'user':{}}
