@@ -2,8 +2,7 @@
 from json import dumps
 from flask import Blueprint, request
 from check_functions import token_to_uid, channel_member_check, message_id_check
-from error import InputError
-from class_file import User
+from error import InputError, AccessError
 from data import DATA, getData
 
 PIN = Blueprint('message_pin', __name__)
