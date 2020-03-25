@@ -9,7 +9,7 @@ import time, datetime
 
 SENDMESSAGELATER = Blueprint('message_sendlater', __name__)
 
-@SENDMESSAGELATER.route('/message/sendlater', methods=['Post'])
+@SENDMESSAGELATER.route('/message/sendlater', methods=['POST'])
 def request_get():
     '''request get for route message sendlater'''
     request = request.get_json()
@@ -45,7 +45,7 @@ def message_sendlater(token, channel_id, message_content, time_send):
     CHANNELS_COUNT += 1
     message_id = CHANNELS_COUNT
     
-    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token)))
+    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token), time_send))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
