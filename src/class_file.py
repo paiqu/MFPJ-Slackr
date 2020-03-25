@@ -36,4 +36,4 @@ class React:
     def __init__(self, message_id, u_id, react_id)
         self.message_id = message_id
         self.u_id = u_id
-        self.react_id = react.id
+        self.react_id = react_id
