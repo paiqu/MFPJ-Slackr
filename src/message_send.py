@@ -13,7 +13,7 @@ def request_get():
     '''request get for route message send'''
     request = request.get_json()
     token = request['token']
-    channel_id = request['channel_id']
+    channel_id = int(request['channel_id'])
     message_content = request['message']
     
     message_send(token, channel_id, message_content)
