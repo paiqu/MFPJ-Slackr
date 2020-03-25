@@ -14,9 +14,9 @@ def request_get():
     '''request get for route message sendlater'''
     request = request.get_json()
     token = request['token']
-    channel_id = request['channel_id']
+    channel_id = int(request['channel_id'])
     message_content = request['message']
-    time_send = request['time_send']
+    time_send = int(request['time_send'])
     message_send(token, channel_id, message_content, time_send)
     return dumps({})
 
@@ -33,7 +33,7 @@ def message_send(token, channel_id, message_content, time_send):
     
     currenttime = time.time()
     
-    if time_send < currenttime:
+    if time_send < int(currenttime):
         raise InputError('Time sent is a time in the past')
         
     DATA = getData()
