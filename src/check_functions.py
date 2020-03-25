@@ -4,7 +4,7 @@ This file is to store function:
 
     channel_id_check(channel_id) -- Check for valid channel_id
 
-    channel_member_check(token, channel_id) 
+    channel_member_check(token, channel_id)
         -- Check if a memeber with token is in channel with channel_id
 
 '''
@@ -23,7 +23,7 @@ def channel_id_check(channel_id):
     for channel in channels:
         if channel['channel_id'] == channel_id:
             return True
-    
+
     return False
 
 def channel_member_check(channel_id, token):
