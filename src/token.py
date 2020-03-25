@@ -1,7 +1,6 @@
-
-import jwt
 import hashlib
 from json import dumps
+import jwt
 from flask import Flask, request
 from data import * 
         
