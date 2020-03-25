@@ -43,6 +43,10 @@ def channel_join(token, channel_id):
             target_channel = channel
     
     owners = target_channel['owners']
+
+    if target_user in target_channel['members']:
+        raise AccessError("The user is already a memeber in this channel")
+    
     if (not target_user['is_slack_owner']) and (target_user not in owners) and (not target_channel['is_public']):
         raise AccessError("A user who is not a owner of channel or owner of slackr cannot join a private channel")
 
