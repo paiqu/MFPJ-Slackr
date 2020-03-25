@@ -7,7 +7,7 @@ from data import DATA, getData
 
 REMOVE = Blueprint('message_remove', __name__)
 
-@REMOVE.route('/message/remove', methods=['Delete'])
+@REMOVE.route('/message/remove', methods=['DELETE'])
 def request_get():
     '''request get for route message romove'''
     request = request.get_json()
