@@ -11,9 +11,9 @@ SETEMAIL = Blueprint('setemail', __name__)
 
 @SETEMAIL.route('/setemail', methods=['PUT'])
 def setemail():
-    
-    token = request.form.get('token')
-    email = request.form.get('email')
+    store = request.get_json()
+    token = store['token']
+    email = store['email']
 
     return dumps(user_setemail(token, email))
 

@@ -11,10 +11,10 @@ SETNAME = Blueprint('setname', __name__)
 
 @SETNAME.route('/setname', methods=['PUT'])
 def setname():
-    
-    token = request.form.get('token')
-    name_first = request.form.get('name_first')
-    name_last = request.form.get('name_last')
+    store = request.get_json()
+    token = store['token']
+    name_first = store['name_first']
+    name_last = store['name_last']
 
     return dumps(user_setname(token, name_first, name_last))
 

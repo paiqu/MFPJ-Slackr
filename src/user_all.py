@@ -10,7 +10,9 @@ ALL = Blueprint('user_all', __name__)
 
 @ALL.route('/user/all', methods=['GET'])
 def list():
-    token = request.form.get('token')
+    store = request.get_json()
+    token = store['token']
+    u_id = int(store['u_id'])
     return dumps(user_all(token, u_id))   
 
 def user_all(token, u_id):

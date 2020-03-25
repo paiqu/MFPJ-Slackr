@@ -11,9 +11,9 @@ SETHANDLE = Blueprint('sethandle', __name__)
 
 @SETHANDLE.route('/sethandle', methods=['PUT'])
 def sethandle():
-    
-    token = request.form.get('token')
-    handle = request.form.get('handle')
+    store = request.get_json()
+    token = store['token']
+    handle = store['handle']
 
     return dumps(user_sethandle(token, handle))
 
