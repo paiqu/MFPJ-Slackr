@@ -19,9 +19,10 @@ class Channel:
         self.is_public = True
     
 class Message:
-    def __init__(self, message_content, message_id, channel_id, sender_id):
+    def __init__(self, message_content, message_id, channel_id, sender_id, time):
         self.message_content = message_content
         self.message_id = message_id
         self.channel_id = channel_id
         self.sender_id = sender_id
+        self.time_created = time
         self.is_pin = False
