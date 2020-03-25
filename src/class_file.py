@@ -24,3 +24,9 @@ class Message:
         self.channel_id = channel_id
         self.sender_token = sender_token
         self.is_pin = False
+
+class Time:
+    def _init_(self, start_time, end_time):
+        self.start_time = start_time
+        self.end_time = end_time
+
