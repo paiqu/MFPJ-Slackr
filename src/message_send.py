@@ -38,7 +38,7 @@ def message_send(token, channel_id, message_content):
     message_id = CHANNELS_COUNT
     
     current_time = time.time()
-    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token), current_time))
+    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token), int(current_time)))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
