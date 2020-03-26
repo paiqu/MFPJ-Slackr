@@ -3,6 +3,7 @@ from json import dumps
 from flask import Blueprint, request
 from error import InputError
 from data import DATA, getData
+from class_file import User
 
 PROFILE = Blueprint('profile', __name__)
 
@@ -12,7 +13,8 @@ def request_get():
     '''function for route user/profile'''
     token = request.args.get('token')
     u_id = int(request.args.get('u_id'))
-    return user_profile(token, u_id)
+    return dumps(user_profile(token, u_id))
+
 
 def user_profile(token, u_id):
     '''
@@ -21,18 +23,22 @@ def user_profile(token, u_id):
     '''
     
     DATA = getData()
+    users = DATA['users']
+
     is_exist = False
     
+    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu', handle='')))
+    
     # check Input Error (User with u_id is not a valid user)
-    for user in DATA['users']
-        if user['u_id'] = u_id
+    for user in users:
+        if user['u_id'] == u_id:
             is_exist = True
     if not is_exist:
         raise InputError("Invalid u_id")
     
     # get user profile
     user = {'user':{}}
-    for existuser in DATA['users']:
+    for existuser in users:
         if existuser['u_id'] == u_id:
             user['user']['u_id'] = existuser['u_id']
             user['user']['email'] = existuser['email']
