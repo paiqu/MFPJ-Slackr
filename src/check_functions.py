@@ -52,3 +52,14 @@ def token_to_uid(token):
     global SECRET
     decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
+
+def message_id_check(message_id):
+    ''' Return True is the message_id is valid ''' 
+    DATA = getData()
+
+    messages = DATA['messages']
+    for message in messages:
+        if message['message_id'] == message_id:
+            return True
+    
+    return False
