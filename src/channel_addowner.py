@@ -9,7 +9,7 @@ ADDOWNER = Blueprint('channel_addowner', __name__)
 
 @ADDOWNER.route('/channel/addowner', methods=['POST'])
 def addowner():
-    '''function for route channle/join'''
+    '''function for route channle/addowner'''
     info = request.get_json()
     token = info['token']
     channel_id = int(info['channel_id'])
