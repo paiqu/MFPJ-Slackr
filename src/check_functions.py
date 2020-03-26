@@ -50,7 +50,7 @@ def channel_member_check(channel_id, token):
 def token_to_uid(token):
     ''' Convert a token to u_id '''
     global SECRET
-    decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
+    decoded = jwt.decode(token[2:-1], SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
 
 def message_id_check(message_id):
