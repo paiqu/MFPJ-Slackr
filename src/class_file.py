@@ -26,3 +26,14 @@ class Message:
         self.sender_id = sender_id
         self.time_created = time
         self.is_pin = False
+
+class Time:
+    def _init_(self, start_time, end_time):
+        self.start_time = start_time
+        self.end_time = end_time
+        
+class React:
+    def __init__(self, message_id, u_id, react_id):
+        self.message_id = message_id
+        self.u_id = u_id
+        self.react_id = react_id
