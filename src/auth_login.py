@@ -31,9 +31,12 @@ def hashPassword(password):
 
 @LOGIN.route('/auth/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    return auth_login(email, password)
+
+    info = request.get_json()
+    
+    email = info['email']
+    password = info['password']
+    return dumps(channels_create(token, name, is_public))
     
 
 
@@ -45,7 +48,7 @@ def auth_login(email, password):
         if user['email'] == email and user['password'] == hashPassword(password):
             valid_token = True
             return sendSuccess({
-                'token': generateToken(email),
+                'token': generate_token(email),
             })
     valid_token = False
     return sendError('Email or password incorrect') 

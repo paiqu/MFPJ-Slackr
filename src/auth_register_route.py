@@ -3,7 +3,7 @@ from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, channel_member_check, token_to_uid
 from error import InputError, AccessError
-from token_functions import generateToken
+from token_functions import generate_token
 
 from data import DATA, getData
 
@@ -21,18 +21,25 @@ def generateHandle(firstName, lastName):
     handle = firstName + lastName 
     return handle
 
-def generateUserID():
+#def generateUserID():
 
 
 @REGISTER.route('/auth/register', methods=['POST'])
+
 def register():
     '''function for route auth/register'''
-    email = request.form.get('email')
-    password = request.form.get('password')
-    firstName = request.form.get('First Name')
-    lastName = request.form.get('Last Name')
+
+    info = request.get_json()
+    
+    email = info['email']
+    password = info['password']
+    firstName = info['First Name']
+    lastName = info['Last Name']
 
     auth_register(email, password, firstName, lastName)
+
+
+    #Need to return { u_id, token }
     return dumps({})
 
 def auth_register(email, password, firstName, lastName):
@@ -50,6 +57,6 @@ def auth_register(email, password, firstName, lastName):
     
     print(data)
     return sendSuccess({
-        'token': generateToken(email),
+        'token': generate_token(email),
     })
 

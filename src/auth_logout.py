@@ -20,7 +20,12 @@ LOGOUT = Blueprint('logout', __name__)
 
 @LOGOUT.route('/auth/logout', methods=['POST'])
 def logout(token):
-    token = request.form.get('token')
+
+    info = request.get_json()
+    
+    token = info['token']
+
+    return dumps(auth_logout(token))
     
 
 def auth_logout(token):
