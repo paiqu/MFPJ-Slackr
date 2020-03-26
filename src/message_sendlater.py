@@ -6,22 +6,32 @@ from error import InputError
 from class_file import User
 from data import DATA, getData ,MESSAGE_COUNT
 import time, datetime
+from class_file import User, Channel, Message
 
 SENDMESSAGELATER = Blueprint('message_sendlater', __name__)
 
 @SENDMESSAGELATER.route('/message/sendlater', methods=['POST'])
 def request_get():
     '''request get for route message sendlater'''
-    request = request.get_json()
-    token = request['token']
-    channel_id = int(request['channel_id'])
-    message_content = request['message']
-    time_send = int(request['time_send'])
-    message_sendlater(token, channel_id, message_content, time_send)
-    return dumps({})
+    info = request.get_json()
+    token = info['token']
+    channel_id = int(info['channel_id'])
+    message_content = info['message_content']
+    time_send = int(info['time_send'])
+    return dumps(message_sendlater(token, channel_id, message_content, time_send))
 
 def message_sendlater(token, channel_id, message_content, time_send):
     ''' Send a message from authorised_user to the channel specified by channel_id'''
+    DATA = getData()
+    users = DATA['users']
+    channels = DATA['channels']
+    messages = DATA['messages']
+    
+    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu', handle='')))   
+    channels.append(vars(Channel(1,"Public")))
+    channels[0]['members'].append(users[0])
+    channels[0]['owners'].append(users[0])
+
     if(len(message_content) > 1000):
         raise InputError('invalid message content')
 
@@ -35,20 +45,15 @@ def message_sendlater(token, channel_id, message_content, time_send):
     
     if time_send < int(currenttime):
         raise InputError('Time sent is a time in the past')
-        
-    DATA = getData()
-    users = DATA['users']
-    channels = DATA['channels']
-    messages = DATA['messages']
     
     global MESSAGE_COUNT
     MESSAGE_COUNT += 1
     message_id = MESSAGE_COUNT
     
-    message_send = vars(Message(message_content, message_id, channel_id, token_to_uid(token), time_send))
+    messages.append(vars(Message(message_content, message_id, channel_id, token_to_uid(token), time_send)))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
     
-    return returnvalue
+    return messages
 
