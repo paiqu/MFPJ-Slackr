@@ -65,10 +65,10 @@ def search(token, query_str):
                                 is_react_in = True
                             if is_react_in == False:
                                 react_collect.append({'react_id': react['react_id'], 'u_ids': [react['u_id']], 'is_this_user_reacted': False})
-            #check weather the given user reacts   
+            #check whether the given user reacts   
             for i in react_collect:
-                for user in i['u_ids']:
-                    if token_to_uid(token) == user:
+                for user_id in i['u_ids']:
+                    if token_to_uid(token) == user_id:
                         i['is_this_user_reacted'] = True     
 
             message_info['reacts'] = react_collect     
