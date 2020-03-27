@@ -10,9 +10,17 @@ This file is to store function:
 '''
 from data import *
 import jwt
+import re
 
 def token_check(token):
     ''' Return True if the token is valid '''
+    return False
+    
+def check_email(email): 
+    '''Return True is email is valid'''
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'  
+    if(re.search(regex,email)):  
+        return True
     return False
 
 def channel_id_check(channel_id):
