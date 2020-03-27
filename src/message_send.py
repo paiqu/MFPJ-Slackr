@@ -46,6 +46,7 @@ def message_send(token, channel_id, message_content):
     MESSAGE_COUNT += 1
     message_id = MESSAGE_COUNT
     
+    # get current time and send message
     current_time = time.time()
     messages.append(vars(Message(message_content, message_id, channel_id, token_to_uid(token), int(current_time))))
     
