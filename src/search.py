@@ -62,12 +62,11 @@ def search(token, query_str):
                         
                             if is_react_in == False:
                                 react_collect.append({'react_id': react['react_id'], 'u_ids': [react['u_id']], 'is_this_user_reacted': False})
-            '''       
+               
             for i in react_collect:
                 for user in i['u_ids']:
                     if token_to_uid(token) == user:
-                        i['is_this_user_reacted'] = True
-            '''       
+                        i['is_this_user_reacted'] = True     
 
             message_info['reacts'] = react_collect 
                      

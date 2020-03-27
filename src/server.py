@@ -5,6 +5,7 @@ from flask_cors import CORS
 from error import InputError
 from channels_create import CREATE
 from class_file import User
+from search import SEARCH
 
 def defaultHandler(err):
     response = err.get_response()
@@ -25,7 +26,7 @@ APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
 APP.register_blueprint(CREATE)
-
+APP.register_blueprint(SEARCH)
 # Example
 @APP.route("/echo", methods=['GET'])
 def echo():
