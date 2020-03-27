@@ -3,14 +3,15 @@ from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, channel_member_check, token_to_uid
 from error import InputError, AccessError
-from token_functions import generateToken
+from token_functions import generate_token
+from valid_email import check 
 
 from data import DATA, getData
 
 
 LOGIN = Blueprint('login', __name__)
 
-valid_token = False
+
 
 def sendSuccess(DATA):
     return dumps(DATA)
@@ -31,26 +32,32 @@ def hashPassword(password):
 
 @LOGIN.route('/auth/login', methods=['POST'])
 def login():
-
+    '''
+    This function collects the information/parameters and calls the auth_login function
+    '''
     info = request.get_json()
     
     email = info['email']
     password = info['password']
-    return dumps(channels_create(token, name, is_public))
+
+    # must return { u_id, token }
+    return auth_login(email, password)
     
 
 
 def auth_login(email, password):
     data = getData()
-    global valid_token
     for user in data['users']:
         ####CHANGE USERNAME TO EMAIL 
-        if user['email'] == email and user['password'] == hashPassword(password):
-            valid_token = True
-            return sendSuccess({
-                'token': generate_token(email),
-            })
-    valid_token = False
+        if check(email) == True: 
+            for user in data['users']:
+                if user['email'] == email and user['password'] == hashPassword(password):
+                    user['is_login'] = True 
+                    return dumps{
+                        'token': user['email'])
+                        'email' : user['email']   
+                    })
+
     return sendError('Email or password incorrect') 
     
 

@@ -6,7 +6,9 @@ class User:
         self.name_first = name_first
         self.name_last = name_last
         self.handle = handle
+        self.global_permission= 2
         self.is_slack_owner = False
+        self.is_login = False 
 
 class Channel:
     def __init__(self, channel_id, channel_name):

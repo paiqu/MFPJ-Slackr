@@ -7,7 +7,12 @@ This file is to store function:
     channel_member_check(token, channel_id) 
         -- Check if a memeber with token is in channel with channel_id
 
+slackr_owner_permission = 1
+slackr_member_permission = 2
+owner_channel_permission = 3
+member_channel_permission = 4
 '''
+
 from data import *
 import jwt
 
@@ -60,6 +65,17 @@ def message_id_check(message_id):
     messages = DATA['messages']
     for message in messages:
         if message['message_id'] == message_id:
+            return True
+    
+    return False
+
+def user_id_check(u_id):
+    ''' Return True is the user_id is valid ''' 
+    DATA = getData()
+
+    users = DATA['users']
+    for user in users:
+        if user['u_id'] == U_id:
             return True
     
     return False
