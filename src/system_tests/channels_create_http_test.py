@@ -23,6 +23,8 @@ import urllib.request
 import urllib.parse
 import pytest
 from data import DATA
+from error import InputError
+import requests
 
 PORT_NUMBER = '5321'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -125,7 +127,36 @@ def test_create_private_channel(register_and_login_user_1):
     global DATA
     channels = DATA['channels']
     channel_1 = channels[0]
-    assert not channel_1.is_public 
+    assert not channel_1.is_public
 
 
 
+def test_error_long_name(register_and_login_user_1):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+
+    # Create a public channel
+    channel_info = dumps({
+        'token': user_1_token,
+        'name': 'ihaveasupersuperlongnamethatislongerthan20chars',
+        'is_public': True
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    with pytest.raises(InputError):
+        load(urllib.request.urlopen(req))
+    
+
+
+        
