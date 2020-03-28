@@ -27,26 +27,27 @@ def message_unreact(token, message_id, react_id):
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
     channels[0]['owners'].append(users[0])
-    messages_list.append(vars(Message(message_content = 'first', message_id = 1, channel_id = 1, sender_id = 1, time = 1231)))
-    reacts.append(vars(React(message_id = 1, u_id = 1, react_id = 1))
+    messages.append(vars(Message(message_content = 'first', message_id = 1, channel_id = 1, sender_id = 1, time = 1231)))
+    reacts.append(vars(React(message_id = 1, u_id = 1, react_id = 1)))
     
     if not message_id_check(message_id):
         raise InputError("Message ID is not valid")
     if react_id != 1:
         raise InputError("React ID is not valid")
     
-    exist = 0
+    exist = False
     for i in reacts:
         if i['message_id'] == message_id:
             if i['u_id'] == token_to_uid(token):
                 if i['react_id'] == react_id:
-                    exist = 1
-    if exist == 0:
+                    exist = True
+    if exist == False:
         raise InputError("Not existing the react_id")
+     
             
     for i in reacts:
         if i['message_id'] == message_id and i['react_id'] == react_id and i['u_id'] == token_to_uid(token):
-           reacts.remove()
+           reacts.remove(i)
            
            
     return {}

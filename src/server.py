@@ -11,7 +11,7 @@ from channels_list import CHANNELS_LIST
 from channels_listall import CHANNELS_LISTALL
 from message_edit import MESSAGE_EDIT
 from message_react import MESSAGE_REACT
-#from message_unreact import MESSAGE_UNREACT
+from message_unreact import MESSAGE_UNREACT
 
 '''
 def defaultHandler(err):
@@ -38,7 +38,7 @@ APP.register_blueprint(CHANNELS_LIST)
 APP.register_blueprint(CHANNELS_LISTALL)
 APP.register_blueprint(MESSAGE_EDIT)
 APP.register_blueprint(MESSAGE_REACT)
-#APP.register_blueprint(MESSAGE_UNREACT)
+APP.register_blueprint(MESSAGE_UNREACT)
 # Example
 
 @APP.route("/echo", methods=['GET'])
