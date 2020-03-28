@@ -79,3 +79,14 @@ def user_id_check(u_id):
             return True
     
     return False
+
+def user_exists_check(email):
+    ''' Return True is the email is reigstered to an account ''' 
+    DATA = getData()
+
+    users = DATA['users']
+    for user in users:
+        if user['email'] == email:
+            return True
+    
+    return False

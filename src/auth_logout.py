@@ -42,5 +42,6 @@ def auth_logout(token):
                 user['is_login'] == False
                 return True
             else: 
+                raise InputError("Problem occurred while logging out")
                 return False
   

@@ -43,25 +43,28 @@ def channel_details(token, channel_id):
             target_channel = channel
 
     
-    # Checks the Target Channel ID is valid 
-    if channel_id_check(target_channel) == True:
-
-        # Checks the Invitee/Token User is member of the channel 
-        if channel_member_check(channel_id,token == True):
-            return dumps{
-                        'name': channel['name'])
-
-                        # Can I call this considering member list is a list???
-                        'owner_members' : channel['owner_members'] 
-                        'all_members' : channel['all_members']
-
-                    })
-             
-        else: 
-            raise AccessError("The user requesting channel details is not a member of this channel")
-            
-    else: 
+    # Checks the Target Channel ID is not invalid 
+    if channel_id_check(target_channel) == False:
         raise InputError("This is not a valid channel or channel ID")
+
+    # Checks the Invitee/Token User is member of the channel 
+    if channel_member_check(channel_id,token == False):
+        raise AccessError("The user requesting channel details is not a member of this channel")
+    
+    return dumps({
+                'name': channel['name'],
+
+                # Can I call this considering member list is a list???
+                'owner_members' : channel['owner_members'],
+                'all_members' : channel['all_members']
+
+            })
+             
+         
+            
+            
+    
+        
     
             
    

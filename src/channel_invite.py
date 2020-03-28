@@ -53,28 +53,26 @@ def channel_invite(token, channel_id, u_id):
     
     owners = target_channel['owners']
 
-    # Checks the Target Channel ID is valid 
-    if channel_id_check(target_channel) == True:
-
-        # Checks the User ID is valid
-        if user_id_check(u_id) == True:
-
-            # Checks the Invitee/Token User is member of the channel 
-            if channel_member_check(channel_id,token == True):
-                
-
-                # Checks the Invited User is not already a member of the channel
-                if channel_member_check(channel_id, target_user['token']) == False:
-                    members = target_channel['members']
-                    members.append(target_user)
-                else: 
-                    raise AccessError("The user is already a memeber in this channel")
-            else: 
-                raise AccessError("The invitee is not a member of this channel")
-            
-        else:
-            raise InputError("This is not a valid user or user ID")  
-    else: 
+    # Checks the Target Channel ID is not invalid
+    if channel_id_check(target_channel) == False:
         raise InputError("This is not a valid channel or channel ID")
+
+    # Checks the User ID is not invalid
+    if user_id_check(u_id) == False:
+        raise InputError("This is not a valid user or user ID")
+
+    # Checks the Invitee/Token User is member of the channel 
+    if channel_member_check(channel_id,token) == False:
+        raise AccessError("The invitee is not a member of this channel")
+
+    # Checks the Invited User is not already a member of the channel
+    if channel_member_check(channel_id, target_user['token']) == True:
+        raise AccessError("The user is already a memeber in this channel")
+                    
+    members = target_channel['members']
+    members.append(target_user)
+          
+     
+        
     return {}
 

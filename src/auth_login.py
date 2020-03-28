@@ -1,7 +1,7 @@
 '''Route implementation for auth/login'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check, token_to_uid
+from check_functions import channel_id_check, channel_member_check, token_to_uid, user_exists_check
 from error import InputError, AccessError
 from token_functions import generate_token
 from valid_email import check 
@@ -25,10 +25,10 @@ def getUserFromToken(token):
     global SECRET
     decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
     return decoded['email']
-
+'''
 def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
-
+'''
 
 @LOGIN.route('/auth/login', methods=['POST'])
 def login():
@@ -47,17 +47,26 @@ def login():
 
 def auth_login(email, password):
     data = getData()
-    for user in data['users']:
-        ####CHANGE USERNAME TO EMAIL 
-        if check(email) == True: 
-            for user in data['users']:
-                if user['email'] == email and user['password'] == hashPassword(password):
-                    user['is_login'] = True 
-                    return dumps{
-                        'token': user['email'])
-                        'email' : user['email']   
-                    })
 
-    return sendError('Email or password incorrect') 
+    if check(email) == False:
+        raise InputError("This is not a valid email")
+
+    if user_exists_check(email) == False:
+        raise InputError("Email entered does not belong to a user")
+       
+    for user in data['users']:
+        if user['email'] == email and user['password'] == password:
+            user['is_login'] = True 
+            return dumps({
+                'token': user['email'],
+                'email' : user['email']   
+            })
+
+        else: 
+            raise InputError("Email or password incorrect")
+        
+            
+    
+
     
 

@@ -1,12 +1,5 @@
 '''Route implementation for admin/user/permission/change
 
-Members in a channel have one of two channel permissions.
-
-
-1) Owner of the channel (the person who created it, and whoever else that creator adds)
-2) Members of the channel
-
-
 Slackr user's have two global permissions
 
 
@@ -19,6 +12,8 @@ All slackr users are by default members, except for the very first user who sign
 from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, channel_member_check, token_to_uid
+from channels_list import channels_list
+from channel_addowner import channel_addowner
 from error import InputError, AccessError
 from token_functions import generate_token
 from class_file import User, Channel
@@ -56,37 +51,31 @@ def admin_permission(token, u_id, permission_id):
             sub_user = user         
 
     # Checks the User ID is valid
-    if user_id_check(u_id) == True:
-
-        # The admin user has permission priviledges 
-        if admin_user['global_permission'] == 1 || admin_user['channel_permission'] == 3:
-
-            if permission_id == 1:
-
-                if admin_user['global_permission'] == 1:
-                    sub_user['global_permission'] == permission_id
-                    sub_user['channel_permission'] == 3 
-                else: 
-                    raise AccessError("The admin user does not have global permission privileges")   
-            elif permission_id == 3:
-                if admin_user['channel_permission'] == 3:
-                    sub_user['channel_permission'] == permission_id
-                else:
-                    raise AccessError("The admin user does not have channel permission privileges")
-
-            else: 
-                raise InputError('This is not a valid permission number')
+    if user_id_check(u_id) == False:
+        raise InputError("This is not a valid user or user ID")
 
 
-        else: 
-            raise AccessError("The admin user is not authorised")    
+    # If the wrong permission ID is entered 
+    if permission_id != 1:
+        raise InputError('This is not a valid permission number')
 
-    else: 
-        raise InputError("This is not a valid user or user ID")    
-    '''
-    if admin_user[permission_id] == 2
-        permission_user['permission_id'] = 2 
-    '''
+    # The admin user has permission priviledges 
+    if admin_user['global_permission'] != 1:
+        raise AccessError("The admin user is not authorised")
+    
+    #changes the sub users permission having passed all checks 
+
+    #### IS THIS RIGHT?
+    sub_user['global_permission'] == permission_id
+    
+
+    owners = target_channel['owners']
+
+    #changes the users permission privileges to owner if they aren't already owner 
+    for channel in channels_list(sub_user['token']):
+        if sub_user not in owners:
+            channel_addowner(admin_user['token'], channel['channel_id'], sub_user['u_id'])
+
     return {}
 
     
