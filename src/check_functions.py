@@ -11,6 +11,7 @@ This file is to store function:
 from data import *
 import jwt
 import re
+from token_functions import generate_token
 
 def token_check(token):
     ''' Return True if the token is valid '''
@@ -58,7 +59,7 @@ def channel_member_check(channel_id, token):
 def token_to_uid(token):
     ''' Convert a token to u_id '''
     global SECRET
-    decoded = jwt.decode(token[2:-1], SECRET, algorithms=['HS256'])
+    decoded = jwt.decode(token[2:-1].encode(), SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
 
 def message_id_check(message_id):
@@ -71,3 +72,4 @@ def message_id_check(message_id):
             return True
     
     return False
+
