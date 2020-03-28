@@ -7,12 +7,6 @@ def generate_token(u_id):
     SECRET = get_Secret()
 
     encoded = jwt.encode({'u_id': str(u_id)}, SECRET, algorithm="HS256")
-<<<<<<< HEAD
-    return encoded
-    
-if __name__ == "__main__":
-   print( generate_token(1))
-=======
+
     return str(encoded)
->>>>>>> 407331b3e7f05e01fd7d7fa9a0d3e6d265f40d7d
 
