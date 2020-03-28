@@ -10,10 +10,18 @@ This file is to store function:
 '''
 from data import *
 import jwt
+import re
 from token_functions import generate_token
 
 def token_check(token):
     ''' Return True if the token is valid '''
+    return False
+    
+def check_email(email): 
+    '''Return True is email is valid'''
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'  
+    if(re.search(regex,email)):  
+        return True
     return False
 
 def channel_id_check(channel_id):
@@ -51,11 +59,7 @@ def channel_member_check(channel_id, token):
 def token_to_uid(token):
     ''' Convert a token to u_id '''
     global SECRET
-
-    token_in_str = token[2:-1]
-    token_in_byte = token_in_str.encode()
-
-    decoded = jwt.decode(token_in_byte, SECRET, algorithms=['HS256'])
+    decoded = jwt.decode(token[2:-1].encode(), SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
 
 def message_id_check(message_id):
@@ -69,6 +73,3 @@ def message_id_check(message_id):
     
     return False
 
-if __name__ == "__main__":
-    token_of_1234 = str(generate_token(1234))
-    print(token_to_uid(token_of_1234))
