@@ -7,5 +7,6 @@ def generate_token(u_id):
     SECRET = get_Secret()
 
     encoded = jwt.encode({'u_id': str(u_id)}, SECRET, algorithm="HS256")
-    return encoded
+
+    return str(encoded)
 
