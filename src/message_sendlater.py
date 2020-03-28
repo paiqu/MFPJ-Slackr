@@ -44,7 +44,8 @@ def message_sendlater(token, channel_id, message_content, time_send):
     if not channel_id_check(channel_id):
         raise InputError('Channel ID is not a valid channel')
     
-    currenttime = time.time()
+    now = datetime.datetime.utcnow()
+    currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
     
     if time_send < int(currenttime):
         raise InputError('Time sent is a time in the past')
