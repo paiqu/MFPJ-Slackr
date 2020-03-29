@@ -15,9 +15,18 @@ member_channel_permission = 4
 
 from data import *
 import jwt
+import re
+from token_functions import generate_token
 
 def token_check(token):
     ''' Return True if the token is valid '''
+    return False
+    
+def check_email(email): 
+    '''Return True is email is valid'''
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'  
+    if(re.search(regex,email)):  
+        return True
     return False
 
 def channel_id_check(channel_id):

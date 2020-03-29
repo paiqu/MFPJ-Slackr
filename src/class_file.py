@@ -21,11 +21,25 @@ class Channel:
         
         self.owners = []  # a list of users who are owners
         self.is_public = True
+        self.is_standup_active = False
     
 class Message:
-    def __init__(self, message_content, message_id, channel_id, sender_id):
+    def __init__(self, message_content, message_id, channel_id, sender_id, time):
         self.message_content = message_content
         self.message_id = message_id
         self.channel_id = channel_id
         self.sender_id = sender_id
+        self.time_created = time
         self.is_pin = False
+        
+class React:
+    def __init__(self, message_id, u_id, react_id):
+        self.message_id = message_id
+        self.u_id = u_id
+        self.react_id = react_id
+
+class Standup:
+    def __init__(self, channel_id, time_end):
+        self.channel_id = channel_id
+        self.time_end = time_end
+        self.messages = []
