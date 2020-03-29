@@ -29,24 +29,37 @@ PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
-@pytest.fixture
-def reset_workspace():
-    urllib.request.Request(
-        f'{BASE_URL}/workspace/reset',
-        data=dumps({}),
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
+
+# def reset_workspace():
+#     req = urllib.request.Request(
+#         f'{BASE_URL}/workspace/reset',
+#         data=dumps({}),
+#         headers={'Content-Type': 'application/json'},
+#         method='POST'
+#     )
+
+#     load(urllib.request.urlopen(req))
 
 
 @pytest.fixture
 def register_and_login_user_1():
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    load(urllib.request.urlopen(req))
+
+    # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword',
         'name_first': 'Peter',
         'name_last': 'Parker'
     }).encode('utf-8')
+
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
@@ -57,6 +70,7 @@ def register_and_login_user_1():
 
     load(urllib.request.urlopen(req))
     
+    # Login
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword'
@@ -102,10 +116,7 @@ def test_create_public_channel(register_and_login_user_1):
     assert len(payload) == 1
     assert payload['channel_id'] == 1
 
-
 def test_create_private_channel(register_and_login_user_1):
-    urllib.request.urlopen(f'{BASE_URL}/workspace/reset')
-
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
     
@@ -156,9 +167,11 @@ def test_error_long_name(register_and_login_user_1):
         method='POST'
     )
 
-    with pytest.raises(InputError):
-        load(urllib.request.urlopen(req))
+    # with pytest.raises(InputError):
+    #     load(urllib.request.urlopen(req))
     
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
 
 
         
