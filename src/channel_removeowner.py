@@ -50,4 +50,4 @@ def channel_removeowner(token, channel_id, u_id):
 
     owners.remove(target_user)
 
-    return owners
+    return {}
