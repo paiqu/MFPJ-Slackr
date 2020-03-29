@@ -46,6 +46,10 @@ def login():
 
 
 def auth_login(email, password):
+    '''
+    This function authenticates the token to show the user is logged in
+    changes is_login to false
+    '''
     data = getData()
 
     if check(email) == False:
@@ -55,15 +59,17 @@ def auth_login(email, password):
         raise InputError("Email entered does not belong to a user")
        
     for user in data['users']:
-        if user['email'] == email and user['password'] == password:
-            user['is_login'] = True 
-            return dumps({
-                'token': user['email'],
-                'email' : user['email']   
-            })
-
-        else: 
-            raise InputError("Email or password incorrect")
+        if user['email'] == email:
+                if user['email'] == email and user['password'] == password:
+                    user['is_login'] = True 
+                    return dumps({
+                        'u_id': user['u_id'],
+                        'token' : user['token']   
+                    })
+                else: 
+                    raise InputError("Email or password incorrect")
+        
+            
         
             
     

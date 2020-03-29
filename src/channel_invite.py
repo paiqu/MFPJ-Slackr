@@ -26,6 +26,9 @@ def invite():
 
 
 def channel_invite(token, channel_id, u_id):
+    '''
+    Invites a user to a channel is the parameters are valid
+    '''
     DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
@@ -54,7 +57,7 @@ def channel_invite(token, channel_id, u_id):
     owners = target_channel['owners']
 
     # Checks the Target Channel ID is not invalid
-    if channel_id_check(target_channel) == False:
+    if channel_id_check(target_channel['channel_id']) == False:
         raise InputError("This is not a valid channel or channel ID")
 
     # Checks the User ID is not invalid

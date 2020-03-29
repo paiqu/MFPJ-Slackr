@@ -21,7 +21,7 @@ def sendError(message):
 LOGOUT = Blueprint('logout', __name__)
 
 @LOGOUT.route('/auth/logout', methods=['POST'])
-def logout(token):
+def logout():
     '''
     This function collects the information/parameters and calls the auth_logout function
     '''
@@ -34,14 +34,20 @@ def logout(token):
     
 
 def auth_logout(token):
+    '''
+    This function logs out with an authenticated token 
+    Changes is_login to false
+    '''
     data = getData()
     for user in data['users']:
         if user['token'] == token:
             if user['is_login'] == True:
                 ###LOGS USER OUT - TOKEN BECOMES FALSE 
-                user['is_login'] == False
-                return True
+                user['is_login'] = False
+                new_dict = {}
+                new_dict['is_success'] = True
+                return new_dict
             else: 
                 raise InputError("Problem occurred while logging out")
-                return False
+               
   

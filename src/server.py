@@ -10,6 +10,7 @@ from auth_login import LOGIN
 from auth_logout import LOGOUT
 from channel_invite import INVITE 
 from channel_details import DETAILS
+from user_permission import PERMISSION
 
 def defaultHandler(err):
     response = err.get_response()
@@ -35,6 +36,7 @@ APP.register_blueprint(LOGIN)
 APP.register_blueprint(LOGOUT)
 APP.register_blueprint(INVITE)
 APP.register_blueprint(DETAILS)
+APP.register_blueprint(PERMISSION)
 
 
 # Example
