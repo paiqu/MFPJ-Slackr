@@ -4,7 +4,7 @@ This file is to store function:
 
     channel_id_check(channel_id) -- Check for valid channel_id
 
-    channel_member_check(token, channel_id) 
+    channel_member_check(token, channel_id)
         -- Check if a memeber with token is in channel with channel_id
 
 slackr_owner_permission = 1
@@ -22,7 +22,7 @@ def token_check(token):
     ''' Return True if the token is valid '''
     return False
     
-def check_email(email): 
+def check_email(email):
     '''Return True is email is valid'''
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'  
     if(re.search(regex,email)):  
@@ -37,7 +37,7 @@ def channel_id_check(channel_id):
     for channel in channels:
         if channel['channel_id'] == channel_id:
             return True
-    
+
     return False
 
 def channel_member_check(channel_id, token):
