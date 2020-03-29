@@ -33,6 +33,7 @@ from user_all import ALL
 from standup_start import START
 from standup_active import ACTIVE
 from standup_send import SEND
+from workspace_reset import RESET
 
 from channel_leave import LEAVE
 
@@ -84,6 +85,7 @@ APP.register_blueprint(START)
 APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(ALL)
+APP.register_blueprint(RESET)
 
 
 # Example
