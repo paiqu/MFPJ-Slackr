@@ -7,7 +7,6 @@ from channels_create import CREATE
 from channel_addowner import ADDOWNER
 from channel_removeowner import RMVOWNER
 from class_file import User
-<<<<<<< src/server.py
 from auth_register_route import REGISTER 
 from auth_login import LOGIN 
 from auth_logout import LOGOUT
@@ -27,8 +26,13 @@ from channels_listall import CHANNELS_LISTALL
 from message_edit import MESSAGE_EDIT
 from message_react import MESSAGE_REACT
 from message_unreact import MESSAGE_UNREACT
->>>>>>> src/server.py
-
+from user_setname import SETNAME
+from user_setemail import SETEMAIL
+from user_sethandle import SETHANDLE
+from user_all import ALL
+from standup_start import START
+from standup_active import ACTIVE
+from standup_send import SEND
 
 from channel_leave import LEAVE
 
@@ -54,7 +58,6 @@ APP.register_error_handler(Exception, defaultHandler)
 '''
 
 APP.register_blueprint(CREATE)
-<<<<<<< src/server.py
 APP.register_blueprint(REGISTER)
 APP.register_blueprint(LOGIN)
 APP.register_blueprint(LOGOUT)
@@ -74,7 +77,14 @@ APP.register_blueprint(SENDMESSAGE)
 APP.register_blueprint(SENDMESSAGELATER)
 APP.register_blueprint(PROFILE)
 APP.register_blueprint(SEARCH)
->>>>>>> src/server.py
+APP.register_blueprint(SETNAME)
+APP.register_blueprint(SETEMAIL)
+APP.register_blueprint(SETHANDLE)
+APP.register_blueprint(START)
+APP.register_blueprint(ACTIVE)
+APP.register_blueprint(SEND)
+APP.register_blueprint(ALL)
+
 
 # Example
 
