@@ -5,7 +5,6 @@ from error import InputError
 
 from class_file import User
 from data import *
-from workspace_reset import reset
 
 SETNAME = Blueprint('setname', __name__)
 
