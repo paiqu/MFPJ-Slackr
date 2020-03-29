@@ -17,7 +17,7 @@ def token_check(token):
     ''' Return True if the token is valid '''
     return False
     
-def check_email(email): 
+def check_email(email):
     '''Return True is email is valid'''
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'  
     if(re.search(regex,email)):  

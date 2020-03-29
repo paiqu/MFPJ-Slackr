@@ -5,7 +5,13 @@ from flask_cors import CORS
 from error import InputError
 from channels_create import CREATE
 from class_file import User
-
+from message_sendlater import SENDMESSAGELATER
+from message_send import SENDMESSAGE
+from message_remove import REMOVE
+from message_pin import PIN
+from message_unpin import UNPIN
+from user_profile import PROFILE
+from search import SEARCH
 from channel_messages import CHANNEL_MESSAGES
 from channels_list import CHANNELS_LIST
 from channels_listall import CHANNELS_LISTALL
@@ -39,6 +45,14 @@ APP.register_blueprint(CHANNELS_LISTALL)
 APP.register_blueprint(MESSAGE_EDIT)
 APP.register_blueprint(MESSAGE_REACT)
 APP.register_blueprint(MESSAGE_UNREACT)
+APP.register_blueprint(UNPIN)
+APP.register_blueprint(PIN)
+APP.register_blueprint(REMOVE)
+APP.register_blueprint(SENDMESSAGE)
+APP.register_blueprint(SENDMESSAGELATER)
+APP.register_blueprint(PROFILE)
+APP.register_blueprint(SEARCH)
+
 # Example
 
 @APP.route("/echo", methods=['GET'])

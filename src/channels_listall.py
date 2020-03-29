@@ -36,8 +36,7 @@ def channels_listall(token):
         new_dict['channel_id'] = channel['channel_id']
         new_dict['name'] = channel['channel_name']
         new_list.append(new_dict)
-    
-            
+      
     return_dict = {}        
     return_dict['channels'] = new_list
     return return_dict
