@@ -13,10 +13,10 @@ def all():
     '''function for route of users all'''
     token = request.args.get('token')
     u_id = request.args.get('u_id')
-    return dumps(users_all(token, u_id))
+    return dumps(users_all(token))
    
 
-def users_all(token, u_id):
+def users_all(token):
     '''
     Given a token, list all users associated with information 
     
