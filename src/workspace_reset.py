@@ -12,7 +12,9 @@ def reset():
     DATA = {
         'users': [],
         'channels': [],
-        'messages': []
+        'messages': [],
+        'reacts': [],
+        'standups': []
     }
 
     return dumps({})
