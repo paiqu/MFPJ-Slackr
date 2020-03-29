@@ -26,9 +26,9 @@ def channels_create(token, name, is_public):
     
     is_private = False
 
-    if is_public == "True":
+    if is_public == True:
         is_private = False
-    elif is_public == "False":
+    elif is_public == False:
         is_private = True
 
     DATA = getData()
