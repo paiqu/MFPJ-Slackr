@@ -24,11 +24,20 @@ import urllib.parse
 import pytest
 from data import DATA
 from error import InputError
-import requests
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
+
+@pytest.fixture
+def reset_workspace():
+    urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        data=dumps({}),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
 
 @pytest.fixture
 def register_and_login_user_1():
@@ -37,7 +46,7 @@ def register_and_login_user_1():
         'password': 'thisisaPassword',
         'name_first': 'Peter',
         'name_last': 'Parker'
-    }).encodee('utf-8')
+    }).encode('utf-8')
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
@@ -65,6 +74,7 @@ def register_and_login_user_1():
     
 
 def test_create_public_channel(register_and_login_user_1):
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
     
@@ -88,16 +98,14 @@ def test_create_public_channel(register_and_login_user_1):
     )
 
     payload = load(urllib.request.urlopen(req))
-    return payload
+    
     assert len(payload) == 1
     assert payload['channel_id'] == 1
 
-    global DATA
-    channels = DATA['channels']
-    channel_1 = channels[0]
-    assert channel_1.is_public == True
 
 def test_create_private_channel(register_and_login_user_1):
+    urllib.request.urlopen(f'{BASE_URL}/workspace/reset')
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
     
@@ -121,14 +129,8 @@ def test_create_private_channel(register_and_login_user_1):
     )
 
     payload = load(urllib.request.urlopen(req))
-    return payload
+    
     assert payload['channel_id'] == 1
-
-    global DATA
-    channels = DATA['channels']
-    channel_1 = channels[0]
-    assert not channel_1.is_public
-
 
 
 def test_error_long_name(register_and_login_user_1):
