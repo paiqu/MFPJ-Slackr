@@ -9,7 +9,7 @@ from token_functions import generate_token
 CREATE = Blueprint('create', __name__)
 
 @CREATE.route('/channels/create', methods=['POST'])
-def leave():
+def create():
     '''function for route channle/leave'''
     info = request.get_json()
     token = info['token']
@@ -34,13 +34,13 @@ def channels_create(token, name, is_public):
     DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
-
+    '''
     # DELETE LATER
     user_1 = User(u_id=token_to_uid(token), email='123@55.com', name_first='pai', name_last='qu', handle='')
     user_1 = vars(user_1)
     ##############
+    '''
 
-    users.append(user_1)
 
     for user in users:
         if user['u_id'] == token_to_uid(token):

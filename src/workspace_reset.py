@@ -6,10 +6,8 @@ from data import DATA
 
 WORKSPACERESET = Blueprint('workspace_reset', __name__)
 
-@WORKSPACERESET.route('/workspace/reset', methods=['POST'])
-def workspace_reset():
-
-    
+@RESET.route('/workspace/reset', methods=['POST'])
+def reset():
     global DATA
     
     DATA = {

@@ -30,10 +30,6 @@ def channel_join(token, channel_id):
     users = DATA['users']
     channels = DATA['channels']
 
- 
-    #######
-    users.append(vars(User(u_id =token_to_uid(token), email='123@33.com', name_first='pai', name_last='qu', handle='')))
-    #######
     for user in users:
         if user['u_id'] == token_to_uid(token):
             target_user = user

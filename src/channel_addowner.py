@@ -24,10 +24,6 @@ def channel_addowner(token, channel_id, u_id):
     global DATA
     users = DATA['users']
     channels = DATA['channels']
-
-    #### DELETE BELOW LATER
-    users.append(vars(User(u_id=u_id, email='123@55.com', name_first='pai', name_last='qu', handle='')))
-    ####
     
     for user in users:
         if user['u_id'] == token_to_uid(token):
@@ -52,5 +48,5 @@ def channel_addowner(token, channel_id, u_id):
     
     owners.append(target_user)
 
-    return owners
-    # return {}
+    return {}
+    
