@@ -30,4 +30,11 @@ def channels_listall(token):
     
     channels.append(vars(Channel(channel_id = 2, channel_name = 'NAME')))
     '''
-    return channels
+    
+    new_list = []
+    for channel in DATA['channels']:
+        new_list.append(channel)
+        
+    return_dict = {}        
+    return_dict['channels'] = new_list
+    return return_dict
