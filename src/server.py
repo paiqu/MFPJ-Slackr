@@ -4,6 +4,8 @@ from flask import Flask, request, blueprints
 from flask_cors import CORS
 from error import InputError
 from channels_create import CREATE
+from channel_addowner import ADDOWNER
+from channel_removeowner import RMVOWNER
 from class_file import User
 from message_sendlater import SENDMESSAGELATER
 from message_send import SENDMESSAGE
@@ -20,6 +22,9 @@ from message_react import MESSAGE_REACT
 from message_unreact import MESSAGE_UNREACT
 
 
+from channel_leave import LEAVE
+
+'''
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -30,13 +35,15 @@ def defaultHandler(err):
     })
     response.content_type = 'application/json'
     return response
+'''
 
 APP = Flask(__name__)
 CORS(APP)
 
-
+'''
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
+'''
 
 APP.register_blueprint(CREATE)
 APP.register_blueprint(CHANNEL_MESSAGES)
