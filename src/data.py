@@ -1,9 +1,11 @@
-from class_file import User
+from class_file import User, Channel, Message, React, Standup
 
 DATA = {
     'users': [], # a list of users {u_id: user_1}
     'channels': [], # a list of channels  {channel_id: channel_1}
-    'messages': [] # a list of messages
+    'messages': [], # a list of messages
+    'reacts': [], # a list of reacts
+    'standups': [], # a list of standups
 }
 
 SECRET = 'MFPJ'
