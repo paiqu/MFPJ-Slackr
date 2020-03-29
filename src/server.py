@@ -5,6 +5,13 @@ from flask_cors import CORS
 from error import InputError
 from channels_create import CREATE
 from class_file import User
+from message_sendlater import SENDMESSAGELATER
+from message_send import SENDMESSAGE
+from message_remove import REMOVE
+from message_pin import PIN
+from message_unpin import UNPIN
+from user_profile import PROFILE
+from search import SEARCH
 
 def defaultHandler(err):
     response = err.get_response()
@@ -25,6 +32,13 @@ APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
 APP.register_blueprint(CREATE)
+APP.register_blueprint(UNPIN)
+APP.register_blueprint(PIN)
+APP.register_blueprint(REMOVE)
+APP.register_blueprint(SENDMESSAGE)
+APP.register_blueprint(SENDMESSAGELATER)
+APP.register_blueprint(PROFILE)
+APP.register_blueprint(SEARCH)
 
 # Example
 @APP.route("/echo", methods=['GET'])
