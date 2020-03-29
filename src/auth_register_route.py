@@ -80,7 +80,8 @@ def auth_register(email, password, name_first, name_last):
 
 
     generateID = generateUserID()
-    user_1 = User(generateID, email, name_first, name_last, generateHandle(name_first, name_last))
+    user_1 = User(generateID, email, name_first, name_last)
+    user_1.handle = generateHandle(name_first, name_last)
     user_1.token = str(generate_token(generateID))
 
     if data['users'] == []:

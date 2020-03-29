@@ -34,10 +34,10 @@ from standup_start import START
 from standup_active import ACTIVE
 from standup_send import SEND
 from workspace_reset import RESET
-
+from channel_join import JOIN
 from channel_leave import LEAVE
 
-'''
+
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -48,43 +48,46 @@ def defaultHandler(err):
     })
     response.content_type = 'application/json'
     return response
-'''
+
 
 APP = Flask(__name__)
 CORS(APP)
 
-'''
+
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-'''
 
-APP.register_blueprint(CREATE)
-APP.register_blueprint(REGISTER)
 APP.register_blueprint(LOGIN)
 APP.register_blueprint(LOGOUT)
+APP.register_blueprint(REGISTER)
 APP.register_blueprint(INVITE)
 APP.register_blueprint(DETAILS)
-APP.register_blueprint(PERMISSION)
 APP.register_blueprint(CHANNEL_MESSAGES)
+APP.register_blueprint(LEAVE)
+APP.register_blueprint(JOIN)
+APP.register_blueprint(ADDOWNER)
+APP.register_blueprint(RMVOWNER)
 APP.register_blueprint(CHANNELS_LIST)
 APP.register_blueprint(CHANNELS_LISTALL)
-APP.register_blueprint(MESSAGE_EDIT)
-APP.register_blueprint(MESSAGE_REACT)
-APP.register_blueprint(MESSAGE_UNREACT)
-APP.register_blueprint(UNPIN)
-APP.register_blueprint(PIN)
-APP.register_blueprint(REMOVE)
+APP.register_blueprint(CREATE)
 APP.register_blueprint(SENDMESSAGE)
 APP.register_blueprint(SENDMESSAGELATER)
+APP.register_blueprint(MESSAGE_REACT)
+APP.register_blueprint(MESSAGE_UNREACT)
+APP.register_blueprint(PIN)
+APP.register_blueprint(UNPIN)
+APP.register_blueprint(REMOVE)
+APP.register_blueprint(MESSAGE_EDIT)
 APP.register_blueprint(PROFILE)
-APP.register_blueprint(SEARCH)
 APP.register_blueprint(SETNAME)
 APP.register_blueprint(SETEMAIL)
 APP.register_blueprint(SETHANDLE)
+APP.register_blueprint(ALL)
+APP.register_blueprint(SEARCH)
 APP.register_blueprint(START)
 APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
-APP.register_blueprint(ALL)
+APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
 
 

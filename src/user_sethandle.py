@@ -34,5 +34,5 @@ def user_sethandle(token, handle):
 
     for user in DATA['users']:
         if user['u_id'] == token_to_uid(token):
-            user['handle'] == handle
+            user['handle'] = handle
     return {}

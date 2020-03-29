@@ -33,6 +33,6 @@ def user_setname(token, name_first, name_last):
     
     for user in DATA['users']:
         if user['u_id'] == token_to_uid(token):
-            user['name_first'] == name_first
-            user['name_last'] == name_last
+            user['name_first'] = name_first
+            user['name_last'] = name_last
     return {}
