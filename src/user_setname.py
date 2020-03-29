@@ -5,6 +5,7 @@ from error import InputError
 
 from class_file import User
 from data import *
+from workspace_reset import reset
 
 SETNAME = Blueprint('setname', __name__)
 
@@ -32,7 +33,7 @@ def user_setname(token, name_first, name_last):
     DATA = getData()
     
     for user in DATA['users']:
-        if user.u_id == token_to_uid(token):
-            user.name_first == name_first
-            user.name_last == name_last
+        if user['u_id'] == token_to_uid(token):
+            user['name_first'] == name_first
+            user['name_last'] == name_last
     return {}
