@@ -7,6 +7,13 @@ from channels_create import CREATE
 from channel_addowner import ADDOWNER
 from channel_removeowner import RMVOWNER
 from class_file import User
+<<<<<<< src/server.py
+from auth_register_route import REGISTER 
+from auth_login import LOGIN 
+from auth_logout import LOGOUT
+from channel_invite import INVITE 
+from channel_details import DETAILS
+from user_permission import PERMISSION
 from message_sendlater import SENDMESSAGELATER
 from message_send import SENDMESSAGE
 from message_remove import REMOVE
@@ -20,6 +27,7 @@ from channels_listall import CHANNELS_LISTALL
 from message_edit import MESSAGE_EDIT
 from message_react import MESSAGE_REACT
 from message_unreact import MESSAGE_UNREACT
+>>>>>>> src/server.py
 
 
 from channel_leave import LEAVE
@@ -46,6 +54,13 @@ APP.register_error_handler(Exception, defaultHandler)
 '''
 
 APP.register_blueprint(CREATE)
+<<<<<<< src/server.py
+APP.register_blueprint(REGISTER)
+APP.register_blueprint(LOGIN)
+APP.register_blueprint(LOGOUT)
+APP.register_blueprint(INVITE)
+APP.register_blueprint(DETAILS)
+APP.register_blueprint(PERMISSION)
 APP.register_blueprint(CHANNEL_MESSAGES)
 APP.register_blueprint(CHANNELS_LIST)
 APP.register_blueprint(CHANNELS_LISTALL)
@@ -59,6 +74,7 @@ APP.register_blueprint(SENDMESSAGE)
 APP.register_blueprint(SENDMESSAGELATER)
 APP.register_blueprint(PROFILE)
 APP.register_blueprint(SEARCH)
+>>>>>>> src/server.py
 
 # Example
 
