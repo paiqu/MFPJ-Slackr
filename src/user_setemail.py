@@ -34,5 +34,5 @@ def user_setemail(token, email):
   
     for user in DATA['users']:
         if user['u_id'] == token_to_uid(token):
-            user['email'] == email
+            user['email'] = email
     return {}
