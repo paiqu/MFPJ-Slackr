@@ -88,11 +88,11 @@ def test_user_profile(register_and_login_user_1):
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/user/profile?{queryString}"))
     
-    assert payload[0]['u_id'] == 1
-    assert payload[0]['email'] == 'z5237609@unsw.edu.au'
-    assert payload[0]['name_first'] == 'Xinlei'   
-    assert payload[0]['name_last'] == 'Zhang'
-    #assert payload[0]['handle_str'] == 'zhangxinlei'
+    assert payload['user']['u_id'] == 1
+    assert payload['user']['email'] == 'z5237609@unsw.edu.au'
+    assert payload['user']['name_first'] == 'Xinlei'   
+    assert payload['user']['name_last'] == 'Zhang'
+    assert payload['user']['handle_str'] == 'xinleizhang'
 
 def test_user_profile_inputerror(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -102,54 +102,13 @@ def test_user_profile_inputerror(register_and_login_user_1):
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
 
-
-    # Create a private channel
-    channel_info = dumps({
-        'token': user_1_token,
-        'name': 'a channel',
-        'is_public': False
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
-    payload = load(urllib.request.urlopen(req))
-    
-    assert payload['channel_id'] == 1
-
-
-def test_error_long_name(register_and_login_user_1):
-    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_and_login_user_1
-    
-    assert response['u_id'] == 1
-    assert isinstance(response['token'], str)
-    assert response['token'] == user_1_token
-
-
-    # Create a public channel
-    channel_info = dumps({
-        'token': user_1_token,
-        'name': 'ihaveasupersuperlongnamethatislongerthan20chars',
-        'is_public': True
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
-    # with pytest.raises(InputError):
-    #     load(urllib.request.urlopen(req))
+    # Get user profile
+    queryString = urllib.parse.urlencode({
+        'token' : user_1_token,
+        'u_id' : 2
+    })
     
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
-
+        urllib.request.urlopen(f"{BASE_URL}/user/profile?{queryString}")
 
         
