@@ -28,7 +28,7 @@ def message_edit(token, message_id, message):
     channels = DATA['channels']
     messages = DATA['messages']
     '''
-    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop', handle='')))
+    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop')))
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
     channels[0]['owners'].append(users[0])
@@ -49,7 +49,11 @@ def message_edit(token, message_id, message):
     
     if target_message['sender_id'] != token_to_uid(token) or is_owner == False:
         raise AccessError("Unauthorised user try to edit")
-     
-    target_message['message_content'] = message
-    return {}
-     
+    
+    if message == '':
+        # empty string, delete message
+         messages.remove(target_message)
+    else:
+        # update
+        target_message['message_content'] = message
+    return {} 
