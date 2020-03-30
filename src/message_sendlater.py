@@ -61,7 +61,7 @@ def message_sendlater(token, channel_id, message, time_sent):
         DATA = getData()
         messages = DATA['messages']       
         messages.append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
-        
+        print(messages)
     # set a time to run this function
     time_diffrence = time_sent - currenttime
     timer = threading.Timer(time_diffrence, message_send, args=(message, message_id, channel_id, u_id, time_sent))

@@ -89,13 +89,12 @@ def channel_messages(token, channel_id, start):
     # formate output {messages, start, end}
     out_dict = {}
     messages_list.reverse()
-    out_dict['messages'] = messages_list
+    out_dict['messages'] = messages_list[0:50]
     out_dict['start'] = start
     
-    if start + 50 >= len(messages_list):
+    if not start + 50 < len(messages_list):
         out_dict['end'] = -1
     else: 
         out_dict['end'] = start + 50   
-    
     
     return out_dict
