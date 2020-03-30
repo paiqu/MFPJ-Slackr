@@ -2,7 +2,7 @@
 from json import dumps
 from flask import Blueprint, request
 from check_functions import token_to_uid, channel_member_check, channel_id_check
-from error import InputError
+from error import InputError, AccessError
 from class_file import User
 from data import DATA, getData ,MESSAGE_COUNT
 import time, datetime
