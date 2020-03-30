@@ -126,20 +126,51 @@ def create_public_channel():
 
     payload = load(urllib.request.urlopen(req))
     return payload
+    
+@pytest.fixture
+def create_public_channel_2():
+    # Create public channel 
+
+    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    channel_info = dumps({
+        'token': user_2_token,
+        'name': 'channel_2',
+        'is_public': True
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    payload = load(urllib.request.urlopen(req))
+    return payload
+
 
 
     
-def test_only_one_channel((register_and_login_user_1, create_public_channel):
+def test_only_one_channel(register_and_login_user_1, create_public_channel):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
     })
 
-    payload = json.load(urllib.request.urlopen(f"{BASE_URL}/channels/listall?{queryString}"))
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/channels/listall?{queryString}"))
     
     assert payload['channels'][0]['channel_id'] == 1
-    assert payload['channels'][0]['channel_name'] == 'publicchannel'
+    assert payload['channels'][0]['name'] == 'publicchannel'
     
-def test_two_channels_created_by_diff_users():
+def test_two_channels_created_by_diff_users(register_and_login_user_1, create_public_channel,register_and_login_user_2, create_public_channel_2):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    queryString = urllib.parse.urlencode({
+        'token' : user_1_token,
+    })
 
-
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/channels/listall?{queryString}"))
+    
+    assert payload['channels'][0]['channel_id'] == 1
+    assert payload['channels'][0]['name'] == 'publicchannel'
+    assert payload['channels'][1]['channel_id'] == 2
+    assert payload['channels'][1]['name'] == 'channel_2'
