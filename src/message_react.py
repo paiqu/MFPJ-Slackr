@@ -29,7 +29,7 @@ def message_react(token, message_id, react_id):
     channels = DATA['channels']
     reacts = DATA['reacts']
     '''
-    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop', handle='')))
+    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop')))
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
     channels[0]['owners'].append(users[0])
