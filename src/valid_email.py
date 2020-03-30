@@ -22,11 +22,9 @@ def check(email):
     # pass the regualar expression 
     # and the string in search() method 
     if(re.search(regex,email)):  
-        print("Valid Email") 
         return True 
           
     else:  
-        print("Invalid Email") 
         return False  
       
   
