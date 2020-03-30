@@ -22,8 +22,9 @@ from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
+from data import DATA, getData
 import time, datetime
+import threading
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -131,37 +132,6 @@ def create_public_channel():
     payload = load(urllib.request.urlopen(req))
     return payload
 
-def test_message_sendlater(register_and_login_user_1, create_public_channel):
-
-    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_and_login_user_1
-    
-    assert response['u_id'] == 1
-    assert isinstance(response['token'], str)
-    assert response['token'] == user_1_token
-
-    response2 = create_public_channel
-    assert response2['channel_id'] == 1
-
-    now = datetime.datetime.utcnow()
-    currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
-
-    # send messagelater
-    message_info = dumps({
-        'token': user_1_token,
-        'channel_id': 1,
-        'message': 'hello',
-        'time_sent': currenttime
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/message/sendlater',
-        data=message_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-    payload = load(urllib.request.urlopen(req))
-    assert payload['message_id'] == 1
 
 def test_message_send_inputerror1(register_and_login_user_1, create_public_channel):
     
@@ -297,3 +267,44 @@ def test_message_sendlater_accesserror(register_and_login_user_1, create_public_
     )
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
+
+def test_message_sendlater(register_and_login_user_1, create_public_channel):
+
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+    response2 = create_public_channel
+    assert response2['channel_id'] == 1
+
+    now = datetime.datetime.utcnow()
+    currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
+    senttime = currenttime + 10
+
+    # send messagelater
+    message_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'message': 'hello',
+        'time_sent': senttime
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/sendlater',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    payload = load(urllib.request.urlopen(req))
+    assert payload['message_id'] == 1
+
+    def message_check():
+        DATA = getData()
+        assert len(DATA['messages']) == 1
+        
+    # set a time to run this function
+    timer2 = threading.Timer(senttime - currenttime + 5, message_check)
+    timer2.start()
