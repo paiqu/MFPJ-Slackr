@@ -29,13 +29,15 @@ def channel_messages(token, channel_id, start):
     channels = DATA['channels']
     messages = DATA['messages']
     reacts = DATA['reacts']
-    '''
-    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop', handle='')))
+    
+    users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop')))
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
     channels[0]['owners'].append(users[0])
     messages.append(vars(Message(message_content = 'first', message_id = 1, channel_id = 1, sender_id = 1, time = 1231)))
-    '''
+    messages.append(vars(Message(message_content = 'second', message_id = 2, channel_id = 1, sender_id = 1, time = 1231)))
+    messages.append(vars(Message(message_content = 'third', message_id = 3, channel_id = 1, sender_id = 1, time = 1231)))
+    
     
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
@@ -59,7 +61,7 @@ def channel_messages(token, channel_id, start):
             react_collect = []
             for react in reacts:
                 # find the reacts of this message
-                if react['message_id'] == message['message_id']:
+                if react['message_id'] == i['message_id']:
                     ''' 
                     if react is empty or it has not had this react, append a new react 
                     if react has already been in this list, just append the user_id
@@ -86,6 +88,7 @@ def channel_messages(token, channel_id, start):
     
     # formate output {messages, start, end}
     out_dict = {}
+    messages_list.reverse()
     out_dict['messages'] = messages_list
     out_dict['start'] = start
     
