@@ -49,5 +49,5 @@ def channel_join(token, channel_id):
     members = target_channel['members']
     members.append(target_user)
 
-    return members
+    return {}
 
