@@ -368,7 +368,7 @@ def test_message_pin(register_and_login_user_1, create_public_channel, send_a_me
         method='POST'
     )
     load(urllib.request.urlopen(req))
-
+``
     DATA = getData()
     
     assert DATA['messages'][0]['is_pin'] == True
