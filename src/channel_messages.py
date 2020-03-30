@@ -38,7 +38,7 @@ def channel_messages(token, channel_id, start):
     messages.append(vars(Message(message_content = 'second', message_id = 2, channel_id = 1, sender_id = 1, time = 1231)))
     messages.append(vars(Message(message_content = 'third', message_id = 3, channel_id = 1, sender_id = 1, time = 1231)))
     '''   
-    
+   
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
 
@@ -100,7 +100,5 @@ def channel_messages(token, channel_id, start):
             new_list.append(messages_list[i + start])
         out_dict['message'] = new_list 
         out_dict['start'] = start
-        out_dict['end'] = start + 50   
-    
-    
+        out_dict['end'] = start + 50
     return out_dict
