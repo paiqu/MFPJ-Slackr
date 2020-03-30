@@ -12,7 +12,6 @@ ALL = Blueprint('users_all', __name__)
 def all():
     '''function for route of users all'''
     token = request.args.get('token')
-    u_id = request.args.get('u_id')
     return dumps(users_all(token))
    
 
