@@ -17,25 +17,27 @@ def request_get():
     info = request.get_json()
     token = info['token']
     channel_id = int(info['channel_id'])
-    message_content = info['message_content']
+    message = info['message_content']
     time_send = int(info['time_send'])
      
-    return dumps(message_sendlater(token, channel_id, message_content, time_send))
+    return dumps(message_sendlater(token, channel_id, message, time_send))
 
-def message_sendlater(token, channel_id, message_content, time_send):
+def message_sendlater(token, channel_id, message, time_send):
     ''' Send a message from authorised_user to the channel specified by channel_id'''
     DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
     messages = DATA['messages']
     
+    '''
     #self-check function
-    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu', handle='')))   
+    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu')))   
     channels.append(vars(Channel(1,"Public")))
     channels[0]['members'].append(users[0])
     channels[0]['owners'].append(users[0])
+    '''
     
-    if(len(message_content) > 1000):
+    if(len(message) > 1000):
         raise InputError('invalid message content')
 
     if not channel_member_check(channel_id, token):
@@ -55,14 +57,14 @@ def message_sendlater(token, channel_id, message_content, time_send):
     
     u_id = token_to_uid(token)
 
-    def message_send(message_content, message_id, channel_id, u_id, time_send):
+    def message_send(message, message_id, channel_id, u_id, time_send):
         DATA = getData()
         messages = DATA['messages']       
-        messages.append(vars(Message(message_content, message_id, channel_id, u_id, time_send)))
+        messages.append(vars(Message(message, message_id, channel_id, u_id, time_send)))
         
     # set a time to run this function
     time_diffrence = time_send - currenttime
-    timer = threading.Timer(time_diffrence, message_send, args=(message_content, message_id, channel_id, u_id, time_send))
+    timer = threading.Timer(time_diffrence, message_send, args=(message, message_id, channel_id, u_id, time_send))
     timer.start()
     
     returnvalue = {}
