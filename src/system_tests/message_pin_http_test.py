@@ -4,7 +4,7 @@ This file is HTTP test for message_pin (POST)
 Parameter: (token, message_id)
 Return: {}
 
-Steps to test message_unpin:
+Steps to test message_pin:
     1. Register a user
     2. The user login to the server
     3. create a channel
