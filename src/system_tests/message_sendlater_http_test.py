@@ -195,6 +195,70 @@ def test_message_send_inputerror1(register_and_login_user_1, create_public_chann
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
+def test_message_send_inputerror2(register_and_login_user_1, create_public_channel):
+    
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+    response2 = create_public_channel
+    assert response2['channel_id'] == 1
+
+    now = datetime.datetime.utcnow()
+    currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
+
+    # send messagelater
+    message_info = dumps({
+        'token': user_1_token,
+        'channel_id': 2,
+        'message': 'hello',
+        'time_sent': currenttime + 10
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/sendlater',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
+def test_message_send_inputerror2(register_and_login_user_1, create_public_channel):
+    
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+    response2 = create_public_channel
+    assert response2['channel_id'] == 1
+
+    now = datetime.datetime.utcnow()
+    currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
+
+    # send messagelater
+    message_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'message': 'hello',
+        'time_sent': currenttime - 10
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/sendlater',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
 def test_message_sendlater_accesserror(register_and_login_user_1, create_public_channel, register_and_login_user_2):
     
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
