@@ -50,9 +50,8 @@ def message_sendlater(token, channel_id, message_content, time_send):
     if time_send < int(currenttime):
         raise InputError('Time sent is a time in the past')
     
-    global MESSAGE_COUNT
-    MESSAGE_COUNT += 1
-    message_id = MESSAGE_COUNT
+    DATA['messages_count'] += 1
+    message_id = DATA['messages_count']
     
     u_id = token_to_uid(token)
 

@@ -42,9 +42,8 @@ def message_send(token, channel_id, message_content):
         raise AccessError("Authorised user is not a member of channel with channel_id")
     
     # get message_id
-    global MESSAGE_COUNT
-    MESSAGE_COUNT += 1
-    message_id = MESSAGE_COUNT
+    DATA['messages_count'] += 1
+    message_id = DATA['messages_count']
     
     # get current time and send message
     now = datetime.datetime.utcnow()

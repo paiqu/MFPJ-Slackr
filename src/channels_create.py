@@ -8,6 +8,7 @@ from token_functions import generate_token
 
 CREATE = Blueprint('create', __name__)
 
+
 @CREATE.route('/channels/create', methods=['POST'])
 def create():
     '''function for route channle/leave'''
@@ -34,34 +35,27 @@ def channels_create(token, name, is_public):
     DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
-    '''
-    # DELETE LATER
-    user_1 = User(u_id=token_to_uid(token), email='123@55.com', name_first='pai', name_last='qu', handle='')
-    user_1 = vars(user_1)
-    ##############
-    '''
-
 
     for user in users:
         if user['u_id'] == token_to_uid(token):
             target_user = user
     
-    global CHANNELS_COUNT
-    CHANNELS_COUNT += 1
-    channel_id = CHANNELS_COUNT
 
-    target_channel = vars(Channel(channel_id=CHANNELS_COUNT, channel_name=name))
+    DATA['channels_count'] += 1
+
+    channel_id = DATA['channels_count']
+
+    target_channel = vars(Channel(channel_id=channel_id, channel_name=name))
     target_channel['members'].append(target_user)
     target_channel['owners'].append(target_user)
 
     if is_private:
         target_channel['is_public'] = False
 
-    channels.append(target_channel)
+    DATA['channels'].append(target_channel)
 
     return_dict = {}
     return_dict['channel_id'] = channel_id
     
-
     return return_dict
     

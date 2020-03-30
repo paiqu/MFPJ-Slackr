@@ -11,4 +11,4 @@ def generate_token(u_id):
     return str(encoded)
 
 if __name__ == "__main__":
-    print(generate_token(2345))
+    print(generate_token(2))
