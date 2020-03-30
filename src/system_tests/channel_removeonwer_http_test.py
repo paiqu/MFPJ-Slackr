@@ -1,12 +1,13 @@
 '''
-Steps to test channel/addowner:
+Steps to test channel/removeowner:
     1. register and login two users: user_1 and user_2
     2. user_1 creates a channel
+    3. user_2 joins the channel
     3. Test:
-        1. user_1 add user_2 as a owner
+        1. user_1 remove user_2 from channel
         2. Input Error:
             1. invalid channel id
-            2. user_1 add itself as an owner
+            2. user_2 is not an owner
         3. Access Error:
             1. when owner is not an owner of slakr,
                 or an owner of this channel.
@@ -100,7 +101,7 @@ def register_and_login_user_1_and_2():
     load(urllib.request.urlopen(req))
     #return payload
 
-def test_add_user_2_as_owner(register_and_login_user_1_and_2):
+def test_remove_user_2_from_owner(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     
@@ -130,6 +131,22 @@ def test_add_user_2_as_owner(register_and_login_user_1_and_2):
     req = urllib.request.Request(
         f'{BASE_URL}/channel/addowner',
         data=addowner_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    load(urllib.request.urlopen(req))
+
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
@@ -160,7 +177,7 @@ def test_invalid_channel_id(register_and_login_user_1_and_2):
     # user_1 add user_2 as an owner
     addowner_info = dumps({
         'token': user_1_token,
-        'channel_id': 40,
+        'channel_id': 1,
         'u_id': 2
     }).encode('utf-8')
 
@@ -171,10 +188,27 @@ def test_invalid_channel_id(register_and_login_user_1_and_2):
         method='POST'
     )
 
+    load(urllib.request.urlopen(req))
+
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 133,
+        'u_id': 2
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_already_owner(register_and_login_user_1_and_2):
+
+def test_not_owner(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     
@@ -194,22 +228,23 @@ def test_already_owner(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_1 add user_2 as an owner
-    addowner_info = dumps({
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
         'token': user_1_token,
         'channel_id': 1,
-        'u_id': 1
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/addowner',
-        data=addowner_info,
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
+
 
     
 def test_access_error(register_and_login_user_1_and_2):
@@ -232,16 +267,17 @@ def test_access_error(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_1 add user_2 as an owner
-    addowner_info = dumps({
+
+    # user_2 removes user_21 from owners
+    removeowner_info = dumps({
         'token': user_2_token,
         'channel_id': 1,
-        'u_id': 2
+        'u_id': 1
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/addowner',
-        data=addowner_info,
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
