@@ -1,16 +1,16 @@
 '''
-Steps to test channel/join:
-    1. Register two users: user_1 and user_2
-    2. Both users login to the server
-    3. the user_1 create a channel (public)
-    4. Time to Test:
-        1. user_2 joins user_1's public channel
+Steps to test channel/owner:
+    1. register and login two users: user_1 and user_2
+    2. user_1 creates a channel
+    3. Test:
+        1. user_1 add user_2 as a owner
         2. Input Error:
-            invalid channel_id
+            1. invalid channel id
+            2. user_1 add itself as an owner
         3. Access Error:
-            join private channel
+            1. when owner is not an owner of slakr,
+                or an owner of this channel.
 '''
-
 
 import sys
 sys.path.append('..')
@@ -42,6 +42,7 @@ def register_and_login_user_1_and_2():
         'name_first': 'Peter',
         'name_last': 'Parker'
     }).encode('utf-8')
+
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
@@ -99,7 +100,7 @@ def register_and_login_user_1_and_2():
     load(urllib.request.urlopen(req))
     #return payload
 
-def test_join_public(register_and_login_user_1_and_2):
+def test_add_user_2_as_owner(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     
@@ -119,15 +120,16 @@ def test_join_public(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
@@ -135,8 +137,7 @@ def test_join_public(register_and_login_user_1_and_2):
     payload = load(urllib.request.urlopen(req))
     assert payload == {}
 
-
-def test_for_invalid_channel_id(register_and_login_user_1_and_2):
+def test_invalid_channel_id(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     
@@ -156,15 +157,16 @@ def test_for_invalid_channel_id(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 50
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 40,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
@@ -172,8 +174,7 @@ def test_for_invalid_channel_id(register_and_login_user_1_and_2):
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-
-def test_join_private_channel(register_and_login_user_1_and_2):
+def test_already_owner(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     
@@ -181,7 +182,7 @@ def test_join_private_channel(register_and_login_user_1_and_2):
     channel_info = dumps({
         'token': user_1_token,
         'name': 'a channel',
-        'is_public': False
+        'is_public': True
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -193,19 +194,57 @@ def test_join_private_channel(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 1
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
+    
+def test_access_error(register_and_login_user_1_and_2):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    
+    # user_1 creates a public channel
+    channel_info = dumps({
+        'token': user_1_token,
+        'name': 'a channel',
+        'is_public': True
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    load(urllib.request.urlopen(req))
+
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_2_token,
+        'channel_id': 1,
+        'u_id': 2
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
