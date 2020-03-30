@@ -38,7 +38,7 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
-from workspace_reset import WORKSPACERESET
+
 
 
 def defaultHandler(err):
