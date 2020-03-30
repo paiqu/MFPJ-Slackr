@@ -9,7 +9,7 @@ from class_file import User
 
 from data import DATA, getData
 
-user_count = 0
+
 
 REGISTER = Blueprint('register', __name__)
 
@@ -22,16 +22,14 @@ def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
 '''
 def generateHandle(firstName, lastName):
-
     #add tests for generate handle 
-    handle = firstName + lastName 
-    return handle
+    handle = firstName + lastName
+    lowercase_handle = handle.lower()
+    return lowercase_handle[0:20]
 
-def generateUserID():
-    global user_count 
-    user_count += 1
-    u_id = user_count 
-    return u_id
+# def generateUserID():
+#     user_count = len(DATA['users'])
+#     return user_count+1
 
 
 
@@ -78,10 +76,11 @@ def auth_register(email, password, name_first, name_last):
     if (len(name_last) < 1) or (len(name_last) > 50):
         raise InputError("Last Name must be between 1 and 50 characters")
 
-
-    generateID = generateUserID()
-    user_1 = User(generateID, email, name_first, name_last, generateHandle(name_first, name_last))
-    user_1.token = str(generate_token(generateID))
+    data['users_count'] += 1
+    generate_ID = data['users_count']
+    user_1 = User(generate_ID, email, name_first, name_last)
+    user_1.handle = generateHandle(name_first, name_last)
+    user_1.token = str(generate_token(generate_ID))
 
     if data['users'] == []:
         user_1.is_slack_owner = True

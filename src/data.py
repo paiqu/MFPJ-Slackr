@@ -6,6 +6,9 @@ DATA = {
     'messages': [], # a list of messages
     'reacts': [], # a list of reacts
     'standups': [], # a list of standups
+    'users_count': 0,
+    'channels_count': 0,
+    'messages_count': 0
 }
 
 SECRET = 'MFPJ'
@@ -21,3 +24,4 @@ def get_Secret():
 
 CHANNELS_COUNT = 0
 MESSAGE_COUNT = 0
+

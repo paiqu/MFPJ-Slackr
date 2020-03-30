@@ -1,34 +1,45 @@
 '''
-This file is HTTP test for user/setname (PUT)
+This file is HTTP test for channel/create (POST)
 
-Parameter: (token, name_first, name_last)
-Return: {}
+Parameter: (token, name, is_public)
+Return: {channel_id}
 
 Always reset workspace when testing!!!!!!!!
 
 Steps to test channel/create:
     1. Register a user
     2. The user login to the server
-    3. the user set first name and last name (public or private)
+    3. the user create a channel (public or private)
     4. Time to Test:
-        1. test for firstname and lastname successfully
-        2. test fot Error:
-            Raise InputError when name is not between 1 and 50 characters
+        1. test for creating a public channel successfully
+        2. test for creating a private channel successfully
+        3. test fot Error:
+            Raise InputError when name is more than 20 chars long
 '''
 import sys
 sys.path.append('..')
 from json import load, dumps
-import urllib
-import flask
+import urllib.request
+import urllib.parse
 import pytest
-from data import *
-from error import InputError
+from data import DATA
 
 
-
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
+
+
+# def reset_workspace():
+#     req = urllib.request.Request(
+#         f'{BASE_URL}/workspace/reset',
+#         data=dumps({}),
+#         headers={'Content-Type': 'application/json'},
+#         method='POST'
+#     )
+
+#     load(urllib.request.urlopen(req))
+
 
 @pytest.fixture
 def register_and_login_user_1():
@@ -40,23 +51,26 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
+    # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword',
-        'name_first': 'Xinlei',
-        'name_last': 'Matthew'
+        'name_first': 'Peter',
+        'name_last': 'Parker'
     }).encode('utf-8')
+
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data = register_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=register_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
     
+    # Login
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword'
@@ -73,7 +87,8 @@ def register_and_login_user_1():
     return payload
     
 
-def test_set_name(register_and_login_user_1):
+def test_create_public_channel(register_and_login_user_1):
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
     
@@ -82,27 +97,26 @@ def test_set_name(register_and_login_user_1):
     assert response['token'] == user_1_token
 
 
-    # Set a first and last name
-    user_info = dumps({
+    # Create a public channel
+    channel_info = dumps({
         'token': user_1_token,
-        'name_first': 'Zane',
-        'name_last': 'James'
+        'name': 'a channel',
+        'is_public': True
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setname',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
-    for user in DATA['users']:
-        if user['u_id'] == token_to_uid(token):
-            assert user['name_first'] == 'Zane'
-            assert user['name_last'] == 'James'
+
     payload = load(urllib.request.urlopen(req))
-    assert payload == {}
+    
+    assert len(payload) == 1
+    assert payload['channel_id'] == 1
 
-def test_error_no_type(register_and_login_user_1):
+def test_create_private_channel(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
     
@@ -111,22 +125,24 @@ def test_error_no_type(register_and_login_user_1):
     assert response['token'] == user_1_token
 
 
-    # Set the user's first and last name
-    user_info = dumps({
+    # Create a private channel
+    channel_info = dumps({
         'token': user_1_token,
-        'name_first': '',
-        'name_last': ''
+        'name': 'a channel',
+        'is_public': False
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setname',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
-    with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
+    payload = load(urllib.request.urlopen(req))
+    
+    assert payload['channel_id'] == 1
+
 
 def test_error_long_name(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -137,19 +153,25 @@ def test_error_long_name(register_and_login_user_1):
     assert response['token'] == user_1_token
 
 
-    # Set a user's name first and last
-    user_info = dumps({
+    # Create a public channel
+    channel_info = dumps({
         'token': user_1_token,
-        'name_first': 'ihavea' * 51,
-        'name_last': 'fhsgdyw' * 51
+        'name': 'ihaveasupersuperlongnamethatislongerthan20chars',
+        'is_public': True
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setname',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
+    # with pytest.raises(InputError):
+    #     load(urllib.request.urlopen(req))
+    
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
+
+
+        

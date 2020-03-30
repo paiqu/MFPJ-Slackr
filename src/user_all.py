@@ -6,17 +6,16 @@ from error import InputError, AccessError
 from class_file import User
 from data import *
 
-ALL = Blueprint('user_all', __name__)
+ALL = Blueprint('users_all', __name__)
 
-@ALL.route('/user/all', methods=['GET'])
+@ALL.route('/users/all', methods=['GET'])
 def all():
     '''function for route of users all'''
     token = request.args.get('token')
-    u_id = request.args.get('u_id')
-    return dumps(user_all(token, u_id))
+    return dumps(users_all(token))
    
 
-def user_all(token, u_id):
+def users_all(token):
     '''
     Given a token, list all users associated with information 
     
@@ -24,9 +23,16 @@ def user_all(token, u_id):
 
     DATA = getData()
     users = DATA['users']
-
-    users.append(vars(User(u_id = 23, email = 'z54634652@unsw.edu.au', name_first = 'Matiea', name_last = 'Ben', handle = '')))
-    
-    user = {'user':{}}
+    new_list = []
+    for user in DATA['users']:
+        new_dict = {}
+        new_dict['u_id'] = user['u_id']
+        new_dict['email'] = user['email']
+        new_dict['name_first'] = user['name_first']
+        new_dict['name_last'] = user['name_last']
+        new_dict['handle'] = user['handle']
+        new_list.append(new_dict)
       
-    return users
+    return_dict = {}        
+    return_dict['users'] = new_list
+    return return_dict

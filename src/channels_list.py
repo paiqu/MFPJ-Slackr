@@ -32,7 +32,10 @@ def channels_list(token):
     new_list = []
     for channel in DATA['channels']:
         if channel_member_check(channel['channel_id'], token):
-            new_list.append(channel)
+            new_dict = {}
+            new_dict['channel_id'] = channel['channel_id']
+            new_dict['name'] = channel['channel_name']
+            new_list.append(new_dict)
     
     return_dict = {}        
     return_dict['channels'] = new_list
