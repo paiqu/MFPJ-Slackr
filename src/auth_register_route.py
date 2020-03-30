@@ -23,8 +23,9 @@ def hashPassword(password):
 '''
 def generateHandle(firstName, lastName):
     #add tests for generate handle 
-    handle = firstName + lastName 
-    return handle
+    handle = firstName + lastName
+    lowercase_handle = handle.lower()
+    return lowercase_handle[0:20]
 
 # def generateUserID():
 #     user_count = len(DATA['users'])
