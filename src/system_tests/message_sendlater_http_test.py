@@ -227,7 +227,7 @@ def test_message_send_inputerror2(register_and_login_user_1, create_public_chann
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_message_send_inputerror2(register_and_login_user_1, create_public_channel):
+def test_message_send_inputerror3(register_and_login_user_1, create_public_channel):
     
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
