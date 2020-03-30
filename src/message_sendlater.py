@@ -39,12 +39,12 @@ def message_sendlater(token, channel_id, message, time_sent):
     
     if(len(message) > 1000):
         raise InputError('invalid message content')
-
-    if not channel_member_check(channel_id, token):
-        raise AccessError("Authorised user is not a member of channel with channel_id")
     
     if not channel_id_check(channel_id):
         raise InputError('Channel ID is not a valid channel')
+
+    if not channel_member_check(channel_id, token):
+        raise AccessError("Authorised user is not a member of channel with channel_id")
     
     now = datetime.datetime.utcnow()
     currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
