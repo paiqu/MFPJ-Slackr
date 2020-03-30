@@ -23,7 +23,7 @@ import urllib.request
 import urllib.parse
 import pytest
 from data import DATA
-from error import InputError
+
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
