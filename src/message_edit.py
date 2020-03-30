@@ -50,6 +50,10 @@ def message_edit(token, message_id, message):
     if target_message['sender_id'] != token_to_uid(token) or is_owner == False:
         raise AccessError("Unauthorised user try to edit")
      
-    target_message['message_content'] = message
+    if message == '':
+        # empty string, delete message
+         messages.remove(target_message)
+    else:
+        # update
+        target_message['message_content'] = message
     return {}
-     
