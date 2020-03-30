@@ -1,12 +1,12 @@
 # may need a function to transfer token to u_id
 class User:
-    def __init__(self, u_id, email, name_first, name_last, handle):
+    def __init__(self, u_id, email, name_first, name_last):
         self.u_id = u_id
         self.email = email
         self.password = ''
         self.name_first = name_first
         self.name_last = name_last
-        self.handle = handle
+        self.handle = ""
         self.global_permission= 2
         self.is_slack_owner = False
         self.is_login = False
