@@ -13,11 +13,11 @@ def sethandle():
     '''function for route of user sethandle'''
     store = request.get_json()
     token = store['token']
-    handle_str = store['handle_str']
+    handle = store['handle']
 
-    return dumps(user_sethandle(token, handle_str))
+    return dumps(user_sethandle(token, handle))
 
-def user_sethandle(token, handle_str):
+def user_sethandle(token, handle):
     '''
     Input Error:
         handle is not between 2 and 20 characters
@@ -26,13 +26,13 @@ def user_sethandle(token, handle_str):
     ASSUME: the token id is valid
     '''  
     DATA = getData()    
-    if  len(handle_str) < 2 or len(handle_str) > 20:
+    if  len(handle) < 2 or len(handle) > 20:
         raise InputError("Invalid handle")
     for user in DATA['users']:
-        if user.handle_str == handle_str:
+        if user['handle'] == handle:
             raise InputError("Handle has been used")
 
     for user in DATA['users']:
-        if user.u_id == token_to_uid(token):
-            user.handle_str == handle_str
+        if user['u_id'] == token_to_uid(token):
+            user['handle'] = handle
     return {}

@@ -29,10 +29,10 @@ def user_setemail(token, email):
     if check_email == False:
         raise InputError("Invalid email")
     for user in DATA['users']:
-        if user.email == email:
+        if user['email'] == email:
             raise InputError("Email has been used by another user")
   
     for user in DATA['users']:
-        if user.u_id == token_to_uid(token):
-            user.email == email
+        if user['u_id'] == token_to_uid(token):
+            user['email'] = email
     return {}
