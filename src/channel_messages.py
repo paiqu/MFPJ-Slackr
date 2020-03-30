@@ -29,7 +29,7 @@ def channel_messages(token, channel_id, start):
     channels = DATA['channels']
     messages = DATA['messages']
     reacts = DATA['reacts']
-    
+    '''
     users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop')))
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
@@ -37,7 +37,7 @@ def channel_messages(token, channel_id, start):
     messages.append(vars(Message(message_content = 'first', message_id = 1, channel_id = 1, sender_id = 1, time = 1231)))
     messages.append(vars(Message(message_content = 'second', message_id = 2, channel_id = 1, sender_id = 1, time = 1231)))
     messages.append(vars(Message(message_content = 'third', message_id = 3, channel_id = 1, sender_id = 1, time = 1231)))
-    
+    '''
     
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
