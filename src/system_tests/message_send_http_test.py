@@ -22,7 +22,6 @@ import urllib.parse
 import pytest
 from data import DATA
 
-
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
@@ -94,8 +93,8 @@ def register_and_login_user_2():
     
     # Login
     login_info = dumps({
-        'email': 'Xinleizhang2017',
-        'password': 'Zxl010128'
+        'email': 'z1234567@unsw.edu.au',
+        'password': 'Xinleizhang2017'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -117,27 +116,6 @@ def create_public_channel():
         'token': user_1_token,
         'name': 'publicchannel',
         'is_public': True
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
-    payload = load(urllib.request.urlopen(req))
-    return payload
-
-@pytest.fixture
-def create_private_channel():
-    # Create public channel 
-
-    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    channel_info = dumps({
-        'token': user_1_token,
-        'name': 'privatechannel',
-        'is_public': False
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -176,5 +154,84 @@ def test_message_send(register_and_login_user_1, create_public_channel):
         method='POST'
     )
     payload = load(urllib.request.urlopen(req))
-
     assert payload['message_id'] == 1
+
+    # send message again
+    message_info2 = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'message': 'hello'
+    }).encode('utf-8')
+
+    req2 = urllib.request.Request(
+        f'{BASE_URL}/message/send',
+        data=message_info2,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    payload2 = load(urllib.request.urlopen(req2))
+    assert payload2['message_id'] == 2
+
+
+def test_message_send_inputerror(register_and_login_user_1, create_public_channel):
+    
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+    response2 = create_public_channel
+    assert response2['channel_id'] == 1
+
+    # send message
+    message_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'message': 'h'*1001
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/send',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
+def test_message_send_accesserror(register_and_login_user_1, create_public_channel, register_and_login_user_2):
+    
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+
+    response = register_and_login_user_1
+    
+    assert response['u_id'] == 1
+    assert isinstance(response['token'], str)
+    assert response['token'] == user_1_token
+
+    response2 = create_public_channel
+    assert response2['channel_id'] == 1
+
+    response3 = register_and_login_user_2
+    assert response3['u_id'] == 2
+    assert isinstance(response3['token'], str)
+    assert response3['token'] == user_2_token
+
+    # send message
+    message_info = dumps({
+        'token': user_2_token,
+        'channel_id': 1,
+        'message': 'hello'
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/send',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
