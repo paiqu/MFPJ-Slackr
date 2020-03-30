@@ -17,12 +17,12 @@ def request_get():
     info = request.get_json()
     token = info['token']
     channel_id = int(info['channel_id'])
-    message = info['message_content']
-    time_send = int(info['time_send'])
+    message = info['message']
+    time_sent = int(info['time_sent'])
      
-    return dumps(message_sendlater(token, channel_id, message, time_send))
+    return dumps(message_sendlater(token, channel_id, message, time_sent))
 
-def message_sendlater(token, channel_id, message, time_send):
+def message_sendlater(token, channel_id, message, time_sent):
     ''' Send a message from authorised_user to the channel specified by channel_id'''
     DATA = getData()
     users = DATA['users']
@@ -49,7 +49,7 @@ def message_sendlater(token, channel_id, message, time_send):
     now = datetime.datetime.utcnow()
     currenttime = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
     
-    if time_send < int(currenttime):
+    if time_sent < int(currenttime):
         raise InputError('Time sent is a time in the past')
     
     DATA['messages_count'] += 1
@@ -57,14 +57,14 @@ def message_sendlater(token, channel_id, message, time_send):
     
     u_id = token_to_uid(token)
 
-    def message_send(message, message_id, channel_id, u_id, time_send):
+    def message_send(message, message_id, channel_id, u_id, time_sent):
         DATA = getData()
         messages = DATA['messages']       
-        messages.append(vars(Message(message, message_id, channel_id, u_id, time_send)))
+        messages.append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
         
     # set a time to run this function
-    time_diffrence = time_send - currenttime
-    timer = threading.Timer(time_diffrence, message_send, args=(message, message_id, channel_id, u_id, time_send))
+    time_diffrence = time_sent - currenttime
+    timer = threading.Timer(time_diffrence, message_send, args=(message, message_id, channel_id, u_id, time_sent))
     timer.start()
     
     returnvalue = {}
