@@ -24,5 +24,16 @@ def users_all(token):
 
     DATA = getData()
     users = DATA['users']
+    new_list = []
+    for user in DATA['users']:
+        new_dict = {}
+        new_dict['u_id'] = user['u_id']
+        new_dict['email'] = user['email']
+        new_dict['name_first'] = user['name_first']
+        new_dict['name_last'] = user['name_last']
+        new_dict['handle'] = user['handle']
+        new_list.append(new_dict)
       
-    return users
+    return_dict = {}        
+    return_dict['users'] = new_list
+    return return_dict
