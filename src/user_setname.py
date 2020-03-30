@@ -32,7 +32,7 @@ def user_setname(token, name_first, name_last):
     DATA = getData()
     
     for user in DATA['users']:
-        if user.u_id == token_to_uid(token):
-            user.name_first == name_first
-            user.name_last == name_last
+        if user['u_id'] == token_to_uid(token):
+            user['name_first'] == name_first
+            user['name_last'] == name_last
     return {}
