@@ -125,5 +125,7 @@ def test_user_all(register_and_login_user_1_2):
     assert payload['users'][1]['name_last'] == 'Peteer'
     assert payload['users'][1]['handle'] == 'petepeteer'
 
+    assert len(payload['users']) == 2
+
     
     
