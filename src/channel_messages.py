@@ -42,7 +42,7 @@ def channel_messages(token, channel_id, start):
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
 
-    if start > len(DATA['messages']):
+    if start >= len(DATA['messages']):
         raise InputError("Invalid start")
         
     if not channel_member_check(channel_id, token):
@@ -89,12 +89,17 @@ def channel_messages(token, channel_id, start):
     # formate output {messages, start, end}
     out_dict = {}
     messages_list.reverse()
-    out_dict['messages'] = messages_list[0:50]
-    out_dict['start'] = start
     
-    if not start + 50 < len(messages_list):
+    if 50 < len(messages_list):
+        out_dict['messages'] = messages_list
+        out_dict['start'] = start
         out_dict['end'] = -1
     else: 
-        out_dict['end'] = start + 50   
-    
+        new_list = []
+        for i in range(50):
+            new_list.append(messages_list[i + start])
+        out_dict['message'] = new_list 
+        out_dict['start'] = start
+        out_dict['end'] = start + 50
     return out_dict
+

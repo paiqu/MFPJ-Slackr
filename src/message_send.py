@@ -1,9 +1,9 @@
 '''Route implementation for message_send'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import token_to_uid
+from check_functions import token_to_uid, channel_member_check
 from error import InputError, AccessError
-from data import DATA, getData
+from data import DATA, getData, MESSAGE_COUNT
 import time, datetime
 from class_file import User, Channel, Message
 
@@ -24,8 +24,8 @@ def message_send(token, channel_id, message):
 
     DATA = getData()
     users = DATA['users']
-    messages = DATA['messages']   
     channels = DATA['channels']
+    messages = DATA['messages']   
     
     '''
     self check functions 
@@ -38,36 +38,21 @@ def message_send(token, channel_id, message):
     if(len(message) > 1000):
         raise InputError('invalid message content')
     
-    is_member = False
-    for user in users:
-        if user['u_id'] == token_to_uid(token):
-            target_member = user
-            
-    for channel in channels:
-        if channel['channel_id'] == channel_id:
-            global find_channel
-            find_channel = channel
-            
-    for member in find_channel['members']:
-        if member['u_id'] ==  target_member['u_id']:
-            is_member = True
-    
-    if is_member == False:
+    if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
     
-    
-    # get message_id  
+    # get message_id
     DATA['messages_count'] += 1
     message_id = DATA['messages_count']
     
     # get current time and send message
     now = datetime.datetime.utcnow()
     current_time = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
-    target_message = vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time)))
-    DATA['messages'].append(target_message)
+    messages.append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
     
     return returnvalue
+
 
