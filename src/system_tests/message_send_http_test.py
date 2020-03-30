@@ -4,7 +4,7 @@ This file is HTTP test for message_send (POST)
 Parameter: (token, channel_id, message)
 Return: {message_id}
 
-Steps to test user_profile:
+Steps to test message_send:
     1. Register a user
     2. The user login to the server
     3. create a channel
