@@ -63,5 +63,5 @@ def channels_create(token, name, is_public):
     return_dict['channel_id'] = channel_id
     
 
-    return return_dict
+    return channels
     

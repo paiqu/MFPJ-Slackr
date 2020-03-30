@@ -13,7 +13,7 @@ def leave():
     '''function for route channle/leave'''
     info = request.get_json()
     token = info['token']
-    channel_id = info['channel_id']
+    channel_id = int(info['channel_id'])
     #channel_id = request.form.get('channnel_id')
 
     channel_leave(token, channel_id)
@@ -31,14 +31,13 @@ def channel_leave(token, channel_id):
 
     ASSUME: the token id is valid
     '''
-   
+    DATA = getData()
+ 
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
 
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
-
-    DATA = getData()
 
 
     for channel in DATA['channels']:

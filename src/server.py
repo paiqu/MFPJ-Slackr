@@ -6,6 +6,8 @@ from error import InputError
 from channels_create import CREATE
 from channel_addowner import ADDOWNER
 from channel_removeowner import RMVOWNER
+from channel_join import JOIN
+
 from class_file import User
 from auth_register_route import REGISTER 
 from auth_login import LOGIN 
@@ -36,6 +38,7 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
+from workspace_reset import WORKSPACERESET
 
 
 def defaultHandler(err):

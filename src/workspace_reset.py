@@ -4,11 +4,12 @@ from data import DATA
 
 
 
-RESET = Blueprint('workspace_reset', __name__)
+WORKSPACERESET = Blueprint('workspace_reset', __name__)
 
 @RESET.route('/workspace/reset', methods=['POST'])
 def reset():
     global DATA
+    
     DATA = {
         'users': [],
         'channels': [],
@@ -16,5 +17,6 @@ def reset():
         'reacts': [],
         'standups': []
     }
+    
 
     return dumps({})
