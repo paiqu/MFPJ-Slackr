@@ -20,7 +20,6 @@ import urllib.request
 import urllib.parse
 import pytest
 from data import DATA
-import requests
 
 PORT_NUMBER = '1231'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -72,13 +71,12 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def register_and_login_user_2():
-
     # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
-        'password': 'Xinleizhang2017',
-        'name_first': 'Matty',
-        'name_last': 'Zhang'
+        'password': 'Zxl010128',
+        'name_first': 'fir',
+        'name_last': 'fox'
     }).encode('utf-8')
 
 
@@ -93,8 +91,8 @@ def register_and_login_user_2():
     
     # Login
     login_info = dumps({
-        'email': 'z1234567@unsw.edu.au',
-        'password': 'Xinleizhang2017'
+        'email': 'z5237609@unsw.edu.au',
+        'password': 'Zxl010128'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -107,14 +105,15 @@ def register_and_login_user_2():
     payload = load(urllib.request.urlopen(req))
     return payload
 
+
 @pytest.fixture
-def user_1_create_channel():
+def create_public_channel():
     # Create public channel 
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     channel_info = dumps({
         'token': user_1_token,
-        'name': '1st channel',
+        'name': 'publicchannel',
         'is_public': True
     }).encode('utf-8')
 
@@ -128,39 +127,19 @@ def user_1_create_channel():
     payload = load(urllib.request.urlopen(req))
     return payload
 
-@pytest.fixture  
-def user_2_create_channel():
-    # Create public channel 
-
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    channel_info = dumps({
-        'token': user_2_token,
-        'name': '2nd channel',
-        'is_public': True
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
-    payload = load(urllib.request.urlopen(req))
-    return payload
 
     
-def channel_list_httptest(register_and_login_user_1, register_and_login_user_2, user_1_create_channel,  user_2_create_channel):
-    user_1 = setup_user_and_channel
+def test_only_one_channel((register_and_login_user_1, create_public_channel):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     queryString = urllib.parse.urlencode({
-        'token' : user_1['token'],
+        'token' : user_1_token,
     })
 
-    payload = json.load(urllib.request.urlopen(f"{BASE_URL}/channels/list?{queryString}"))
+    payload = json.load(urllib.request.urlopen(f"{BASE_URL}/channels/listall?{queryString}"))
     
     assert payload['channels'][0]['channel_id'] == 1
-    assert payload['channels'][0]['channel_name'] == '1st channel'
-    assert payload['channels'][1]['channel_id'] == 2
-    assert payload['channels'][1]['channel_name'] == '2st channel'
+    assert payload['channels'][0]['channel_name'] == 'publicchannel'
+    
+def test_two_channels_created_by_diff_users():
 
 
