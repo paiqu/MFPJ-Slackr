@@ -14,8 +14,8 @@ def request_get():
     '''request get for route message send'''
     info = request.get_json()
     token = info['token']
-    channel_id = info['channel_id']
-    message = info['message']
+    channel_id = int(info['channel_id'])
+    message = str(info['message'])
 
     return dumps(message_send(token, channel_id, message))
 
@@ -37,10 +37,10 @@ def message_send(token, channel_id, message):
     
     if(len(message) > 1000):
         raise InputError('invalid message content')
-    
+    '''
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
-    
+    '''
     # get message_id
     DATA['messages_count'] += 1
     message_id = DATA['messages_count']
@@ -48,7 +48,7 @@ def message_send(token, channel_id, message):
     # get current time and send message
     now = datetime.datetime.utcnow()
     current_time = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
-    messages.append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
+    DATA['messages'].append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
