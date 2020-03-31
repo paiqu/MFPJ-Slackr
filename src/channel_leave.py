@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from check_functions import channel_id_check, channel_member_check, token_to_uid
 from error import InputError, AccessError
 
-from data import DATA, getData
+from data import getData
 
 LEAVE = Blueprint('leave', __name__)
 
@@ -32,7 +32,7 @@ def channel_leave(token, channel_id):
     ASSUME: the token id is valid
     '''
     DATA = getData()
- 
+
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
 

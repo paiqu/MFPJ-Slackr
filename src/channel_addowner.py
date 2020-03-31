@@ -1,9 +1,11 @@
+'''
+Route implementation for channel/join
+'''
 from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, token_to_uid
 from error import InputError, AccessError
-from class_file import User
-from data import DATA, getData
+from data import getData
 
 ADDOWNER = Blueprint('channel_addowner', __name__)
 
@@ -18,20 +20,21 @@ def addowner():
     return dumps(channel_addowner(token, channel_id, u_id))
 
 def channel_addowner(token, channel_id, u_id):
+    ''' function to add an owner to channel'''
     if not channel_id_check(channel_id):
         raise InputError("Channel ID is not a valid channel")
 
-    global DATA
+    DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
-    
+
     for user in users:
         if user['u_id'] == token_to_uid(token):
             function_caller = user
-        
+
         if user['u_id'] == u_id:
             target_user = user
-    
+
     for channel in channels:
         if channel['channel_id'] == channel_id:
             target_channel = channel
@@ -45,7 +48,7 @@ def channel_addowner(token, channel_id, u_id):
     if target_user in owners:
         raise InputError('User with u_id is already an owner of the channel')
 
-    
+
     owners.append(target_user)
 
     return {}

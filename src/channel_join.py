@@ -1,9 +1,11 @@
+'''
+Route implementation for channel/join
+'''
 from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, token_to_uid
 from error import InputError, AccessError
-from class_file import User
-from data import DATA, getData
+from data import getData
 
 JOIN = Blueprint('channel_join', __name__)
 
@@ -24,7 +26,7 @@ def channel_join(token, channel_id):
 
     if not channel_id_check(channel_id):
         raise InputError("Channel ID is not a valid channel")
-    
+
 
     DATA = getData()
     users = DATA['users']
@@ -37,12 +39,12 @@ def channel_join(token, channel_id):
     for channel in channels:
         if channel['channel_id'] == channel_id:
             target_channel = channel
-    
+
     owners = target_channel['owners']
 
     if target_user in target_channel['members']:
         raise AccessError("The user is already a memeber in this channel")
-    
+
     if (not target_user['is_slack_owner']) and (target_user not in owners) and (not target_channel['is_public']):
         raise AccessError("A user who is not a owner of channel or owner of slackr cannot join a private channel")
 
@@ -50,4 +52,3 @@ def channel_join(token, channel_id):
     members.append(target_user)
 
     return {}
-

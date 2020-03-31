@@ -22,6 +22,10 @@ def request_get():
      
     return dumps(message_sendlater(token, channel_id, message, time_sent))
 
+def message_send(message, message_id, channel_id, u_id, time_sent):
+    DATA = getData()      
+    DATA['messages'].append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
+        
 def message_sendlater(token, channel_id, message, time_sent):
     ''' Send a message from authorised_user to the channel specified by channel_id'''
     DATA = getData()
@@ -57,10 +61,6 @@ def message_sendlater(token, channel_id, message, time_sent):
     
     u_id = token_to_uid(token)
 
-    def message_send(message, message_id, channel_id, u_id, time_sent):
-        DATA = getData()      
-        DATA['messages'].append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
-        
     # set a time to run this function
     time_diffrence = time_sent - currenttime
     timer = threading.Timer(time_diffrence, message_send, args=(message, message_id, channel_id, u_id, time_sent))

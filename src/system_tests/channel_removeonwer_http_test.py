@@ -1,22 +1,16 @@
 '''
-This file is HTTP test for channel/leave (POST)
-
-Parameter: (token, name, channel_id)
-Return: {}
-
-Always reset workspace when testing!!!!!!!!
-
-Steps to test channel/leave:
-    1. Register two users: user_1 and user_2
-    2. Both users login to the server
-    3. the user_1 create a channel (public)
-    4. user_2 join user_1's public channel
-    4. Time to Test:
-        1. user_2 leave user_1's channel
+Steps to test channel/removeowner:
+    1. register and login two users: user_1 and user_2
+    2. user_1 creates a channel
+    3. user_2 joins the channel
+    3. Test:
+        1. user_1 remove user_2 from channel
         2. Input Error:
-            invalid channel_id
-        2. Access Error:
-            user_2 has not joined user_1's channel
+            1. invalid channel id
+            2. user_2 is not an owner
+        3. Access Error:
+            1. when owner is not an owner of slakr,
+                or an owner of this channel.
 '''
 
 import sys
@@ -109,10 +103,9 @@ def register_and_login_user_1_and_2():
     load(urllib.request.urlopen(req))
     #return payload
 
-
-def test_leave_success(register_and_login_user_1_and_2):
+def test_remove_user_2_from_owner(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     # user_1 creates a public channel
     channel_info = dumps({
@@ -130,41 +123,42 @@ def test_leave_success(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     load(urllib.request.urlopen(req))
 
-    # user_2 now leaves user_1's channel
-    leave_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     payload = load(urllib.request.urlopen(req))
-
     assert payload == {}
 
-def test_for_invalid_channel_id(register_and_login_user_1_and_2):
+def test_invalid_channel_id(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     # user_1 creates a public channel
     channel_info = dumps({
@@ -182,31 +176,32 @@ def test_for_invalid_channel_id(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    # user_1 add user_2 as an owner
+    addowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/addowner',
+        data=addowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     load(urllib.request.urlopen(req))
 
-    # user_2 leave a channel with invalid channel_id
-
-    leave_info = dumps({
-        'token': user_2_token,
-        'channel_id': 40
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 133,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
@@ -214,7 +209,47 @@ def test_for_invalid_channel_id(register_and_login_user_1_and_2):
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_for_access_error(register_and_login_user_1_and_2):
+
+def test_not_owner(register_and_login_user_1_and_2):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+
+    # user_1 creates a public channel
+    channel_info = dumps({
+        'token': user_1_token,
+        'name': 'a channel',
+        'is_public': True
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channels/create',
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    load(urllib.request.urlopen(req))
+
+    # user_1 removes user_2 from owners
+    removeowner_info = dumps({
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
+
+
+def test_access_error(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
@@ -234,15 +269,17 @@ def test_for_access_error(register_and_login_user_1_and_2):
 
     load(urllib.request.urlopen(req))
 
-    # user_2 leaves channel before joining it
-    leave_info = dumps({
+
+    # user_2 removes user_21 from owners
+    removeowner_info = dumps({
         'token': user_2_token,
-        'channel_id': 1
+        'channel_id': 1,
+        'u_id': 1
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
+        f'{BASE_URL}/channel/removeowner',
+        data=removeowner_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
