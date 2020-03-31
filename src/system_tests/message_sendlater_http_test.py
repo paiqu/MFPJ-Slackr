@@ -302,8 +302,14 @@ def test_message_sendlater(register_and_login_user_1, create_public_channel):
     assert payload['message_id'] == 1
 
     def message_check():
-        DATA = getData()
-        assert len(DATA['messages']) == 1
+        # Get search
+        queryString = urllib.parse.urlencode({
+            'token' : user_1_token,
+            'query_str' : 'hello'
+        })
+        payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
+    
+        assert len(payload['messages']) == 1
         
     # set a time to run this function
     timer2 = threading.Timer(senttime - currenttime + 5, message_check)
