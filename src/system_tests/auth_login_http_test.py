@@ -15,8 +15,15 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_a_user():
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
     register_info = dumps({
-        'email': 'alan@turing.com',
+        'email': 'z5209488@unsw.edu.au',
         'password': 'enigma',
         'name_first': 'Alan',
         'name_last': 'Turing'
@@ -44,7 +51,7 @@ def test_login_correct(register_a_user):
     assert response['token'] == user_1_token
 
     login_info = dumps({
-        'email': 'alan@turing.com',
+        'email': 'z5209488@unsw.edu.au',
         'password': 'enigma'
     }).encode('utf-8')
 
@@ -70,7 +77,7 @@ def invalid_email_test(register_a_user):
 
     login_info = dumps({
         # Missing the @ symbol to test log in 
-        'email': 'alanturing.com',
+        'email': 'z5209488unsw.edu.au',
         'password': 'enigma'
     }).encode('utf-8')
 
@@ -107,8 +114,9 @@ def nonuser_email_test(register_a_user):
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    with pytest.raises(InputError):
-        load(urllib.request.urlopen(req))
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
 
 def incorrect_password_test(register_a_user):
     '''
@@ -122,7 +130,7 @@ def incorrect_password_test(register_a_user):
     assert response['token'] == user_1_token
 
     login_info = dumps({
-        'email': 'alan@turing.com',
+        'email': 'z5209488@unsw.edu.au',
         'password': 'incorrectPassword'
     }).encode('utf-8')
 
@@ -132,5 +140,6 @@ def incorrect_password_test(register_a_user):
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    with pytest.raises(InputError):
-        load(urllib.request.urlopen(req))
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+

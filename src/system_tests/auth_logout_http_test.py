@@ -15,8 +15,15 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_login_aUser():
+    
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
     register_info = dumps({
-        'email': 'alan@turing.com',
+        'email': 'z5209488@unsw.edu.au',
         'password': 'enigma',
         'name_first': 'Alan',
         'name_last': 'Turing'
@@ -32,8 +39,8 @@ def register_login_aUser():
     load(urllib.request.urlopen(req))
 
     login_info = dumps({
-        'email': 'z1234567@unsw.edu.au',
-        'password': 'thisisaPassword'
+        'email': 'z5209488@unsw.edu.au',
+        'password': 'enigma'
     }).encode('utf-8')
 
     req = urllib.request.Request(
