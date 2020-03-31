@@ -55,6 +55,7 @@ def register_and_user_1_2():
     load(urllib.request.urlopen(req))
 
 def test_login_basic(register_and_user_1_2):
+    
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword',
