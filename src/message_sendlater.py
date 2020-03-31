@@ -58,9 +58,8 @@ def message_sendlater(token, channel_id, message, time_sent):
     u_id = token_to_uid(token)
 
     def message_send(message, message_id, channel_id, u_id, time_sent):
-        DATA = getData()
-        messages = DATA['messages']       
-        messages.append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
+        DATA = getData()      
+        DATA['messages'].append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
         
     # set a time to run this function
     time_diffrence = time_sent - currenttime

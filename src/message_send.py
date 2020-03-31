@@ -14,7 +14,7 @@ def request_get():
     '''request get for route message send'''
     info = request.get_json()
     token = info['token']
-    channel_id = info['channel_id']
+    channel_id = int(info['channel_id'])
     message = info['message']
 
     return dumps(message_send(token, channel_id, message))
@@ -48,7 +48,7 @@ def message_send(token, channel_id, message):
     # get current time and send message
     now = datetime.datetime.utcnow()
     current_time = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
-    messages.append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
+    DATA['messages'].append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
     
     returnvalue = {}
     returnvalue['message_id'] = message_id
