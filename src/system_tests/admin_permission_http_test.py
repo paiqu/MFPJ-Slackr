@@ -9,7 +9,7 @@ from error import InputError
 import requests
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5444'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
@@ -43,7 +43,7 @@ def register_loginx2_create_invite():
     
     # REGISTER user_2
     register_info_2 = dumps({
-        'email': 'z5432455',
+        'email': 'z5432455@unsw.edu.au',
         'password': 'lovepassword',
         'name_first': 'Ada',
         'name_last': 'Lovelace'
@@ -71,10 +71,11 @@ def register_loginx2_create_invite():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
+    load(urllib.request.urlopen(req))
 
     # Login user_2
     login_info = dumps({
-        'email': 'z5432455',
+        'email': 'z5432455@unsw.edu.au',
         'password': 'lovepassword'
     }).encode('utf-8')
 
@@ -121,15 +122,15 @@ def register_loginx2_create_invite():
         method='POST'
     )
 
-    payload = load(urllib.request.urlopen(req))
+    load(urllib.request.urlopen(req))
 
-def correct_admin_permission_test(register_loginx2_create_invite):
+def test_correct_admin_permission(register_loginx2_create_invite):
     '''
     This http test should pass
     '''
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     #Requests channel details
     admin_permssion = dumps({
@@ -144,19 +145,25 @@ def correct_admin_permission_test(register_loginx2_create_invite):
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
+    
+    payload = load(urllib.request.urlopen(req))
 
+    '''
     global DATA
     users = DATA['users']
+    user_1 = users[0]
     user_2 = users[1]
-    assert user_1.permission_id == 1
+    assert user_2.permission_id == 1
+    '''
+    assert payload == {}
+    
 
-
-def invalid_userID_test(register_loginx2_create_invite):
+def test_invalid_userID(register_loginx2_create_invite):
     '''
     u_id does not refer to a valid user
     '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     #Requests channel details
     admin_permssion = dumps({
@@ -175,7 +182,7 @@ def invalid_userID_test(register_loginx2_create_invite):
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def invalid_permissionID_test(register_loginx2_create_invite):
+def test_invalid_permissionID(register_loginx2_create_invite):
     '''
     permission_id does not refer to a value permission
     '''
@@ -200,7 +207,7 @@ def invalid_permissionID_test(register_loginx2_create_invite):
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def unauthorised_user_test(register_loginx2_create_invite):
+def test_unauthorised_user(register_loginx2_create_invite):
     '''
     The authorised user is not an owner
     '''

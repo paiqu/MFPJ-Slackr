@@ -9,7 +9,7 @@ from error import InputError
 import requests
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5444'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
@@ -43,7 +43,7 @@ def register_loginx2_create_invite():
     
     # REGISTER user_2
     register_info_2 = dumps({
-        'email': 'z5432455',
+        'email': 'z5432455@unsw.edu.au',
         'password': 'lovepassword',
         'name_first': 'Ada',
         'name_last': 'Lovelace'
@@ -74,7 +74,7 @@ def register_loginx2_create_invite():
 
     # Login user_2
     login_info = dumps({
-        'email': 'z5432455',
+        'email': 'z5432455@unsw.edu.au',
         'password': 'lovepassword'
     }).encode('utf-8')
 
@@ -128,14 +128,17 @@ def test_details_basic(register_loginx2_create_invite):
     This test should pass with no issues
     '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     #Requests channel details
-    channel_details = dumps({
+
+    queryString = urllib.parse.urlencode({
         'token': user_1_token,
         'channel_id': 1,
-    }).encode('utf-8')
+    })
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/details?{queryString}"))
 
+    '''
     req = urllib.request.Request(
         f'{BASE_URL}/channel/details',
         data=channel_details,
@@ -144,11 +147,11 @@ def test_details_basic(register_loginx2_create_invite):
     )
 
     payload = load(urllib.request.urlopen(req))
-    
-    assert payload['channel']['name'] == 'a channel'
-    assert payload['channel']['owner_members'] == [{"u_id": 1, "name_first": "Alan", "name_last": "Turing"}]
+    '''
+    assert payload['name'] == 'a channel'
+    assert payload['owner_members'] == [{"u_id": 1, "name_first": "Alan", "name_last": "Turing"}]
 
-def invalid_channelID_test(register_loginx2_create_invite):
+def test_invalid_channelID(register_loginx2_create_invite):
     '''
     Channel ID is not a valid channel
     '''
@@ -168,13 +171,15 @@ def invalid_channelID_test(register_loginx2_create_invite):
         headers={'Content-Type': 'application/json'},
         method='GET'
     )
-
+    '''
     payload = load(urllib.request.urlopen(req))
-    
+    '''
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
-
-def unauthorised_user_test(register_loginx2_create_invite):
+        
+        load(urllib.request.urlopen(req))
+        #urllib.request.urlopen(req)
+        
+def test_unauthorised_user(register_loginx2_create_invite):
     '''
     Authorised user is not a member of channel with channel_id
     '''
