@@ -108,7 +108,7 @@ def register_loginx2_create_invite():
     load(urllib.request.urlopen(req))
 
     # user_2 join user_1's channel
-    join_info = dumps({
+    invite_info = dumps({
         'token': user_1_token,
         'channel_id': 1,
         'u_id': 2
@@ -116,7 +116,7 @@ def register_loginx2_create_invite():
 
     req = urllib.request.Request(
         f'{BASE_URL}/channel/invite',
-        data=join_info,
+        data=invite_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )

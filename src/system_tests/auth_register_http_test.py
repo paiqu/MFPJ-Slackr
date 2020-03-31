@@ -5,8 +5,7 @@ import urllib.request
 import urllib.parse
 import pytest
 from data import DATA
-from error import InputError
-import requests
+
 
 
 PORT_NUMBER = '5321'
@@ -39,19 +38,19 @@ def test_basic():
 
     payload = load(urllib.request.urlopen(req))
 
+    assert payload['u_id'] == 1
+
+    '''
+    assert payload['token'] == 
     global DATA
     users = DATA['users']
     user_1 = users[0]
-
-    assert user_1.email == 'z5555555@unsw.edu.au'
-    assert user_1.password == 'enigma'
-    assert user_1.name_first == 'Alan'
-    assert user_1.name_last == 'Turing'
+    '''
 
 
 def invalid_email_test():
     '''
-    Email entered is not a valid email 
+    Email entered is not a valid email
     '''
     # Register a User 
     register_info = dumps({
@@ -68,7 +67,7 @@ def invalid_email_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
@@ -101,13 +100,13 @@ def email_used_test():
 
     req2 = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data=register_info,
+        data=register_info2,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
+        urllib.request.urlopen(req2)
 
 
 def short_password_test():
@@ -158,7 +157,7 @@ def short_fname_test():
 
 def long_fname_test():
     '''
-    first name is too long 
+    first name is too long
     name_first not is between 1 and 50 characters inclusive in length
     '''
     register_info = dumps({
@@ -178,7 +177,6 @@ def long_fname_test():
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-    
 def short_lname_test():
     '''
     last name is too short
