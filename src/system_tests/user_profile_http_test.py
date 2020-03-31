@@ -110,4 +110,3 @@ def test_user_profile_inputerror(register_and_login_user_1):
     
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(f"{BASE_URL}/user/profile?{queryString}")
-
