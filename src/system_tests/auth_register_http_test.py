@@ -22,6 +22,7 @@ def test_basic():
     )
     
     load(urllib.request.urlopen(req))
+
     # Register a User 
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
@@ -53,6 +54,15 @@ def invalid_email_test():
     '''
     Email entered is not a valid email
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
+
     # Register a User 
     register_info = dumps({
         #email is missing @ sign 
@@ -77,6 +87,14 @@ def email_used_test():
     '''
     Email address is already being used by another user
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
 
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
@@ -91,7 +109,7 @@ def email_used_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-
+    load(urllib.request.urlopen(req))
     register_info2 = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',
@@ -114,8 +132,16 @@ def short_password_test():
     '''
     Password entered is less than 6 characters long
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
 
-    register_info = dumps({
+    register_info1 = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'chris',
         'name_first': 'Alan',
@@ -124,7 +150,7 @@ def short_password_test():
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data=register_info,
+        data=register_info1,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
@@ -138,6 +164,15 @@ def short_fname_test():
     first name is too short
     name_first not is between 1 and 50 characters inclusive in length
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
+
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',
@@ -161,6 +196,15 @@ def long_fname_test():
     first name is too long
     name_first not is between 1 and 50 characters inclusive in length
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
+
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',
@@ -183,6 +227,15 @@ def short_lname_test():
     last name is too short
     name_first not is between 1 and 50 characters inclusive in length
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
+
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',
@@ -206,6 +259,15 @@ def long_lname_test():
     last name is too long 
     name_first not is between 1 and 50 characters inclusive in length
     '''
+    # RESET
+    req = urllib.request.Request(
+        f'{BASE_URL}/workspace/reset',
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    load(urllib.request.urlopen(req))
+
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',

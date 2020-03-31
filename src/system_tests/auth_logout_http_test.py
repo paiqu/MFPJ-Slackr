@@ -1,3 +1,6 @@
+'''
+
+'''
 import sys
 sys.path.append('..')
 from json import load, dumps
@@ -5,42 +8,43 @@ import urllib.request
 import urllib.parse
 import pytest
 from data import DATA
-from error import InputError
-import requests
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5444'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
-#BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
-def register_login_aUser():
-    
+def register_and_user_login_1_2():
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
+
+    load(urllib.request.urlopen(req))
+    
+    #REGISTER user_1
     register_info = dumps({
-        'email': 'z5209488@unsw.edu.au',
-        'password': 'enigma',
-        'name_first': 'Alan',
-        'name_last': 'Turing'
+        'email': 'z1234567@unsw.edu.au',
+        'password': 'thisisaPassword',
+        'name_first': 'Xinlei',
+        'name_last': 'Matthew'
     }).encode('utf-8')
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data=register_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
+        data = register_info,
+        headers = {'Content-Type': 'application/json'},
+        method = 'POST'
     )
 
     load(urllib.request.urlopen(req))
 
+    #LOGIN user_1    
     login_info = dumps({
-        'email': 'z5209488@unsw.edu.au',
-        'password': 'enigma'
+        'email': 'z1234567@unsw.edu.au',
+        'password': 'thisisaPassword'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -49,33 +53,23 @@ def register_login_aUser():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    payload = load(urllib.request.urlopen(req))
 
-    return payload
+    load(urllib.request.urlopen(req))
 
 
-def logout_correct():
+def test_logout_basic(register_and_user_login_1_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_login_aUser
+    
+    logout_info = dumps({
+        'token': user_1_token,
 
-    login_info = dumps({
-        'token': user_1_token
     }).encode('utf-8')
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/logout',
-        data=login_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
+        data = logout_info,
+        headers = {'Content-Type': 'application/json'},
+        method = 'POST'
     )
-
     payload = load(urllib.request.urlopen(req))
-
-    assert payload == {'is_success' : True}
-
-    global DATA
-    users = DATA['users']
-    user_1 = users[0]
-    assert user_1.is_login == False
-
-
+    assert payload['is_success'] == True
