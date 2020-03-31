@@ -217,7 +217,7 @@ def test_start_is_10_and_50_messages(register_and_login_user_1, create_public_ch
     
     assert len(payload['message']) == 50
     assert payload['end'] == 60  
-def invalid_channel_id(register_and_login_user_1, create_public_channel):
+def test_invalid_channel_id(register_and_login_user_1, create_public_channel):
     
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):
@@ -246,7 +246,7 @@ def invalid_channel_id(register_and_login_user_1, create_public_channel):
         urllib.request.urlopen(req)
     
 
-def invalid_start(register_and_login_user_1, create_public_channel):
+def test_invalid_start(register_and_login_user_1, create_public_channel):
     # start is greater than or equal to the total number of messages in the channel
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):
@@ -274,7 +274,7 @@ def invalid_start(register_and_login_user_1, create_public_channel):
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
         
-def unauthorised_user(register_and_login_user_1, create_public_channel):
+def test_unauthorised_user(register_and_login_user_1, create_public_channel):
     # Authorised user is not a member of channel with channel_id
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):

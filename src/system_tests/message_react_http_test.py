@@ -1,27 +1,29 @@
 '''
-This file is HTTP test for message/edit (PUT)
+This file is HTTP test for message/react (POST)
 
-Parameter: (token, message_id, message)
+Parameter: (token, message_id, react_id)
 Return: {}
 
 Always reset workspace when testing!!!!!!!!
 
-Steps to test channels/list:
-    1. setup user_1, channel and send message
-    2. Time to Test:
-        1. test update message with new texts
-        2. update with empty string, which will delete the msg
-        3. AccessError 
-            - Message with message_id was sent by the authorised user making this request
-            - The authorised user is an owner of this channel or the slackr
+Steps to test channel/leave:
+    1. Register user_1, login and create channel 
+    2. send user_1 send messages 
+    3. Time to Test:
+        1. test for react a message
+        2. Input Error:
+            -invalid message_id
+            -invalid react_id
+            -message already been reacted with react_id
 '''
+
 import sys
 sys.path.append('..')
 from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
+
 
 PORT_NUMBER = '1231'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -112,78 +114,99 @@ def send_messages():
     load(urllib.request.urlopen(req))
     return
 
-
-def test_update_message(register_and_login_user_1, create_public_channel, send_messages):
+def test_message_react(register_and_login_user_1, create_public_channel, send_messages):
+    
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     message_info = dumps({
         'token': user_1_token,
         'message_id': 1,
-        'message': 'been changed'
+        'react_id': 1
     }).encode('utf-8')
     
     req = urllib.request.Request(
-        f'{BASE_URL}/message/edit',
+        f'{BASE_URL}/message/react',
         data=message_info,
         headers={'Content-Type': 'application/json'},
-        method='PUT'
+        method='POST'
     )
     load(urllib.request.urlopen(req))
-    
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
-        'channel_id' : 1,
-        'start': 0,
+        'query_str' : 'hello'
     })
+    mess_info = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
+
     
-    payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
+    assert mess_info['messages'][0]['message_id'] == 1
+    assert len(mess_info['messages'][0]['reacts']) == 1
+    assert mess_info['messages'][0]['reacts'][0]['react_id'] == 1
 
-    assert payload['messages'][0]['message'] == 'been changed'
-    assert payload['messages'][0]['message_id'] == 1
-
-def test_blank_message(register_and_login_user_1, create_public_channel, send_messages):
+def test_invalid_message_id(register_and_login_user_1, create_public_channel, send_messages):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     message_info = dumps({
         'token': user_1_token,
-        'message_id': 1,
-        'message': ''
+        'message_id': 123123123,
+        'react_id': 1
     }).encode('utf-8')
     
     req = urllib.request.Request(
-        f'{BASE_URL}/message/edit',
+        f'{BASE_URL}/message/react',
         data=message_info,
         headers={'Content-Type': 'application/json'},
-        method='PUT'
+        method='POST'
     )
-    load(urllib.request.urlopen(req))
     
-    queryString = urllib.parse.urlencode({
-        'token' : user_1_token,
-        'channel_id' : 1,
-        'start': 0,
-    })
-    
-    payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
-
-    assert len(payload['messages']) == 0 
-def test_unauthorised_user_try_to_edit(register_and_login_user_1, create_public_channel, send_messages):
-    '''
-    - Message with message_id was sent by the authorised user making this request
-    - The authorised user is an owner of this channel or the slackr
-    '''
-    user_1_token = 'this is not a valid token'
-    message_info = dumps({
-        'token': user_1_token,
-        'message_id': 1,
-        'message': ''
-    }).encode('utf-8')
-    
-    req = urllib.request.Request(
-        f'{BASE_URL}/message/edit',
-        data=message_info,
-        headers={'Content-Type': 'application/json'},
-        method='PUT'
-    )
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
+
+def test_invalid_react_id(register_and_login_user_1, create_public_channel, send_messages):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    message_info = dumps({
+        'token': user_1_token,
+        'message_id': 1,
+        'react_id': 123123
+    }).encode('utf-8')
     
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/react',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req)
+
+def test_exist_react_id(register_and_login_user_1, create_public_channel, send_messages):
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    message_info = dumps({
+        'token': user_1_token,
+        'message_id': 1,
+        'react_id': 1
+    }).encode('utf-8')
+    
+    req = urllib.request.Request(
+        f'{BASE_URL}/message/react',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    load(urllib.request.urlopen(req))
+    
+    message_info = dumps({
+        'token': user_1_token,
+        'message_id': 1,
+        'react_id': 1
+    }).encode('utf-8')
+    
+    req_2 = urllib.request.Request(
+        f'{BASE_URL}/message/react',
+        data=message_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    
+    with pytest.raises(urllib.error.HTTPError):
+        urllib.request.urlopen(req_2) 
     
