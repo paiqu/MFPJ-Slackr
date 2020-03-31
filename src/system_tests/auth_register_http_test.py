@@ -21,6 +21,7 @@ def test_basic():
         method='POST'
     )
     
+    load(urllib.request.urlopen(req))
     # Register a User 
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
