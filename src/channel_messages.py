@@ -41,9 +41,6 @@ def channel_messages(token, channel_id, start):
     
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
-
-    if start > len(DATA['messages']):
-        raise InputError("Invalid start")
         
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
@@ -85,12 +82,14 @@ def channel_messages(token, channel_id, start):
             message_info['reacts'] = react_collect
             message_info['is_pinned'] = i['is_pin']
             messages_list.append(message_info)
-    
+
+    if start >= len(messages_list):
+        raise InputError("Invalid start")
     # formate output {messages, start, end}
     out_dict = {}
     messages_list.reverse()
     
-    if start + 50 > len(messages_list):
+    if 50 >= len(messages_list):
         out_dict['messages'] = messages_list
         out_dict['start'] = start
         out_dict['end'] = -1
