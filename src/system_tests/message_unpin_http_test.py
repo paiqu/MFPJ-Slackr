@@ -15,13 +15,13 @@ Steps to test message_unpin:
             Raise InputError when message is more than 1000 characters
             The authorised user has not joined the channel they are trying to post to
 '''
-import sys
-sys.path.append('..')
+
 from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA, getData
+import sys
+sys.path.append('..')
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -45,7 +45,6 @@ def register_and_login_user_1():
         'name_last': 'Zhang'
     }).encode('utf-8')
 
-
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
         data=register_info,
@@ -54,7 +53,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z5237609@unsw.edu.au',
@@ -82,7 +81,6 @@ def register_and_login_user_2():
         'name_last': 'Zhang'
     }).encode('utf-8')
 
-
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
         data=register_info,
@@ -91,7 +89,7 @@ def register_and_login_user_2():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -110,7 +108,7 @@ def register_and_login_user_2():
 
 @pytest.fixture
 def create_public_channel():
-    # Create public channel 
+    # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     channel_info = dumps({
@@ -131,7 +129,7 @@ def create_public_channel():
 
 @pytest.fixture
 def send_a_message():
-    # send a message 
+    # send a message
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     message_info = dumps({
@@ -150,10 +148,10 @@ def send_a_message():
     return payload
 
 def test_message_unpin_inputerror1(register_and_login_user_1, create_public_channel, send_a_message):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -192,10 +190,10 @@ def test_message_unpin_inputerror1(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req2)
 
 def test_message_unpin_inputerror2(register_and_login_user_1, create_public_channel, send_a_message):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -226,11 +224,11 @@ def test_message_unpin_inputerror2(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req)
 
 def test_message_unpin_inputerror3(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -274,7 +272,7 @@ def test_message_unpin_inputerror3(register_and_login_user_1, create_public_chan
     )
     load(urllib.request.urlopen(req2))
 
-    # user 2 unpin a message 
+    # user 2 unpin a message
     message_info2 = dumps({
         'token': user_2_token,
         'message_id': 1
@@ -291,11 +289,11 @@ def test_message_unpin_inputerror3(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req3)
 
 def test_message_unpin_accesserror(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -325,7 +323,7 @@ def test_message_unpin_accesserror(register_and_login_user_1, create_public_chan
     )
     load(urllib.request.urlopen(req2))
 
-    # user 2 unpin a message 
+    # user 2 unpin a message
     message_info2 = dumps({
         'token': user_2_token,
         'message_id': 1
@@ -342,10 +340,10 @@ def test_message_unpin_accesserror(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req)
 
 def test_message_pin(register_and_login_user_1, create_public_channel, send_a_message):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -375,7 +373,7 @@ def test_message_pin(register_and_login_user_1, create_public_channel, send_a_me
         'query_str' : 'hello'
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
-    
+
     assert len(payload['messages']) == 1
     assert payload['messages'][0]['is_pinned'] == True
 
@@ -398,6 +396,6 @@ def test_message_pin(register_and_login_user_1, create_public_channel, send_a_me
         'query_str' : 'hello'
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
-    
+
     assert len(payload['messages']) == 1
     assert payload['messages'][0]['is_pinned'] == False

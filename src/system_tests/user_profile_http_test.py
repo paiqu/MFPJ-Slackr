@@ -14,20 +14,21 @@ Steps to test user_profile:
         2. test fot Error:
             Raise InputError when u_id is not a valid user
 '''
-import sys
-sys.path.append('..')
 from json import load, dumps
 import urllib.request
 import urllib.parse
+import sys
+sys.path.append('..')
 import pytest
-from data import DATA
-
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    fixture for register login
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -54,7 +55,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z5237609@unsw.edu.au',
@@ -70,13 +71,15 @@ def register_and_login_user_1():
 
     payload = load(urllib.request.urlopen(req))
     return payload
-    
+
 
 def test_user_profile(register_and_login_user_1):
-
+    '''
+    test the normal case
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -87,17 +90,20 @@ def test_user_profile(register_and_login_user_1):
         'u_id' : 1
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/user/profile?{queryString}"))
-    
+
     assert payload['user']['u_id'] == 1
     assert payload['user']['email'] == 'z5237609@unsw.edu.au'
-    assert payload['user']['name_first'] == 'Xinlei'   
+    assert payload['user']['name_first'] == 'Xinlei'
     assert payload['user']['name_last'] == 'Zhang'
     assert payload['user']['handle_str'] == 'xinleizhang'
 
 def test_user_profile_inputerror(register_and_login_user_1):
+    '''
+    test the inputerror
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -107,6 +113,6 @@ def test_user_profile_inputerror(register_and_login_user_1):
         'token' : user_1_token,
         'u_id' : 2
     })
-    
+
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(f"{BASE_URL}/user/profile?{queryString}")
