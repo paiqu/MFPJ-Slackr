@@ -18,7 +18,7 @@ from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
+
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -51,7 +51,7 @@ def register_and_login_user_1_and_2():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # REGISTER user_2
     register_info_2 = dumps({
         'email': 'z7654321@unsw.edu.au',
@@ -69,7 +69,7 @@ def register_and_login_user_1_and_2():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login user_1
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -102,7 +102,7 @@ def register_and_login_user_1_and_2():
 def test_join_public(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    
+
     # user_1 creates a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -139,7 +139,7 @@ def test_join_public(register_and_login_user_1_and_2):
 def test_for_invalid_channel_id(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    
+
     # user_1 creates a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -176,7 +176,7 @@ def test_for_invalid_channel_id(register_and_login_user_1_and_2):
 def test_join_private_channel(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    
+
     # user_1 creates a public channel
     channel_info = dumps({
         'token': user_1_token,

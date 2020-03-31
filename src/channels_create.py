@@ -1,10 +1,13 @@
+'''
+Server implementation for channels/create
+'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check, token_to_uid
+from check_functions import token_to_uid
 from error import InputError
-from class_file import User, Channel
-from data import DATA, getData, CHANNELS_COUNT
-from token_functions import generate_token
+from class_file import Channel
+from data import getData
+
 
 CREATE = Blueprint('create', __name__)
 
@@ -16,30 +19,30 @@ def create():
     token = info['token']
     name = info['name']
     is_public = info['is_public']
-    
-    
+
+
     return dumps(channels_create(token, name, is_public))
 
 def channels_create(token, name, is_public):
     ''' function to create a channel'''
-    if(len(name) > 20):
+    if len(name) > 20:
         raise InputError('invalid channel name')
-    
+
     is_private = False
 
-    if is_public == True:
+    if is_public:
         is_private = False
-    elif is_public == False:
+    elif not is_public:
         is_private = True
 
     DATA = getData()
     users = DATA['users']
-    channels = DATA['channels']
+
 
     for user in users:
         if user['u_id'] == token_to_uid(token):
             target_user = user
-    
+
 
     DATA['channels_count'] += 1
 
@@ -56,6 +59,6 @@ def channels_create(token, name, is_public):
 
     return_dict = {}
     return_dict['channel_id'] = channel_id
-    
+
     return return_dict
     

@@ -22,7 +22,6 @@ from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
 
 
 PORT_NUMBER = '5204'
@@ -43,6 +42,7 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''register and login user'''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -69,7 +69,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -85,13 +85,13 @@ def register_and_login_user_1():
 
     payload = load(urllib.request.urlopen(req))
     return payload
-    
+
 
 def test_create_public_channel(register_and_login_user_1):
-
+    '''test to create a public channel'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -112,14 +112,14 @@ def test_create_public_channel(register_and_login_user_1):
     )
 
     payload = load(urllib.request.urlopen(req))
-    
+
     assert len(payload) == 1
     assert payload['channel_id'] == 1
 
 def test_create_private_channel(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -140,14 +140,14 @@ def test_create_private_channel(register_and_login_user_1):
     )
 
     payload = load(urllib.request.urlopen(req))
-    
+
     assert payload['channel_id'] == 1
 
 
 def test_error_long_name(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -169,9 +169,6 @@ def test_error_long_name(register_and_login_user_1):
 
     # with pytest.raises(InputError):
     #     load(urllib.request.urlopen(req))
-    
+
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
-
-
-        
