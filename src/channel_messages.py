@@ -29,7 +29,7 @@ def channel_messages(token, channel_id, start):
     channels = DATA['channels']
     messages = DATA['messages']
     reacts = DATA['reacts']
-    
+    '''
     users.append(vars(User(u_id=1, email='123@55.com', name_first='mike', name_last='cop')))
     channels.append(vars(Channel(channel_id = 1, channel_name = 'name')))
     channels[0]['members'].append(users[0])
@@ -37,13 +37,10 @@ def channel_messages(token, channel_id, start):
     messages.append(vars(Message(message_content = 'first', message_id = 1, channel_id = 1, sender_id = 1, time = 1231)))
     messages.append(vars(Message(message_content = 'second', message_id = 2, channel_id = 1, sender_id = 1, time = 1231)))
     messages.append(vars(Message(message_content = 'third', message_id = 3, channel_id = 1, sender_id = 1, time = 1231)))
-    
+    '''
     
     if not channel_id_check(channel_id):
         raise InputError("Invalid channel_id")
-
-    if start > len(DATA['messages']):
-        raise InputError("Invalid start")
         
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
@@ -85,17 +82,22 @@ def channel_messages(token, channel_id, start):
             message_info['reacts'] = react_collect
             message_info['is_pinned'] = i['is_pin']
             messages_list.append(message_info)
-    
+
+    if start >= len(messages_list) and len(messages_list) != 0:
+        raise InputError("Invalid start")
+        
     # formate output {messages, start, end}
     out_dict = {}
     messages_list.reverse()
-    out_dict['messages'] = messages_list
-    out_dict['start'] = start
+    new_list = messages_list[start:]
     
-    if start + 50 >= len(messages_list):
+    if 50 > len(new_list):
+        out_dict['messages'] = new_list
+        out_dict['start'] = start
         out_dict['end'] = -1
     else: 
-        out_dict['end'] = start + 50   
-    
-    
+        out_dict['messages'] = new_list[0:50]
+        out_dict['start'] = start
+        out_dict['end'] = start + 50
+          
     return out_dict

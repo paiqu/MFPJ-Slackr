@@ -12,7 +12,6 @@ ALL = Blueprint('users_all', __name__)
 def all():
     '''function for route of users all'''
     token = request.args.get('token')
-    u_id = request.args.get('u_id')
     return dumps(users_all(token))
    
 
@@ -24,5 +23,16 @@ def users_all(token):
 
     DATA = getData()
     users = DATA['users']
+    new_list = []
+    for user in DATA['users']:
+        new_dict = {}
+        new_dict['u_id'] = user['u_id']
+        new_dict['email'] = user['email']
+        new_dict['name_first'] = user['name_first']
+        new_dict['name_last'] = user['name_last']
+        new_dict['handle'] = user['handle']
+        new_list.append(new_dict)
       
-    return users
+    return_dict = {}        
+    return_dict['users'] = new_list
+    return return_dict
