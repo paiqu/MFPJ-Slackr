@@ -12,13 +12,13 @@ Steps to test search:
     5. test
         1. search successfully
 '''
-import sys
-sys.path.append('..')
+
 from json import load, dumps
 import urllib.request
 import urllib.parse
+import sys
+sys.path.append('..')
 import pytest
-from data import DATA, getData
 
 PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
@@ -51,7 +51,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z5237609@unsw.edu.au',
@@ -70,7 +70,7 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def create_public_channel():
-    # Create public channel 
+    # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     channel_info = dumps({
@@ -91,7 +91,7 @@ def create_public_channel():
 
 @pytest.fixture
 def create_private_channel():
-    # Create public channel 
+    # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     channel_info = dumps({
@@ -112,7 +112,7 @@ def create_private_channel():
 
 @pytest.fixture
 def send_a_message():
-    # send a message 
+    # send a message
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     message_info = dumps({
@@ -145,10 +145,10 @@ def send_a_message():
     return payload
 
 def test_search(register_and_login_user_1, create_public_channel, create_private_channel, send_a_message):
-    
+
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     assert response['u_id'] == 1
     assert isinstance(response['token'], str)
     assert response['token'] == user_1_token
@@ -168,7 +168,7 @@ def test_search(register_and_login_user_1, create_public_channel, create_private
         'query_str' : 'hel'
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
-    
+
     assert len(payload['messages']) == 2
     assert payload['messages'][0]['message'] == 'helloworld'
     assert payload['messages'][1]['message'] == 'hello'
