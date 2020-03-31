@@ -162,7 +162,7 @@ def test_search(register_and_login_user_1, create_public_channel, create_private
     response4 = send_a_message
     assert response4['message_id'] == 2
 
-    # Get user profile
+    # Get search
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'query_str' : 'hel'
