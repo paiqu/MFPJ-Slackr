@@ -26,7 +26,7 @@ def user_setemail(token, email):
     ASSUME: the token id is valid
     '''  
     DATA = getData()    
-    if check_email == False:
+    if check_email(email) == False:
         raise InputError("Invalid email")
     for user in DATA['users']:
         if user['email'] == email:
