@@ -83,6 +83,8 @@ def register_and_login_user_1_and_2():
         method='POST'
     )
 
+    load(urllib.request.urlopen(req))
+
     # Login user_2
     login_info = dumps({
         'email': 'z7654321@unsw.edu.au',
