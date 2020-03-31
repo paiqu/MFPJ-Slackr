@@ -368,10 +368,16 @@ def test_message_pin(register_and_login_user_1, create_public_channel, send_a_me
         method='POST'
     )
     load(urllib.request.urlopen(req))
-``
-    DATA = getData()
+
+    # Get search
+    queryString = urllib.parse.urlencode({
+        'token' : user_1_token,
+        'query_str' : 'hello'
+    })
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
     
-    assert DATA['messages'][0]['is_pin'] == True
+    assert len(payload['messages']) == 1
+    assert payload['messages'][0]['is_pinned'] == True
 
     message_info2 = dumps({
         'token': user_1_token,
@@ -386,4 +392,12 @@ def test_message_pin(register_and_login_user_1, create_public_channel, send_a_me
     )
     load(urllib.request.urlopen(req2))
 
-    assert DATA['messages'][0]['is_pin'] == False
+    # Get search
+    queryString = urllib.parse.urlencode({
+        'token' : user_1_token,
+        'query_str' : 'hello'
+    })
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
+    
+    assert len(payload['messages']) == 1
+    assert payload['messages'][0]['is_pinned'] == False
