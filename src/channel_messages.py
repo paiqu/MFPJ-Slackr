@@ -83,21 +83,21 @@ def channel_messages(token, channel_id, start):
             message_info['is_pinned'] = i['is_pin']
             messages_list.append(message_info)
 
-    if start >= len(messages_list):
+    if start >= len(messages_list) and len(messages_list) != 0:
         raise InputError("Invalid start")
+        
     # formate output {messages, start, end}
     out_dict = {}
     messages_list.reverse()
+    new_list = messages_list[start:]
     
-    if 50 >= len(messages_list):
-        out_dict['messages'] = messages_list
+    if 50 > len(new_list):
+        out_dict['messages'] = new_list
         out_dict['start'] = start
         out_dict['end'] = -1
     else: 
-        new_list = []
-        for i in range(50):
-            new_list.append(messages_list[i + start])
-        out_dict['message'] = new_list 
+        out_dict['messages'] = new_list[0:50]
         out_dict['start'] = start
         out_dict['end'] = start + 50
+          
     return out_dict
