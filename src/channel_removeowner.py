@@ -6,8 +6,7 @@ from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, token_to_uid
 from error import InputError, AccessError
-from class_file import User
-from data import DATA, getData
+from data import getData
 
 RMVOWNER = Blueprint('channel_removeowner', __name__)
 
@@ -22,24 +21,25 @@ def addowner():
     return dumps(channel_removeowner(token, channel_id, u_id))
 
 def channel_removeowner(token, channel_id, u_id):
+    '''function to remove an owner from a channel'''
     if not channel_id_check(channel_id):
         raise InputError("Channel ID is not a valid channel")
 
-    global DATA
+    DATA = getData()
     users = DATA['users']
     channels = DATA['channels']
 
     for user in users:
         if user['u_id'] == token_to_uid(token):
             function_caller = user
-        
+
         if user['u_id'] == u_id:
             target_user = user
 
     for channel in channels:
         if channel['channel_id'] == channel_id:
             target_channel = channel
-        
+
     owners = target_channel['owners']
 
     if function_caller not in owners and not function_caller['is_slack_owner']:
