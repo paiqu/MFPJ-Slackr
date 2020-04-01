@@ -147,7 +147,7 @@ def test_correct_admin_permission(register_loginx2_create_invite):
     )
     
     payload = load(urllib.request.urlopen(req))
-
+    #return payload
     '''
     global DATA
     users = DATA['users']
