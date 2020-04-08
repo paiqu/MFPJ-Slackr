@@ -3,9 +3,7 @@ This file is HTTP test for channel/messages (GET)
 
 Parameter: (token, channel_id, start)
 Return: {messages, start, end}
-
 Always reset workspace when testing!!!!!!!!
-
 Steps to test channels/list:
     1. Register user_1
     2. The user_1 login to the server
@@ -25,15 +23,13 @@ from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
-from error import InputError, AccessError
-
 
 PORT_NUMBER = '1231'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''set up user'''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -60,7 +56,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # Login
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -76,10 +72,10 @@ def register_and_login_user_1():
 
     payload = load(urllib.request.urlopen(req))
     return payload
-    
+
 @pytest.fixture
 def create_public_channel():
-    # Create public channel 
+    '''Create public channel'''
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     channel_info = dumps({
@@ -118,15 +114,15 @@ def test_10_messages_in_channel(register_and_login_user_1, create_public_channel
             method='POST'
         )
         load(urllib.request.urlopen(req))
-        
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1,
         'start': 0,
     })
-    
+
     payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
-    
+
     assert len(payload['messages']) == 10
     assert payload['end'] == -1
 
@@ -147,21 +143,21 @@ def test_50_messages_in_channel(register_and_login_user_1, create_public_channel
             method='POST'
         )
         load(urllib.request.urlopen(req))
-        
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1,
         'start': 0,
     })
-    
+
     payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
-    
-    assert len(payload['message']) == 50
+
+    assert len(payload['messages']) == 50
     assert payload['end'] == 50
 
 
 def test_start_is_10_and_not_50_messages(register_and_login_user_1, create_public_channel):
-    #in this case, less than 50 messages left starts from 10
+    '''in this case, less than 50 messages left starts from 10'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(50):
         # send message
@@ -177,20 +173,20 @@ def test_start_is_10_and_not_50_messages(register_and_login_user_1, create_publi
             method='POST'
         )
         load(urllib.request.urlopen(req))
-        
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1,
         'start': 10,
     })
-    
+
     payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
-    
-    assert len(payload['messages']) == 50
+
+    assert len(payload['messages']) == 40
     assert payload['end'] == -1
 
-def test_start_is_10_and_50_messages(register_and_login_user_1, create_public_channel):
-    #in this case, more than 50 messages left starts from 10
+def test_start_is_10_and_70_messages(register_and_login_user_1, create_public_channel):
+    '''in this case, more than 50 messages left starts from 10'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(70):
         # send message
@@ -206,19 +202,19 @@ def test_start_is_10_and_50_messages(register_and_login_user_1, create_public_ch
             method='POST'
         )
         load(urllib.request.urlopen(req))
-        
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1,
         'start': 10,
     })
-    
+
     payload = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
-    
-    assert len(payload['message']) == 50
-    assert payload['end'] == 60  
+
+    assert len(payload['messages']) == 50
+    assert payload['end'] == 60
 def test_invalid_channel_id(register_and_login_user_1, create_public_channel):
-    
+    '''test for channel id is invalid'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):
         # send message
@@ -234,20 +230,18 @@ def test_invalid_channel_id(register_and_login_user_1, create_public_channel):
             method='POST'
         )
         load(urllib.request.urlopen(req))
-    
-    
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1231321,
         'start': 0,
     })
-    req = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
+
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
-    
+        urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}")
 
 def test_invalid_start(register_and_login_user_1, create_public_channel):
-    # start is greater than or equal to the total number of messages in the channel
+    '''start is greater than or equal to the total number of messages in the channel'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):
         # send message
@@ -263,19 +257,18 @@ def test_invalid_start(register_and_login_user_1, create_public_channel):
             method='POST'
         )
         load(urllib.request.urlopen(req))
-    
-    
+
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
         'channel_id' : 1231321,
         'start': 10,
     })
-    req = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
+
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
-        
+        urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}")
+    
 def test_unauthorised_user(register_and_login_user_1, create_public_channel):
-    # Authorised user is not a member of channel with channel_id
+    '''Authorised user is not a member of channel with channel_id'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     for i in range(10):
         # send message
@@ -291,13 +284,12 @@ def test_unauthorised_user(register_and_login_user_1, create_public_channel):
             method='POST'
         )
         load(urllib.request.urlopen(req))
-    
+
     invalid_token = 'this is not a valid token'
     queryString = urllib.parse.urlencode({
         'token' : invalid_token,
         'channel_id' : 1231321,
         'start': 10,
     })
-    req = load(urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}"))
     with pytest.raises(urllib.error.HTTPError):
-        urllib.request.urlopen(req)
+        urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}")
