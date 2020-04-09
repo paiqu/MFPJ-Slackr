@@ -47,7 +47,7 @@ def message_pin(token, message_id):
             is_owner = True
 
     if is_owner == False:
-        raise InputError("The authorised user is not an owner")
+        raise AccessError("The authorised user is not an owner")
 
     if target_message['is_pin'] == True:
         raise InputError("Message with ID message_id is already pinned")

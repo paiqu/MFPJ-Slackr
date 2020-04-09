@@ -50,7 +50,7 @@ def message_unpin(token, message_id):
         raise InputError("The authorised user is not an owner")
 
     if target_message['is_pin'] == False:
-        raise InputError("Message with ID message_id is already unpinned")
+        raise AccessError("Message with ID message_id is already unpinned")
 
     target_message['is_pin'] = False
 
