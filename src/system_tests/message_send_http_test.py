@@ -26,6 +26,9 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login(user1)
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -71,7 +74,9 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def register_and_login_user_2():
-
+    '''
+    register and login(user2)
+    '''
     # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -108,6 +113,9 @@ def register_and_login_user_2():
 
 @pytest.fixture
 def create_public_channel():
+    '''
+    public channel created
+    '''
     # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -128,7 +136,9 @@ def create_public_channel():
     return payload
 
 def test_message_send(register_and_login_user_1, create_public_channel):
-
+    '''
+    test normal case
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -173,7 +183,9 @@ def test_message_send(register_and_login_user_1, create_public_channel):
 
 
 def test_message_send_inputerror(register_and_login_user_1, create_public_channel):
-
+    '''
+    test inputerror length > 1000
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -201,7 +213,9 @@ def test_message_send_inputerror(register_and_login_user_1, create_public_channe
         urllib.request.urlopen(req)
 
 def test_message_send_accesserror(register_and_login_user_1, create_public_channel, register_and_login_user_2):
-
+    '''
+    test accesserror
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
