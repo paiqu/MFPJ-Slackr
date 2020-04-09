@@ -1,11 +1,11 @@
 '''Route implementation for message_send'''
+import datetime
 from json import dumps
 from flask import Blueprint, request
 from check_functions import token_to_uid, channel_member_check
 from error import InputError, AccessError
-from data import DATA, getData, MESSAGE_COUNT
-import time, datetime
-from class_file import User, Channel, Message
+from data import getData
+from class_file import Message
 
 SENDMESSAGE = Blueprint('message_send', __name__)
 
@@ -23,36 +23,23 @@ def message_send(token, channel_id, message):
     '''Send a message from authorised_user to the channel specified by channel_id'''
 
     DATA = getData()
-    users = DATA['users']
-    channels = DATA['channels']
-    messages = DATA['messages']   
-    
-    '''
-    self check functions 
-    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu', handle='')))   
-    channels.append(vars(Channel(1,"Public")))
-    channels[0]['members'].append(users[0])
-    channels[0]['owners'].append(users[0])
-    '''
-    
-    if(len(message) > 1000):
+
+    if len(message) > 1000:
         raise InputError('invalid message content')
-    
+
     if not channel_member_check(channel_id, token):
         raise AccessError("Authorised user is not a member of channel with channel_id")
-    
+
     # get message_id
     DATA['messages_count'] += 1
     message_id = DATA['messages_count']
-    
+
     # get current time and send message
     now = datetime.datetime.utcnow()
-    current_time = int(now.replace(tzinfo = datetime.timezone.utc).timestamp())
+    current_time = int(now.replace(tzinfo=datetime.timezone.utc).timestamp())
     DATA['messages'].append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
-    
+
     returnvalue = {}
     returnvalue['message_id'] = message_id
-    
+
     return returnvalue
-
-
