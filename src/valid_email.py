@@ -19,14 +19,12 @@ regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 # for validating an Email
 def check(email):  
   
-    # pass the regualar expression
-    # and the string in search() method
-    if(re.search(regex,email)):
-        print("Valid Email") 
+    # pass the regualar expression 
+    # and the string in search() method 
+    if(re.search(regex,email)):  
         return True 
           
     else:  
-        print("Invalid Email") 
         return False  
       
   
