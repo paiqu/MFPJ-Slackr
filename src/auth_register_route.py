@@ -1,13 +1,12 @@
 '''Route implementation for auth/register'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check, token_to_uid
-from error import InputError, AccessError
+from error import InputError
 from token_functions import generate_token
-from valid_email import check 
+from valid_email import check
 from class_file import User
 
-from data import DATA, getData
+from data import getData
 
 
 
@@ -15,6 +14,9 @@ REGISTER = Blueprint('register', __name__)
 
 
 def sendSuccess(DATA):
+    '''
+    This opeation is used to check if any given function e.g. loggout out is a success
+    '''
     return dumps(DATA)
 
 '''
@@ -22,7 +24,10 @@ def hashPassword(password):
     return hashlib.sha256(password.encode()).hexdigest()
 '''
 def generateHandle(firstName, lastName):
-    #add tests for generate handle 
+    '''
+    Generates a handle for every registered user
+    '''
+    #add tests for generate handle
     handle = firstName + lastName
     lowercase_handle = handle.lower()
     return lowercase_handle[0:20]
@@ -41,14 +46,13 @@ def register():
     '''
 
     info = request.get_json()
-    
-    
+
+
     email = info['email']
     password = info['password']
     firstName = info['name_first']
     lastName = info['name_last']
-    
-    
+
 
 
     #This function will return { u_id, token }
@@ -56,17 +60,17 @@ def register():
 
 def auth_register(email, password, name_first, name_last):
     '''
-    This function creates a new user object and adds it to the user register list/dictionary 
+    This function creates a new user object and adds it to the user register list/dictionary
     '''
     data = getData()
-    
-    if check(email) == False:
+
+    if not check(email):
         raise InputError("This is not a valid email")
 
     for user in data['users']:
         if user['email'] == email:
             raise InputError("This email is already being used by another user")
-    
+
     if len(password) < 6:
         raise InputError("This password is too short. Must be at least 6 characters")
 
@@ -85,19 +89,15 @@ def auth_register(email, password, name_first, name_last):
     if data['users'] == []:
         user_1.is_slack_owner = True
         user_1.global_permission = 1
-    
+
 
     user_1.password = password
     user_1 = vars(user_1)
-    
-    
+
+
     data['users'].append(user_1)
-    
+
     return dumps({
         'u_id' : user_1['u_id'],
         'token': user_1['token']
     })
-    
-
-    
-

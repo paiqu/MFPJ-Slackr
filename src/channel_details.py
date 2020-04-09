@@ -1,11 +1,10 @@
 '''Route implementation for channel/details'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check, token_to_uid
+from check_functions import channel_id_check, channel_member_check
 from error import InputError, AccessError
-from token_functions import generate_token
 
-from data import DATA, getData
+from data import getData
 
 
 
@@ -29,30 +28,30 @@ def channel_details(token, channel_id):
     Prints the channel details if the channel is valid, user is valid
     '''
     DATA = getData()
-    users = DATA['users']
+    #users = DATA['users']
     channels = DATA['channels']
 
 
-    # Discovers the user from the token parameter 
-    for user in users:
-        if user['u_id'] == token_to_uid(token):
-            request_user = user
-        
-    
-    # Find the channel which the channel ID belongs to 
+    # Discovers the user from the token parameter
+    #for user in users:
+        #if user['u_id'] == token_to_uid(token):
+            #request_user = user
+
+
+    # Find the channel which the channel ID belongs to
     for channel in channels:
         if channel['channel_id'] == channel_id:
             target_channel = channel
 
-    
-    # Checks the Target Channel ID is not invalid 
-    if channel_id_check(target_channel['channel_id']) == False:
+
+    # Checks the Target Channel ID is not invalid
+    if not channel_id_check(target_channel['channel_id']):
         raise InputError("This is not a valid channel or channel ID")
 
-    # Checks the Invitee/Token User is member of the channel 
-    if channel_member_check(channel_id,token )== False:
+    # Checks the Invitee/Token User is member of the channel
+    if not channel_member_check(channel_id, token):
         raise AccessError("The user requesting channel details is not a member of this channel")
-    
+
     owner_members_list = []
     all_members_list = []
 
@@ -78,11 +77,4 @@ def channel_details(token, channel_id):
 
                 'all_members' : all_members_list
 
-            }
-     
-            
-    
-        
-    
-            
-   
+        }
