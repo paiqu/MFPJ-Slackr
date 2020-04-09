@@ -155,6 +155,7 @@ def send_a_message():
         method='POST'
     )
     payload = load(urllib.request.urlopen(req))
+    payload = load(urllib.request.urlopen(req))
     return payload
 
 def test_message_remove_inputerror(register_and_login_user_1, create_public_channel, send_a_message):
@@ -172,11 +173,11 @@ def test_message_remove_inputerror(register_and_login_user_1, create_public_chan
     assert response2['channel_id'] == 1
 
     response3 = send_a_message
-    assert response3['message_id'] == 1
+    assert response3['message_id'] == 2
 
     message_info = dumps({
         'token': user_1_token,
-        'message_id': 2
+        'message_id': 3
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -205,7 +206,7 @@ def test_message_remove_accesserror(register_and_login_user_1, create_public_cha
     assert response2['channel_id'] == 1
 
     response3 = send_a_message
-    assert response3['message_id'] == 1
+    assert response3['message_id'] == 2
 
     response4 = register_and_login_user_2
     assert response4['u_id'] == 2
@@ -242,7 +243,7 @@ def test_message_remove(register_and_login_user_1, create_public_channel, send_a
     assert response2['channel_id'] == 1
 
     response3 = send_a_message
-    assert response3['message_id'] == 1
+    assert response3['message_id'] == 2
 
     message_info = dumps({
         'token': user_1_token,
@@ -264,4 +265,4 @@ def test_message_remove(register_and_login_user_1, create_public_channel, send_a
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/search?{queryString}"))
 
-    assert len(payload['messages']) == 0
+    assert len(payload['messages']) == 1
