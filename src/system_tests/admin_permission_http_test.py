@@ -1,20 +1,27 @@
+'''
+HTTP Test for User/Permission
+'''
 import sys
 sys.path.append('..')
 from json import load, dumps
-import urllib.request
-import urllib.parse
+import urllib
+import flask
 import pytest
-from data import DATA
-from error import InputError
-import requests
+#from data import DATA
+#import requests
+#from error import InputError
 
 
-PORT_NUMBER = '5321'
+
+PORT_NUMBER = '5322'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
 def register_loginx2_create_invite():
+    '''
+    Registers and Logs In 2 users
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -23,24 +30,23 @@ def register_loginx2_create_invite():
     )
 
     load(urllib.request.urlopen(req))
-
-    # REGISTER user_1
-    register_info_1 = dumps({
-        'email': 'z5209488@unsw.edu.au',
-        'password': 'enigma',
-        'name_first': 'Alan',
-        'name_last': 'Turing'
+    #R1
+    register_info = dumps({
+        'email': 'z1234567@unsw.edu.au',
+        'password': 'thisisaPassword',
+        'name_first': 'Xinlei',
+        'name_last': 'Matthew'
     }).encode('utf-8')
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data=register_info_1,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
+        data = register_info,
+        headers = {'Content-Type': 'application/json'},
+        method = 'POST'
     )
 
     load(urllib.request.urlopen(req))
-    
+
     # REGISTER user_2
     register_info_2 = dumps({
         'email': 'z5432455',
@@ -58,11 +64,15 @@ def register_loginx2_create_invite():
     )
 
     load(urllib.request.urlopen(req))
-    
+<<<<<<< HEAD
+
     # Login user_1
+=======
+    #L1
+>>>>>>> 62c421c336bf89888690279e4a57d7601c7f8f60
     login_info = dumps({
-        'email': 'z5209488@unsw.edu.au',
-        'password': 'enigma'
+        'email': 'z1234567@unsw.edu.au',
+        'password': 'thisisaPassword'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -86,11 +96,11 @@ def register_loginx2_create_invite():
     )
 
     load(urllib.request.urlopen(req))
-    #return payload
 
+def test_basic(register_and_login_user_1):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+
     # user_1 creates a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -121,7 +131,7 @@ def register_loginx2_create_invite():
         method='POST'
     )
 
-    payload = load(urllib.request.urlopen(req))
+    load(urllib.request.urlopen(req))
 
 def correct_admin_permission_test(register_loginx2_create_invite):
     '''
@@ -129,26 +139,26 @@ def correct_admin_permission_test(register_loginx2_create_invite):
     '''
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     #Requests channel details
     admin_permssion = dumps({
         'token': user_1_token,
-        'u_id': 2,
+        'u_id': 1,
         'permission_id': 1
     }).encode('utf-8')
 
-    req = urllib.request.Request(
+    urllib.request.Request(
         f'{BASE_URL}/admin/userpermission/change',
         data=admin_permssion,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
-    global DATA
-    users = DATA['users']
-    user_2 = users[1]
-    assert user_1.permission_id == 1
+    #global DATA
+    #users = DATA['users']
+    #user_2 = users[1]
+    #assert user_1.permission_id == 1
 
 
 def invalid_userID_test(register_loginx2_create_invite):
@@ -156,9 +166,9 @@ def invalid_userID_test(register_loginx2_create_invite):
     u_id does not refer to a valid user
     '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
-    #Requests channel details
+
     admin_permssion = dumps({
         'token': user_1_token,
         'u_id': 10,
@@ -181,7 +191,7 @@ def invalid_permissionID_test(register_loginx2_create_invite):
     '''
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+    #user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
     #Requests channel details
     admin_permssion = dumps({
@@ -205,9 +215,9 @@ def unauthorised_user_test(register_loginx2_create_invite):
     The authorised user is not an owner
     '''
 
-    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    #user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    response = register_loginx2_create_invite
+    #response = register_loginx2_create_invite
     #Requests channel details
     admin_permssion = dumps({
         'token': user_2_token,
