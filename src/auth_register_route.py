@@ -59,6 +59,7 @@ def auth_register(email, password, name_first, name_last):
     This function creates a new user object and adds it to the user register list/dictionary 
     '''
     data = getData()
+    users = DATA['users']
     
     if check(email) == False:
         raise InputError("This is not a valid email")
@@ -90,9 +91,14 @@ def auth_register(email, password, name_first, name_last):
     user_1.password = password
     user_1 = vars(user_1)
     
-    
+    '''
+
+    which one is correct? The first one is what I submitted for iteration 2 
     data['users'].append(user_1)
     
+    users.append(target_user)
+    '''
+
     return dumps({
         'u_id' : user_1['u_id'],
         'token': user_1['token']
