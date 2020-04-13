@@ -62,6 +62,7 @@ def auth_login(email, password):
         if user['email'] == email:
                 if user['email'] == email and user['password'] == password:
                     user['is_login'] = True 
+                    user['token'] = generate_token(user['u_id'])
                     return dumps({
                         'u_id': user['u_id'],
                         'token' : user['token']   
