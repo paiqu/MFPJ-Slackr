@@ -2,8 +2,7 @@
 from json import dumps
 from flask import Blueprint, request
 from error import InputError
-from data import DATA, getData
-from class_file import User
+from data import getData
 
 PROFILE = Blueprint('profile', __name__)
 
@@ -15,27 +14,23 @@ def request_get():
     u_id = int(request.args.get('u_id'))
     return dumps(user_profile(token, u_id))
 
-
 def user_profile(token, u_id):
     '''
-    For a valid user, returns information about their user id, email, 
+    For a valid user, returns information about their user id, email,
     first name, last name, and handle
     '''
-    
+
     DATA = getData()
     users = DATA['users']
     is_exist = False
-    '''
-    self-check function
-    users.append(vars(User(u_id=123, email='123@55.com', name_first='pai', name_last='qu', handle='')))
-    '''
+
     # check Input Error (User with u_id is not a valid user)
     for user in users:
         if user['u_id'] == u_id:
             is_exist = True
     if not is_exist:
         raise InputError("Invalid u_id")
-    
+
     # get user profile
     user = {'user':{}}
     for existuser in users:
@@ -45,7 +40,5 @@ def user_profile(token, u_id):
             user['user']['name_first'] = existuser['name_first']
             user['user']['name_last'] = existuser['name_last']
             user['user']['handle_str'] = existuser['handle']
-            
-    return user
-    
 
+    return user
