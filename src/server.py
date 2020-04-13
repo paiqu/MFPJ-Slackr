@@ -41,7 +41,6 @@ from channel_leave import LEAVE
 
 from data import getData, DATA
 import threading
-import os
 import pickle
 
 def defaultHandler(err):
