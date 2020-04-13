@@ -39,7 +39,10 @@ from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
 
-
+from data import getData, DATA
+import threading
+import os
+import pickle
 
 def defaultHandler(err):
     response = err.get_response()
@@ -93,7 +96,17 @@ APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
 
+def save():
+    DATA = getData()
+    print("saved")
+    with open('dataStore.p', 'wb') as FILE:
+        pickle.dump(DATA, FILE)
 
+def timerAction():
+    timer = threading.Timer(30.0, timerAction)
+    timer.daemon = True
+    timer.start()
+    save() 
 # Example
 
 @APP.route("/echo", methods=['GET'])
@@ -106,4 +119,7 @@ def echo():
     })
 
 if __name__ == "__main__":
+    
+    timerAction()
+
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
