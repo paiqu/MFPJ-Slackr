@@ -38,6 +38,7 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
+from user_remove import RMVUSER
 
 
 
@@ -92,6 +93,7 @@ APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
+APP.register_blueprint(RMVUSER)
 
 
 # Example
