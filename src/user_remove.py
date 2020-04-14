@@ -33,14 +33,8 @@ def rmv_user():
 def remove_user(token, u_id):
     '''
     Removes user from slackr 
-    Removes them from all of the channels they belong to 
+    Removes them from all of the channels they belong to - owners and members
     '''
-
-    authorised_user = token_to_uid(token)
-
-    DATA = getData()
-    users = DATA['users']
-    channels = DATA['channels']
 
     DATA = getData()
     users = DATA['users']
@@ -58,25 +52,27 @@ def remove_user(token, u_id):
         raise InputError("This is not a valid user or user ID")
 
 
-    # If the wrong permission ID is entered 
-    if permission_id != 1:
-        raise InputError('This is not a valid permission number')
-
-    # The admin user has permission priviledges 
-    if admin_user['global_permission'] != 1:
-        raise AccessError("The admin user is not authorised")
+    # If not slackr owner
+    if admin_user['is_slack_owner'] != True:
+        raise AccessError('This user is not a slackr owner')
+  
     
-    #changes the sub users permission having passed all checks 
-
-    #### IS THIS RIGHT?
-    sub_user['global_permission'] = permission_id
+    # Removes user as member of any channels 
+    for channel in channels:
+        for user in channel['members']:
+            if user == sub_user
+                channel['members'].remove(user)
     
+    # Removes user as owner of any channels
+    for channel in channels:
+        for user in channel['owners']:
+            if user == sub_user
+                channel['owners'].remove(user)
+    
+    #Removes user for user database
+    users.remove(sub_user)
 
-    #changes the users permission privileges to owner if they aren't already owner 
-    for channel in channels_list(sub_user['token'])['channels']:
-        if sub_user not in channel['owners']:
-            
-            channel_addowner(admin_user['token'], channel['channel_id'], sub_user['u_id'])
+
 
     return {}
 
