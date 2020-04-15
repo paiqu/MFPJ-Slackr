@@ -38,8 +38,16 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
+#from auth_passwordreset_request import PASSWORDRESET_REQUEST
+from auth_passwordreset_reset import PASSWORDRESET_RESET
 
-
+from flask_mail import Mail
+import random
+import string
+from class_file import User
+from data import DATA, getData
+from check_functions import user_exists_check
+from flask_mail import Message
 
 def defaultHandler(err):
     response = err.get_response()
@@ -54,6 +62,17 @@ def defaultHandler(err):
 
 
 APP = Flask(__name__)
+APP.config['MAIL_DEBUG'] = True
+APP.config['MAIL_SUPPRESS_SEND'] = False
+APP.config['MAIL_SERVER'] = 'smtp.gmail.com'
+APP.config['MAIL_PORT'] = 465
+APP.config['MAIL_USE_SSL'] = True
+APP.config['MAIL_USE_TLS'] = False
+APP.config['MAIL_USERNAME'] = 'oneroit7@gmail.com'
+APP.config['MAIL_PASSWORD'] = 'tyzplgibskjdwvtx'
+APP.config['MAIL_DEFAULT_SENDER'] = 'oneroit7@gmail.com'
+mail = Mail(APP)
+
 CORS(APP)
 
 
@@ -92,6 +111,8 @@ APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
+#APP.register_blueprint(PASSWORDRESET_REQUEST)
+APP.register_blueprint(PASSWORDRESET_RESET)
 
 
 # Example
@@ -104,6 +125,36 @@ def echo():
     return dumps({
         'data': data
     })
+
+#
+
+def passwordreset_request(email):
+    '''
+    Given an email address, if the user is a registered user,
+    send's them a an email containing a specific secret code
+    '''
+    if user_exists_check(email):
+        secret_code = ''.join(random.choice(string.digits) for _ in range(5))
+        msg = Message(secret_code,
+                      sender='from@example.com',
+                      recipients=[email])
+        mail.send(msg)
+        DATA = getData()
+        for user in DATA['users']:
+            if user['email'] == email:
+                user['reset_code'] = secret_code
+    return {}
+
+@APP.route('/auth/passwordreset/request', methods=['POST'])
+def reset_request():
+    '''function for route passwordreset/request'''
+    info = request.get_json()
+    email = info['email']
+    return dumps(passwordreset_request(email))
+
+
+#
+
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))

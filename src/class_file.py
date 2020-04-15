@@ -10,7 +10,7 @@ class User:
         self.global_permission= 2
         self.is_slack_owner = False
         self.is_login = False
-         
+        self.reset_code = ""
 
 class Channel:
     def __init__(self, channel_id, channel_name):
