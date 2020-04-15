@@ -38,12 +38,11 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
-#from auth_passwordreset_request import PASSWORDRESET_REQUEST
 from auth_passwordreset_reset import PASSWORDRESET_RESET
 
-from flask_mail import Mail
 import random
 import string
+from flask_mail import Mail
 from class_file import User
 from data import DATA, getData
 from check_functions import user_exists_check
@@ -59,7 +58,6 @@ def defaultHandler(err):
     })
     response.content_type = 'application/json'
     return response
-
 
 APP = Flask(__name__)
 APP.config['MAIL_DEBUG'] = True
@@ -111,7 +109,6 @@ APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
-#APP.register_blueprint(PASSWORDRESET_REQUEST)
 APP.register_blueprint(PASSWORDRESET_RESET)
 
 
@@ -126,7 +123,6 @@ def echo():
         'data': data
     })
 
-#
 
 def passwordreset_request(email):
     '''
@@ -151,9 +147,6 @@ def reset_request():
     info = request.get_json()
     email = info['email']
     return dumps(passwordreset_request(email))
-
-
-#
 
 
 if __name__ == "__main__":
