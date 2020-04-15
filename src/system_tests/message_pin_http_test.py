@@ -10,10 +10,13 @@ Steps to test message_pin:
     3. create a channel
     4. send a message and pin it
     5. test
-        1. pin message successfully
-        2. test fot Error:
-            Raise InputError when message is more than 1000 characters
-            The authorised user has not joined the channel they are trying to post to
+        InputError when any of:
+        message_id is not a valid message
+        Message with ID message_id is already pinned
+
+        AccessError when any of:
+        The authorised user is not a member of the channel that the message is within
+        The authorised user is not an owner
 '''
 import sys
 sys.path.append('..')
@@ -27,6 +30,9 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login(user1)
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -72,7 +78,9 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def register_and_login_user_2():
-
+    '''
+    register and login(user2)
+    '''
     # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -109,6 +117,9 @@ def register_and_login_user_2():
 
 @pytest.fixture
 def create_public_channel():
+    '''
+    channel_create(public)
+    '''
     # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -130,6 +141,9 @@ def create_public_channel():
 
 @pytest.fixture
 def send_a_message():
+    '''
+    message send in the created channel
+    '''
     # send a message
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -149,7 +163,9 @@ def send_a_message():
     return payload
 
 def test_message_pin_inputerror1(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    inputerror when message_id is not a valid message
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -178,7 +194,9 @@ def test_message_pin_inputerror1(register_and_login_user_1, create_public_channe
         urllib.request.urlopen(req)
 
 def test_message_pin_inputerror2(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    Inputerror when Message with ID message_id is already pinned
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -220,8 +238,10 @@ def test_message_pin_inputerror2(register_and_login_user_1, create_public_channe
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req2)
 
-def test_message_pin_inputerror3(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-
+def test_message_pin_accesserror1(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
+    '''
+    accesserror when the authorised user is not an owner
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
@@ -271,8 +291,10 @@ def test_message_pin_inputerror3(register_and_login_user_1, create_public_channe
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_message_pin_accesserror(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-
+def test_message_pin_accesserror2(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
+    '''
+    The authorised user is not a member of the channel that the message is within
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
@@ -309,7 +331,9 @@ def test_message_pin_accesserror(register_and_login_user_1, create_public_channe
         urllib.request.urlopen(req)
 
 def test_message_pin(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    test normal cases
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 

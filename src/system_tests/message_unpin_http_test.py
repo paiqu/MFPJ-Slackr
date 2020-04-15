@@ -11,16 +11,20 @@ Steps to test message_unpin:
     4. send a message and pin it
     5. test
         1. unpin message successfully
-        2. test fot Error:
-            Raise InputError when message is more than 1000 characters
-            The authorised user has not joined the channel they are trying to post to
+        2. InputError when any of:
+            message_id is not a valid message
+            Message with ID message_id is already unpinned
+
+            AccessError when any of:
+            The authorised user is not a member of the channel that the message is within
+            The authorised user is not an owner
 '''
 
 from json import load, dumps
 import urllib.request
 import urllib.parse
-import pytest
 import sys
+import pytest
 sys.path.append('..')
 
 PORT_NUMBER = '5204'
@@ -28,6 +32,9 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login(user1)
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -72,7 +79,9 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def register_and_login_user_2():
-
+    '''
+    register and login(user2)
+    '''
     # REGISTER
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -108,6 +117,9 @@ def register_and_login_user_2():
 
 @pytest.fixture
 def create_public_channel():
+    '''
+    public channel create
+    '''
     # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -129,6 +141,9 @@ def create_public_channel():
 
 @pytest.fixture
 def send_a_message():
+    '''
+    message send in the created channel
+    '''
     # send a message
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -148,7 +163,9 @@ def send_a_message():
     return payload
 
 def test_message_unpin_inputerror1(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    inputerror when message_id is not a valid message
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -190,7 +207,9 @@ def test_message_unpin_inputerror1(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req2)
 
 def test_message_unpin_inputerror2(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    inputerror when Message with ID message_id is already unpinned
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
@@ -209,11 +228,6 @@ def test_message_unpin_inputerror2(register_and_login_user_1, create_public_chan
         'message_id': 1
     }).encode('utf-8')
 
-    message_info = dumps({
-        'token': user_1_token,
-        'message_id': 1
-    }).encode('utf-8')
-
     req = urllib.request.Request(
         f'{BASE_URL}/message/unpin',
         data=message_info,
@@ -223,8 +237,10 @@ def test_message_unpin_inputerror2(register_and_login_user_1, create_public_chan
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_message_unpin_inputerror3(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-
+def test_message_unpin_accesserror1(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
+    '''
+    accesserror when the authorised user is not an owner
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
@@ -288,8 +304,10 @@ def test_message_unpin_inputerror3(register_and_login_user_1, create_public_chan
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req3)
 
-def test_message_unpin_accesserror(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
-
+def test_message_unpin_accesserror2(register_and_login_user_1, create_public_channel, send_a_message, register_and_login_user_2):
+    '''
+    accesserror when The authorised user is not a member of the channel that the message is within
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
     response = register_and_login_user_1
@@ -340,7 +358,9 @@ def test_message_unpin_accesserror(register_and_login_user_1, create_public_chan
         urllib.request.urlopen(req)
 
 def test_message_pin(register_and_login_user_1, create_public_channel, send_a_message):
-
+    '''
+    test normal case
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 

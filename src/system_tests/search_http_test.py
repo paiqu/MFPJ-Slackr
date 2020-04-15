@@ -25,6 +25,9 @@ BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login(user1)
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -70,6 +73,9 @@ def register_and_login_user_1():
 
 @pytest.fixture
 def create_public_channel():
+    '''
+    public channel created
+    '''
     # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -91,6 +97,9 @@ def create_public_channel():
 
 @pytest.fixture
 def create_private_channel():
+    '''
+    private channel created
+    '''
     # Create public channel
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -112,6 +121,9 @@ def create_private_channel():
 
 @pytest.fixture
 def send_a_message():
+    '''
+    send message in the created channel
+    '''
     # send a message
 
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
@@ -145,7 +157,9 @@ def send_a_message():
     return payload
 
 def test_search(register_and_login_user_1, create_public_channel, create_private_channel, send_a_message):
-
+    '''
+    test normal cases
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
 
