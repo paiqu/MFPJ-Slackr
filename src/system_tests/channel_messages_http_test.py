@@ -100,7 +100,7 @@ def create_public_channel():
 def test_10_messages_in_channel(register_and_login_user_1, create_public_channel):
     '''test for less than 50 messages '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(10):
+    for _ in range(10):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -129,7 +129,7 @@ def test_10_messages_in_channel(register_and_login_user_1, create_public_channel
 def test_50_messages_in_channel(register_and_login_user_1, create_public_channel):
     '''test for less than 50 messages '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(50):
+    for _ in range(50):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -159,7 +159,7 @@ def test_50_messages_in_channel(register_and_login_user_1, create_public_channel
 def test_start_is_10_and_not_50_messages(register_and_login_user_1, create_public_channel):
     '''in this case, less than 50 messages left starts from 10'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(50):
+    for _ in range(50):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -188,7 +188,7 @@ def test_start_is_10_and_not_50_messages(register_and_login_user_1, create_publi
 def test_start_is_10_and_70_messages(register_and_login_user_1, create_public_channel):
     '''in this case, more than 50 messages left starts from 10'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(70):
+    for _ in range(70):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -216,7 +216,7 @@ def test_start_is_10_and_70_messages(register_and_login_user_1, create_public_ch
 def test_invalid_channel_id(register_and_login_user_1, create_public_channel):
     '''test for channel id is invalid'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(10):
+    for _ in range(10):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -243,7 +243,7 @@ def test_invalid_channel_id(register_and_login_user_1, create_public_channel):
 def test_invalid_start(register_and_login_user_1, create_public_channel):
     '''start is greater than or equal to the total number of messages in the channel'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(10):
+    for _ in range(10):
         # send message
         message_info = dumps({
             'token': user_1_token,
@@ -266,11 +266,11 @@ def test_invalid_start(register_and_login_user_1, create_public_channel):
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(f"{BASE_URL}/channel/messages?{queryString}")
-    
+
 def test_unauthorised_user(register_and_login_user_1, create_public_channel):
     '''Authorised user is not a member of channel with channel_id'''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    for i in range(10):
+    for _ in range(10):
         # send message
         message_info = dumps({
             'token': user_1_token,
