@@ -1,38 +1,20 @@
-'''
-This file is HTTP test for channel/leave (POST)
-
-Parameter: (token, name, channel_id)
-Return: {}
-
-Always reset workspace when testing!!!!!!!!
-
-Steps to test channel/leave:
-    1. Register two users: user_1 and user_2
-    2. Both users login to the server
-    3. the user_1 create a channel (public)
-    4. user_2 join user_1's public channel
-    4. Time to Test:
-        1. user_2 leave user_1's channel
-        2. Input Error:
-            invalid channel_id
-        2. Access Error:
-            user_2 has not joined user_1's channel
-'''
-
 import sys
 sys.path.append('..')
 from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
+from data import DATA
+from error import InputError
+import requests
 
 
-PORT_NUMBER = '5204'
+PORT_NUMBER = '5321'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
-def register_and_login_user_1_and_2():
+def register_loginx2_create_invite():
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -44,12 +26,11 @@ def register_and_login_user_1_and_2():
 
     # REGISTER user_1
     register_info_1 = dumps({
-        'email': 'z1234567@unsw.edu.au',
-        'password': 'thisisaPassword',
-        'name_first': 'Peter',
-        'name_last': 'Parker'
+        'email': 'z5209488@unsw.edu.au',
+        'password': 'enigma',
+        'name_first': 'Alan',
+        'name_last': 'Turing'
     }).encode('utf-8')
-
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
@@ -59,13 +40,13 @@ def register_and_login_user_1_and_2():
     )
 
     load(urllib.request.urlopen(req))
-
+    
     # REGISTER user_2
     register_info_2 = dumps({
-        'email': 'z7654321@unsw.edu.au',
-        'password': 'thisisaPassword',
-        'name_first': 'Pete',
-        'name_last': 'Peteer'
+        'email': 'z5432455',
+        'password': 'lovepassword',
+        'name_first': 'Ada',
+        'name_last': 'Lovelace'
     }).encode('utf-8')
 
 
@@ -77,11 +58,11 @@ def register_and_login_user_1_and_2():
     )
 
     load(urllib.request.urlopen(req))
-
+    
     # Login user_1
     login_info = dumps({
-        'email': 'z1234567@unsw.edu.au',
-        'password': 'thisisaPassword'
+        'email': 'z5209488@unsw.edu.au',
+        'password': 'enigma'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -91,12 +72,10 @@ def register_and_login_user_1_and_2():
         method='POST'
     )
 
-    load(urllib.request.urlopen(req))
-
     # Login user_2
     login_info = dumps({
-        'email': 'z7654321@unsw.edu.au',
-        'password': 'thisisaPassword'
+        'email': 'z5432455',
+        'password': 'lovepassword'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -109,11 +88,9 @@ def register_and_login_user_1_and_2():
     load(urllib.request.urlopen(req))
     #return payload
 
-
-def test_leave_success(register_and_login_user_1_and_2):
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-
+    
     # user_1 creates a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -132,119 +109,118 @@ def test_leave_success(register_and_login_user_1_and_2):
 
     # user_2 join user_1's channel
     join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+        'token': user_1_token,
+        'channel_id': 1,
+        'u_id': 2
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
+        f'{BASE_URL}/channel/invite',
         data=join_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
-    load(urllib.request.urlopen(req))
-
-    # user_2 now leaves user_1's channel
-    leave_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     payload = load(urllib.request.urlopen(req))
-
     assert payload == {}
-
-def test_for_invalid_channel_id(register_and_login_user_1_and_2):
+def test_details_basic(register_loginx2_create_invite):
+    '''
+    This test should pass with no issues
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
 
-    # user_1 creates a public channel
-    channel_info = dumps({
+    #Requests channel details
+    channel_details = dumps({
         'token': user_1_token,
-        'name': 'a channel',
-        'is_public': True
+        'channel_id': 1,
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
+        f'{BASE_URL}/channel/details',
+        data=channel_details,
         headers={'Content-Type': 'application/json'},
-        method='POST'
+        method='GET'
     )
 
-    load(urllib.request.urlopen(req))
+    payload = load(urllib.request.urlopen(req))
+    
+    assert payload['channel']['name'] == 'a channel'
+    assert payload['channel']['owner_members'] == [{"u_id": 1, "name_first": "Alan", "name_last": "Turing"}]
 
-    # user_2 join user_1's channel
-    join_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+def invalid_channelID_test(register_loginx2_create_invite):
+    '''
+    Channel ID is not a valid channel
+    '''
+
+    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
+    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+
+    #Requests channel details
+    channel_details = dumps({
+        'token': user_1_token,
+        'channel_id': 50,
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/join',
-        data=join_info,
+        f'{BASE_URL}/channel/details',
+        data=channel_details,
         headers={'Content-Type': 'application/json'},
-        method='POST'
+        method='GET'
     )
 
-    load(urllib.request.urlopen(req))
-
-    # user_2 leave a channel with invalid channel_id
-
-    leave_info = dumps({
-        'token': user_2_token,
-        'channel_id': 40
-    }).encode('utf-8')
-
-    req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-
+    payload = load(urllib.request.urlopen(req))
+    
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_for_access_error(register_and_login_user_1_and_2):
-    user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
+def unauthorised_user_test(register_loginx2_create_invite):
+    '''
+    Authorised user is not a member of channel with channel_id
+    '''
 
-    # user_1 creates a public channel
-    channel_info = dumps({
-        'token': user_1_token,
-        'name': 'a channel',
-        'is_public': True
+    register_info_2 = dumps({
+        'email': 'z5454545@unsw.edu.au',
+        'password': 'testPassword',
+        'name_first': 'Test',
+        'name_last': 'User'
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channels/create',
-        data=channel_info,
+        f'{BASE_URL}/auth/register',
+        data=register_info_2,
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
 
     load(urllib.request.urlopen(req))
 
-    # user_2 leaves channel before joining it
-    leave_info = dumps({
-        'token': user_2_token,
-        'channel_id': 1
+    login3_info = dumps({
+        'email': 'z5454545@unsw.edu.au',
+        'password': 'testPassword'
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/channel/leave',
-        data=leave_info,
+        f'{BASE_URL}/auth/login',
+        data=login3_info,
         headers={'Content-Type': 'application/json'},
         method='POST'
+    )
+
+    user_3_token= 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMyJ9.hnzKv5QKl78L2jWvtB8w9kcxZHo1UFxGN5shF7HBK0Y\''
+
+
+    #Requests channel details
+    channel_details = dumps({
+        'token': user_3_token,
+        'channel_id': 1,
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        f'{BASE_URL}/channel/details',
+        data=channel_details,
+        headers={'Content-Type': 'application/json'},
+        method='GET'
     )
 
     with pytest.raises(urllib.error.HTTPError):

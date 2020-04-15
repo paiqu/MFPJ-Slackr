@@ -15,9 +15,8 @@ def route_message_edit():
     token = info['token']
     message_id = int(info['message_id'])
     message = info['message']
-    
     return dumps(message_edit(token, message_id, message))
-    
+
 def message_edit(token, message_id, message):
     '''
     Given a message, update it's text with new text. 
@@ -38,7 +37,7 @@ def message_edit(token, message_id, message):
         # find the target_message's information
         if i['message_id'] == message_id:
             target_message = i
-          
+
     for j in channels:
         # find whether the user is a owner of a channel or not 
         is_owner = False
@@ -46,10 +45,10 @@ def message_edit(token, message_id, message):
             for owner in j['owners']:
                 if (token_to_uid(token) == owner['u_id']):
                     is_owner = True
-    
+
     if target_message['sender_id'] != token_to_uid(token) or is_owner == False:
         raise AccessError("Unauthorised user try to edit")
-     
+
     if message == '':
         # empty string, delete message
          messages.remove(target_message)

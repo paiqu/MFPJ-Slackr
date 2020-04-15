@@ -1,18 +1,5 @@
 '''
-This file is HTTP test for user/profile (GET)
 
-Parameter: (token, u_id)
-Return: {user}
-
-Always reset workspace when testing!!!!!!!!
-
-Steps to test user_profile:
-    1. Register a user
-    2. The user login to the server
-    3. test
-        1. return correct profile successfully
-        2. test fot Error:
-            Raise InputError when u_id is not a valid user
 '''
 import sys
 sys.path.append('..')
@@ -23,7 +10,7 @@ import pytest
 from data import DATA
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5444'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
@@ -86,4 +73,3 @@ def test_logout_basic(register_and_user_login_1_2):
     )
     payload = load(urllib.request.urlopen(req))
     assert payload['is_success'] == True
-    
