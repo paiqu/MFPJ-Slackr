@@ -8,7 +8,7 @@ from data import *
 
 SETEMAIL = Blueprint('setemail', __name__)
 
-@SETEMAIL.route('/user/setemail', methods=['PUT'])
+@SETEMAIL.route('/user/profile/setemail', methods=['PUT'])
 def setemail():
     '''function for route of user setemail'''
     store = request.get_json()
