@@ -82,10 +82,11 @@ def token_to_uid(token):
     '''
     DATA = getData()
 
-    users = DATA['channels']
+    users = DATA['users']
     for user in users:
         if user['login_token'] == token:
-            return user['u_id']
+            user_found = user
+            return user_found['u_id']
 
 
 def message_id_check(message_id):

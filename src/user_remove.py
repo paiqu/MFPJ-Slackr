@@ -23,10 +23,14 @@ def rmv_user():
     '''
     request info for remove user
     '''
+    token = request.args.get('login_token')
+    u_id = int(request.args.get('u_id'))
+    #u_id = int(u_id)
 
-    info = request.get_json()
-    token = info['token']
-    u_id= int(info['u_id'])
+    #info = request.get_json()
+    #info = request.args.get()
+    #token = info['login_token']
+    #u_id= int(info['u_id'])
 
     return dumps(remove_user(token, u_id))
 
@@ -53,20 +57,20 @@ def remove_user(token, u_id):
 
 
     # If not slackr owner
-    if admin_user['is_slack_owner'] != True:
+    if admin_user['is_slack_owner'] == False:
         raise AccessError('This user is not a slackr owner')
   
     
     # Removes user as member of any channels 
     for channel in channels:
         for user in channel['members']:
-            if user == sub_user
+            if user == sub_user:
                 channel['members'].remove(user)
     
     # Removes user as owner of any channels
     for channel in channels:
         for user in channel['owners']:
-            if user == sub_user
+            if user == sub_user:
                 channel['owners'].remove(user)
     
     #Removes user for user database

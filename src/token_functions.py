@@ -32,4 +32,6 @@ def generate_token():
 
 if __name__ == "__main__":
     print(generate_token())
+    print(generate_token())
+
     print(generate_register_token(2))
