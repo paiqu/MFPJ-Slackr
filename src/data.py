@@ -1,9 +1,11 @@
+'''file to store data'''
 from class_file import User, Channel, Message, React, Standup
 import os
 import pickle
+
 DATA = {
-    'users': [], # a list of users {u_id: user_1}
-    'channels': [], # a list of channels  {channel_id: channel_1}
+    'users': [], # a list of users
+    'channels': [], # a list of channels
     'messages': [], # a list of messages
     'reacts': [], # a list of reacts
     'standups': [], # a list of standups
@@ -27,3 +29,11 @@ def get_Secret():
     return SECRET
 
 
+HANGMAN_WORD = ""
+BOT_TOKEN = ""
+CORRECT_GUESSED = []
+WRONG_GUESS = []
+CORRECT_TIMES = 0
+WRONG_TIMES = 0
+GUESSED = ''
+HAVE_GUESSED = []
