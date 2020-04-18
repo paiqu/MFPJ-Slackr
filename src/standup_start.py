@@ -8,7 +8,7 @@ import threading
 from flask import Blueprint, request
 from check_functions import channel_id_check, token_to_uid
 from error import InputError
-from class_file import Standup
+from class_file import Standup, Message
 from data import getData
 
 START = Blueprint('start', __name__)

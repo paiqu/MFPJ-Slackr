@@ -52,11 +52,11 @@ def standup_send(token, channel_id, message):
     for user in users:
         if user['u_id'] == token_to_uid(token):
             user_name = user['name_first']
-        for channel in channels:
-            if channel['channel_id'] == channel_id:
-                for standup in standups:
-                    if standup['channel_id'] == channel_id:
-                        message_list = f"{user_name}: {message}"
-                        standup['messages'].append(message_list)
+            for channel in channels:
+                if channel['channel_id'] == channel_id:
+                    for standup in standups:
+                        if standup['channel_id'] == channel_id:
+                            message_list = f"{user_name}: {message}"
+                            standup['messages'].append(message_list)
     return {}
 
