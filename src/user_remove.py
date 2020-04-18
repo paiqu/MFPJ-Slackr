@@ -44,6 +44,10 @@ def remove_user(token, u_id):
     users = DATA['users']
     channels = DATA['channels']
 
+    # Checks the User ID is valid
+    if user_id_check(u_id) == False:
+        raise InputError("This is not a valid user or user ID")
+
     for user in users:
         if user['u_id'] == token_to_uid(token):
             admin_user = user
@@ -51,10 +55,7 @@ def remove_user(token, u_id):
         if user['u_id'] == u_id:
             sub_user = user         
 
-    # Checks the User ID is valid
-    if user_id_check(u_id) == False:
-        raise InputError("This is not a valid user or user ID")
-
+    
 
     # If not slackr owner
     if admin_user['is_slack_owner'] == False:
