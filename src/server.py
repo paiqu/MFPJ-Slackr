@@ -59,6 +59,7 @@ CORS(APP)
 
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 APP.register_error_handler(Exception, defaultHandler)
 
 APP.register_blueprint(LOGIN)
