@@ -60,7 +60,8 @@ def channel_details(token, channel_id):
         owner_dict = {
             'u_id' : owner['u_id'],
             'name_first' : owner['name_first'],
-            'name_last' : owner['name_last']
+            'name_last' : owner['name_last'],
+            'profile_img_url' : owner['profile_img_url']
         }
         owner_members_list.append(owner_dict)
 
@@ -68,7 +69,8 @@ def channel_details(token, channel_id):
         member_dict = {
             'u_id' : member['u_id'],
             'name_first' : member['name_first'],
-            'name_last' : member['name_last']
+            'name_last' : member['name_last'],
+            'profile_img_url' : owner['profile_img_url']
         }
         all_members_list.append(member_dict)
     return {

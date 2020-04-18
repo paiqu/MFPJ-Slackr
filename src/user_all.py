@@ -31,6 +31,7 @@ def users_all(token):
         new_dict['name_first'] = user['name_first']
         new_dict['name_last'] = user['name_last']
         new_dict['handle'] = user['handle']
+        new_dict['profile_img_url'] = user['profile_img_url']
         new_list.append(new_dict)
       
     return_dict = {}        

@@ -40,5 +40,5 @@ def user_profile(token, u_id):
             user['user']['name_first'] = existuser['name_first']
             user['user']['name_last'] = existuser['name_last']
             user['user']['handle_str'] = existuser['handle']
-
+            user['user']['profile_img_url'] = existuser['profile_img_url']
     return user
