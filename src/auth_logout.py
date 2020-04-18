@@ -47,7 +47,7 @@ def auth_logout(token):
                 new_dict = {}
                 new_dict['is_success'] = True
                 return new_dict
-            else: 
-                raise InputError("Problem occurred while logging out")
+            #else: 
+                #raise InputError("Problem occurred while logging out")
                
   

@@ -3,7 +3,7 @@ from json import dumps
 from flask import Blueprint, request
 from check_functions import channel_id_check, channel_member_check, token_to_uid
 from error import InputError, AccessError
-from token_functions import generate_token
+from token_functions import generate_token, generate_register_token
 from valid_email import check 
 from class_file import User
 
@@ -64,7 +64,7 @@ def auth_register(email, password, name_first, name_last):
     if check(email) == False:
         raise InputError("This is not a valid email")
 
-    for user in data['users']:
+    for user in users:
         if user['email'] == email:
             raise InputError("This email is already being used by another user")
     
@@ -81,7 +81,7 @@ def auth_register(email, password, name_first, name_last):
     generate_ID = data['users_count']
     user_1 = User(generate_ID, email, name_first, name_last)
     user_1.handle = generateHandle(name_first, name_last)
-    user_1.token = str(generate_token(generate_ID))
+    user_1.register_token = str(generate_register_token(generate_ID))
 
     if data['users'] == []:
         user_1.is_slack_owner = True
@@ -91,17 +91,15 @@ def auth_register(email, password, name_first, name_last):
     user_1.password = password
     user_1 = vars(user_1)
     
-    '''
+    
 
-    which one is correct? The first one is what I submitted for iteration 2 
     data['users'].append(user_1)
     
-    users.append(target_user)
-    '''
+    
 
     return dumps({
         'u_id' : user_1['u_id'],
-        'token': user_1['token']
+        'token': user_1['register_token']
     })
     
 
