@@ -1,4 +1,12 @@
 import sys
+import threading
+import pickle
+import random
+import string
+from flask_mail import Mail, Message
+from data import getData
+from check_functions import user_exists_check
+from data import getData
 from json import dumps
 from flask import Flask, request, blueprints
 from flask_cors import CORS
@@ -7,7 +15,6 @@ from channels_create import CREATE
 from channel_addowner import ADDOWNER
 from channel_removeowner import RMVOWNER
 from channel_join import JOIN
-
 from class_file import User
 from auth_register_route import REGISTER
 from auth_login import LOGIN
@@ -39,11 +46,6 @@ from workspace_reset import RESET
 from channel_leave import LEAVE
 from auth_passwordreset_reset import PASSWORDRESET_RESET
 
-import random
-import string
-from flask_mail import Mail, Message
-from data import getData
-from check_functions import user_exists_check
 
 def defaultHandler(err):
     response = err.get_response()
@@ -108,7 +110,23 @@ APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
 APP.register_blueprint(PASSWORDRESET_RESET)
 
+def save():
+    """
+    regularly pickle data
+    """
+    DATA = getData()
+    print("saved")
+    with open('dataStore.p', 'wb') as FILE:
+        pickle.dump(DATA, FILE)
 
+def timerAction():
+    """
+    a timer to regularly store data
+    """
+    timer = threading.Timer(30.0, timerAction)
+    timer.daemon = True
+    timer.start()
+    save()
 # Example
 
 @APP.route("/echo", methods=['GET'])
@@ -145,4 +163,7 @@ def passwordreset_request(email):
     return {}
 
 if __name__ == "__main__":
+    
+    timerAction()
+
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
