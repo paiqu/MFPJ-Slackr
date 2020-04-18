@@ -1,8 +1,8 @@
-from class_file import User, Channel, Message, React, Standup
+'''file to store data'''
 
 DATA = {
-    'users': [], # a list of users {u_id: user_1}
-    'channels': [], # a list of channels  {channel_id: channel_1}
+    'users': [], # a list of users
+    'channels': [], # a list of channels
     'messages': [], # a list of messages
     'reacts': [], # a list of reacts
     'standups': [], # a list of standups
@@ -12,7 +12,6 @@ DATA = {
 }
 
 SECRET = 'MFPJ'
-
 
 def getData():
     global DATA
@@ -25,3 +24,11 @@ def get_Secret():
 CHANNELS_COUNT = 0
 MESSAGE_COUNT = 0
 
+HANGMAN_WORD = ""
+BOT_TOKEN = ""
+CORRECT_GUESSED = []
+WRONG_GUESS = []
+CORRECT_TIMES = 0
+WRONG_TIMES = 0
+GUESSED = ''
+HAVE_GUESSED = []
