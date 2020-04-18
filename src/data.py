@@ -1,7 +1,7 @@
 '''file to store data'''
-from class_file import User, Channel, Message, React, Standup
 import os
 import pickle
+from class_file import User, Channel, Message, React, Standup
 
 DATA = {
     'users': [], # a list of users
