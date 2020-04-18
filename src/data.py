@@ -1,4 +1,4 @@
-from class_file import User, Channel, Message, React, Standup
+'''file to store data'''
 
 DATA = {
     'users': [], # a list of users
@@ -32,4 +32,3 @@ CORRECT_TIMES = 0
 WRONG_TIMES = 0
 GUESSED = ''
 HAVE_GUESSED = []
-

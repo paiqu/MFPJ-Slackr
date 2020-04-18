@@ -1,13 +1,13 @@
 '''Route implementation for message_send'''
 import datetime
 from json import dumps
+import random
 from flask import Blueprint, request
 from check_functions import token_to_uid, channel_member_check, channel_game_on
 from error import InputError, AccessError
 from data import getData, HANGMAN_WORD, BOT_TOKEN, CORRECT_GUESSED, WRONG_GUESS, CORRECT_TIMES, WRONG_TIMES, GUESSED, HAVE_GUESSED
 from class_file import Message, User
-from phases import *
-import random
+from phases import phases_list
 from token_functions import generate_token
 
 
@@ -78,7 +78,7 @@ def hangman_start(token, channel_id, message):
     for channel in DATA['channels']:
         if channel['channel_id'] == channel_id:
             target_channel = channel
-    
+
     target_channel['members'].append(hangman_bot)
     target_channel['game_on'] = True
 
@@ -116,7 +116,7 @@ def hangman_guess(token, channel_id, message):
     global CORRECT_TIMES
     global WRONG_TIMES
     global GUESSED
-    
+
     if guess in HANGMAN_WORD:
         CORRECT_TIMES += 1
         index_list = []
@@ -133,7 +133,7 @@ def hangman_guess(token, channel_id, message):
 
         if GUESSED != '':
             out_message += "You have guessed {} \n".format(GUESSED)
-        
+
         if CORRECT_TIMES == len(set(HANGMAN_WORD)):
             out_message += "You won! \n"
             target_channel['game_on'] = False
@@ -141,28 +141,28 @@ def hangman_guess(token, channel_id, message):
 
         return message_send(BOT_TOKEN, channel_id, out_message)
 
-    else:
-        WRONG_TIMES += 1
 
-        if WRONG_TIMES == 10:
-            out_message = "You lost! \n"
-            out_message += phases_list[10]
+    WRONG_TIMES += 1
 
-            target_channel['game_on'] = False
-            return message_send(BOT_TOKEN, channel_id, out_message)
+    if WRONG_TIMES == 10:
+        out_message = "You lost! \n"
+        out_message += phases_list[10]
 
-        WRONG_GUESS.append(guess)
-        GUESSED = ' '.join(map(str, WRONG_GUESS))
-
-        have_guessed_in_str = ' '.join(str(elem) for elem in CORRECT_GUESSED)
-
-        out_message = (
-            "Word: {} \n"
-            "{} \n"
-            "You have gussed {} \n"
-        ).format(have_guessed_in_str, phases_list[WRONG_TIMES], GUESSED)
-
+        target_channel['game_on'] = False
         return message_send(BOT_TOKEN, channel_id, out_message)
+
+    WRONG_GUESS.append(guess)
+    GUESSED = ' '.join(map(str, WRONG_GUESS))
+
+    have_guessed_in_str = ' '.join(str(elem) for elem in CORRECT_GUESSED)
+
+    out_message = (
+        "Word: {} \n"
+        "{} \n"
+        "You have gussed {} \n"
+    ).format(have_guessed_in_str, phases_list[WRONG_TIMES], GUESSED)
+
+    return message_send(BOT_TOKEN, channel_id, out_message)
 
 def message_send(token, channel_id, message):
     '''Send a message from authorised_user to the channel specified by channel_id'''
