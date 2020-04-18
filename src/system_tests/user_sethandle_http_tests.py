@@ -107,7 +107,7 @@ def test_set_handle(register_and_login_user_1_2):
     # Set a handle
     user_info = dumps({
         'token': user_1_token,
-        'handle': 'Tim'
+        'handle_str': 'Tim'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -134,7 +134,7 @@ def test_error_short_type(register_and_login_user_1_2):
     # Set the user's handle
     user_info = dumps({
         'token': user_1_token,
-        'handle': 'T'
+        'handle_str': 'T'
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -156,7 +156,7 @@ def test_error_long_type(register_and_login_user_1_2):
     # Set the user's handle
     user_info = dumps({
         'token': user_1_token,
-        'handle': 'T' * 51
+        'handle_str': 'T' * 51
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -177,7 +177,7 @@ def test_error_used_handle(register_and_login_user_1_2):
     # Set a user's handle
     user_info = dumps({
         'token': user_1_token,
-        'handle': 'petepeteer',
+        'handle_str': 'petepeteer',
     }).encode('utf-8')
 
     req = urllib.request.Request(
