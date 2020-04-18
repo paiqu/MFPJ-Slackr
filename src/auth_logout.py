@@ -44,6 +44,7 @@ def auth_logout(token):
             if user['is_login'] == True:
                 ###LOGS USER OUT - TOKEN BECOMES FALSE 
                 user['is_login'] = False
+                user['token'] = ''
                 new_dict = {}
                 new_dict['is_success'] = True
                 return new_dict

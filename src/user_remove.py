@@ -6,7 +6,7 @@ Given a User by their user ID, remove the user from the slackr.
 
 from json import dumps
 from flask import Blueprint, request
-from check_functions import channel_id_check, channel_member_check, token_to_uid, user_id_check
+from check_functions import channel_id_check, channel_member_check, token_to_uid, user_id_check, register_token_to_uid
 from channels_list import channels_list
 from channel_addowner import channel_addowner
 from error import InputError, AccessError
@@ -23,7 +23,7 @@ def rmv_user():
     '''
     request info for remove user
     '''
-    token = request.args.get('login_token')
+    token = request.args.get('token')
     u_id = int(request.args.get('u_id'))
     #u_id = int(u_id)
 

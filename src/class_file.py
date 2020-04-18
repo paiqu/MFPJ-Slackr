@@ -7,11 +7,11 @@ class User:
         self.name_first = name_first
         self.name_last = name_last
         self.handle = ''
-        self.global_permission= 2
+        self.global_permission = 2
         self.is_slack_owner = False
         self.is_login = False
         self.register_token = ''
-        self.login_token = ''
+        self.token = ''
          
 
 class Channel:

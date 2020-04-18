@@ -62,10 +62,10 @@ def auth_login(email, password):
         if user['email'] == email:
                 if user['email'] == email and user['password'] == password:
                     user['is_login'] = True
-                    user['login_token'] = generate_token()
+                    user['login'] = generate_token()
                     return dumps({
                         'u_id': user['u_id'],
-                        'token' : user['login_token']   
+                        'token' : user['login']   
                     })
                 else: 
                     raise InputError("Password incorrect")

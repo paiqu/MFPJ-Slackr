@@ -84,7 +84,7 @@ def token_to_uid(token):
 
     users = DATA['users']
     for user in users:
-        if user['login_token'] == token:
+        if user['token'] == token:
             user_found = user
             return user_found['u_id']
 

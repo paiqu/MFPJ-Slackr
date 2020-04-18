@@ -48,12 +48,6 @@ def admin_permission(token, u_id, permission_id):
     users = DATA['users']
     channels = DATA['channels']
 
-    for user in users:
-        if user['u_id'] == token_to_uid(token):
-            admin_user = user
-    for user in users:
-        if user['u_id'] == u_id:
-            sub_user = user         
 
     # Checks the User ID is valid
     if user_id_check(u_id) == False:
@@ -64,7 +58,17 @@ def admin_permission(token, u_id, permission_id):
     if permission_id != 1:
         raise InputError('This is not a valid permission number')
 
-    # The admin user has permission priviledges 
+
+    for user in users:
+        if user['u_id'] == token_to_uid(token):
+            admin_user = user
+    for user in users:
+        if user['u_id'] == u_id:
+            sub_user = user         
+
+
+
+    # The admin user has permission privileges 
     if admin_user['global_permission'] != 1:
         raise AccessError("The admin user is not authorised")
     
@@ -72,6 +76,7 @@ def admin_permission(token, u_id, permission_id):
 
     #### IS THIS RIGHT?
     sub_user['global_permission'] = permission_id
+    sub_user['is_slack_owner'] = True
     
 
     #changes the users permission privileges to owner if they aren't already owner 
