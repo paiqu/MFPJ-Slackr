@@ -1,14 +1,15 @@
+'''
+Route for user sethandle
+'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import token_check, token_to_uid
-from error import InputError, AccessError
-
-from class_file import User
-from data import *
+from check_functions import token_to_uid
+from error import InputError
+from data import getData
 
 SETHANDLE = Blueprint('sethandle', __name__)
 
-@SETHANDLE.route('/user/sethandle', methods=['PUT'])
+@SETHANDLE.route('/user/profile/sethandle', methods=['PUT'])
 def sethandle():
     '''function for route of user sethandle'''
     store = request.get_json()
@@ -24,8 +25,8 @@ def user_sethandle(token, handle):
         handle has been used by another user
 
     ASSUME: the token id is valid
-    '''  
-    DATA = getData()    
+    '''
+    DATA = getData()
     if  len(handle) < 2 or len(handle) > 20:
         raise InputError("Invalid handle")
     for user in DATA['users']:
