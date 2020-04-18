@@ -87,6 +87,8 @@ def token_to_uid(token):
         if user['token'] == token:
             user_found = user
             return user_found['u_id']
+    
+    return False
 
 
 def message_id_check(message_id):
