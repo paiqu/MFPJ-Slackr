@@ -15,25 +15,23 @@ Steps to test standup/start:
         2. test fot Error:
             Raise InputError when channel_id is not valid
 '''
-import time
 import datetime
 from datetime import timezone
 import sys
 sys.path.append('..')
 from json import load, dumps
-import urllib
-import flask
+import urllib.request
 import pytest
-from data import *
-from error import InputError
 
-
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login user one
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -42,7 +40,7 @@ def register_and_login_user_1():
     )
 
     load(urllib.request.urlopen(req))
-    
+
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword',
@@ -52,13 +50,12 @@ def register_and_login_user_1():
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data = register_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=register_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
-    
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword'
@@ -73,12 +70,12 @@ def register_and_login_user_1():
 
     payload = load(urllib.request.urlopen(req))
     return payload
-    
-def create_public_channel(register_and_login_user_1):
 
+def create_public_channel(register_and_login_user_1):
+    '''
+    create a public channel
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_and_login_user_1
-    
     # Create a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -94,8 +91,12 @@ def create_public_channel(register_and_login_user_1):
     )
 
     payload = load(urllib.request.urlopen(req))
+    return payload
 
 def test_standup_active(register_and_login_user_1):
+    '''
+    This function is to test when channel1 is standup.
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
@@ -109,12 +110,18 @@ def test_standup_active(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
-    load(urllib.request.urlopen(req))
+    payload = load(urllib.request.urlopen(req))
+
+    length = 500
+    now = datetime.datetime.utcnow()
+    time_start = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_end = int(time_start + int(length))
+    assert payload == time_end
 
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
@@ -122,19 +129,12 @@ def test_standup_active(register_and_login_user_1):
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/standup/active?{queryString}"))
 
-    channels = DATA['channels']
-    standups = DATA['standups']
-    
-    for channel in channels:
-        if channel['channel_id'] == channel_id:
-            if channel['is_standup_active'] == True:
-                for standup in standups:
-                    if standup['channel_id'] == channel_id:
-                        assert payload['time_end'] == standup['time_end']
-    
     assert payload['is_active'] == True
 
 def test_standup_active_2(register_and_login_user_1):
+    '''
+    This function is to test when channel2 is not standup.
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
@@ -149,12 +149,13 @@ def test_standup_active_2(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
-    load(urllib.request.urlopen(req))
+    payload = load(urllib.request.urlopen(req))
+
 
     queryString = urllib.parse.urlencode({
         'token' : user_1_token,
@@ -162,22 +163,17 @@ def test_standup_active_2(register_and_login_user_1):
     })
     payload = load(urllib.request.urlopen(f"{BASE_URL}/standup/active?{queryString}"))
 
-    
-    channels = DATA['channels']
-    standups = DATA['standups']
-    
-    for channel in channels:
-        if channel['channel_id'] == channel_id:
-            if channel['is_standup_active'] == False:
-                assert payload['is_active'] == False
-                assert payload['time_end'] == None
+    assert payload['is_active'] == False
+    assert payload['time_finish'] == None
 
 def test_invalid_channel_id(register_and_login_user_1):
+    '''
+    This function is test whether the channel_id is valid
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
-
-    # Set standup state 
+    # Set standup state
     channel_info = dumps({
         'token': user_1_token,
         'channel_id': 2,
@@ -186,9 +182,9 @@ def test_invalid_channel_id(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):

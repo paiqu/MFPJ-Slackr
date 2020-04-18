@@ -18,29 +18,25 @@ Steps to test channel/create:
 import sys
 sys.path.append('..')
 from json import load, dumps
-import urllib
-import flask
+import urllib.request
 import pytest
-from data import *
-from error import InputError
 
-
-
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
 def register_and_login_user_1_2():
+    '''
+    register and login user one
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-
     load(urllib.request.urlopen(req))
-    
     #REGISTER user_1
     register_info = dumps({
         'email': 'z1234567@unsw.edu.au',
@@ -51,9 +47,9 @@ def register_and_login_user_1_2():
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data = register_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=register_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
@@ -75,8 +71,7 @@ def register_and_login_user_1_2():
     )
 
     load(urllib.request.urlopen(req))
-
-    #LOGIN user_1    
+    #LOGIN user_1
     login_info = dumps({
         'email': 'z1234567@unsw.edu.au',
         'password': 'thisisaPassword'
@@ -105,9 +100,11 @@ def register_and_login_user_1_2():
     load(urllib.request.urlopen(req))
 
 def test_set_email(register_and_login_user_1_2):
+    '''
+    This function is for set email successfully
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_and_login_user_1_2
-    
+
     # Set a email
     user_info = dumps({
         'token': user_1_token,
@@ -115,18 +112,24 @@ def test_set_email(register_and_login_user_1_2):
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setemail',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/user/profile/setemail',
+        data=user_info,
+        headers={'Content-Type': 'application/json'},
+        method='PUT'
     )
-    for user in DATA['users']:
-        if user['u_id'] == token_to_uid(token):
-            assert user['email'] == 'z3456789@unsw.edu.au'
-    payload = load(urllib.request.urlopen(req))
-    assert payload == {}
+    load(urllib.request.urlopen(req))
 
-def test_error_no_type(register_and_login_user_1_2):
+    queryString = urllib.parse.urlencode({
+        'token' : user_1_token,
+    })
+    payload = load(urllib.request.urlopen(f"{BASE_URL}/users/all?{queryString}"))
+
+    assert payload['users'][0]['email'] == 'z3456789@unsw.edu.au'
+
+def test_error_invalid_type(register_and_login_user_1_2):
+    '''
+    This function is for test raising error if type invalid
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     # Set the user's email
@@ -136,21 +139,20 @@ def test_error_no_type(register_and_login_user_1_2):
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setemail',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/user/profile/setemail',
+        data=user_info,
+        headers={'Content-Type': 'application/json'},
+        method='PUT'
     )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
 def test_error_used_email(register_and_login_user_1_2):
+    '''
+    This function is for test raising error if use used email
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
-    response = register_and_login_user_1_2
-    user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-    response_2 = register_and_login_user_1_2
-    
     # Set a user's email
     user_info = dumps({
         'token': user_1_token,
@@ -158,10 +160,10 @@ def test_error_used_email(register_and_login_user_1_2):
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        f'{BASE_URL}/user/setemail',
-        data = user_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'PUT'
+        f'{BASE_URL}/user/profile/setemail',
+        data=user_info,
+        headers={'Content-Type': 'application/json'},
+        method='PUT'
     )
 
     with pytest.raises(urllib.error.HTTPError):
