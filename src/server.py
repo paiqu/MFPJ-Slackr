@@ -1,4 +1,7 @@
 import sys
+import threading
+import pickle
+from data import getData
 from json import dumps
 from flask import Flask, request, blueprints
 from flask_cors import CORS
@@ -7,12 +10,11 @@ from channels_create import CREATE
 from channel_addowner import ADDOWNER
 from channel_removeowner import RMVOWNER
 from channel_join import JOIN
-
 from class_file import User
-from auth_register_route import REGISTER 
-from auth_login import LOGIN 
+from auth_register_route import REGISTER
+from auth_login import LOGIN
 from auth_logout import LOGOUT
-from channel_invite import INVITE 
+from channel_invite import INVITE
 from channel_details import DETAILS
 from user_permission import PERMISSION
 from message_sendlater import SENDMESSAGELATER
@@ -38,7 +40,6 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
-
 
 
 def defaultHandler(err):
@@ -93,7 +94,23 @@ APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
 
+def save():
+    """
+    regularly pickle data
+    """
+    DATA = getData()
+    print("saved")
+    with open('dataStore.p', 'wb') as FILE:
+        pickle.dump(DATA, FILE)
 
+def timerAction():
+    """
+    a timer to regularly store data
+    """
+    timer = threading.Timer(30.0, timerAction)
+    timer.daemon = True
+    timer.start()
+    save()
 # Example
 
 @APP.route("/echo", methods=['GET'])
@@ -106,4 +123,7 @@ def echo():
     })
 
 if __name__ == "__main__":
+    
+    timerAction()
+
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))

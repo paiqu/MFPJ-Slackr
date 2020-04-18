@@ -1,4 +1,7 @@
 '''file to store data'''
+import os
+import pickle
+from class_file import User, Channel, Message, React, Standup
 
 DATA = {
     'users': [], # a list of users
@@ -11,6 +14,10 @@ DATA = {
     'messages_count': 0
 }
 
+if os.path.exists('dataStore.p'):
+    DATA = pickle.load(open('dataStore.p', 'rb'))
+
+
 SECRET = 'MFPJ'
 
 def getData():
@@ -21,8 +28,6 @@ def get_Secret():
     global SECRET
     return SECRET
 
-CHANNELS_COUNT = 0
-MESSAGE_COUNT = 0
 
 HANGMAN_WORD = ""
 BOT_TOKEN = ""
