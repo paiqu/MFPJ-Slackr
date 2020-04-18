@@ -38,6 +38,7 @@ from standup_send import SEND
 from workspace_reset import RESET
 from channel_join import JOIN
 from channel_leave import LEAVE
+from user_profile_uploadphoto import PHOTO
 
 
 
@@ -92,6 +93,7 @@ APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
+APP.register_blueprint(PHOTO)
 
 
 # Example
@@ -107,3 +109,4 @@ def echo():
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
+
