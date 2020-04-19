@@ -8,7 +8,7 @@ from error import InputError, AccessError
 from data import getData, HANGMAN_WORD, BOT_TOKEN, CORRECT_GUESSED, WRONG_GUESS, CORRECT_TIMES, WRONG_TIMES, GUESSED, HAVE_GUESSED
 from class_file import Message, User
 from phases import phases_list
-from token_functions import generate_token
+from token_functions import generate_register_token
 
 
 SENDMESSAGE = Blueprint('message_send', __name__)
@@ -84,7 +84,7 @@ def hangman_start(token, channel_id, message):
         DATA['users'].append(hangman_bot)
         target_channel['members'].append(hangman_bot)
 
-        BOT_TOKEN = str(generate_token(generate_ID))
+        BOT_TOKEN = str(generate_register_token(generate_ID))
 
 
     return message_send(BOT_TOKEN, channel_id, out_message)
