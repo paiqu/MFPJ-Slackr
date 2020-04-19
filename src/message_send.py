@@ -48,7 +48,6 @@ def hangman_start(token, channel_id, message):
     global WRONG_TIMES
 
     HANGMAN_WORD = ""
-    BOT_TOKEN = ""
     CORRECT_GUESSED.clear()
     WRONG_GUESS.clear()
     CORRECT_TIMES = 0
@@ -67,22 +66,26 @@ def hangman_start(token, channel_id, message):
         "Word: {}"
     ).format(word_to_guess)
 
+
     DATA = getData()
-
-    DATA['users_count'] += 1
-    generate_ID = DATA['users_count']
-
-    hangman_bot = vars(User(generate_ID, "Hangman@bot.com", "Hangman", "Bot"))
-    DATA['users'].append(hangman_bot)
 
     for channel in DATA['channels']:
         if channel['channel_id'] == channel_id:
             target_channel = channel
-
-    target_channel['members'].append(hangman_bot)
+    
     target_channel['game_on'] = True
 
-    BOT_TOKEN = str(generate_token(generate_ID))
+    # create a hangman bot if it has not been created yet
+    if BOT_TOKEN == "":
+        DATA['users_count'] += 1
+        generate_ID = DATA['users_count']
+
+        hangman_bot = vars(User(generate_ID, "Hangman@bot.com", "Hangman", "Bot"))
+        DATA['users'].append(hangman_bot)
+        target_channel['members'].append(hangman_bot)
+
+        BOT_TOKEN = str(generate_token(generate_ID))
+
 
     return message_send(BOT_TOKEN, channel_id, out_message)
 
@@ -137,6 +140,7 @@ def hangman_guess(token, channel_id, message):
         if CORRECT_TIMES == len(set(HANGMAN_WORD)):
             out_message += "You won! \n"
             target_channel['game_on'] = False
+
             return message_send(BOT_TOKEN, channel_id, out_message)
 
         return message_send(BOT_TOKEN, channel_id, out_message)
@@ -149,6 +153,7 @@ def hangman_guess(token, channel_id, message):
         out_message += phases_list[10]
 
         target_channel['game_on'] = False
+
         return message_send(BOT_TOKEN, channel_id, out_message)
 
     WRONG_GUESS.append(guess)
@@ -184,7 +189,7 @@ def message_send(token, channel_id, message):
     current_time = int(now.replace(tzinfo=datetime.timezone.utc).timestamp())
     DATA['messages'].append(vars(Message(message, message_id, channel_id, token_to_uid(token), int(current_time))))
 
-    returnvalue = {}
+    returnvalue = {} 
     returnvalue['message_id'] = message_id
 
     return returnvalue
