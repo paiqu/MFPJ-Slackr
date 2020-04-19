@@ -170,6 +170,6 @@ def passwordreset_request(email):
 
 if __name__ == "__main__":
     
-    # timerAction()
+    timerAction()
 
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
