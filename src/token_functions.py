@@ -1,13 +1,13 @@
 '''This file stores token functions'''
 import jwt
-from data import DATA, get_Secret
+from data import get_Secret
 
 login_count = 0
 
 def generate_register_token(u_id):
     '''
     convert a u_id to token. Encode it with HS256
-    This is for register token 
+    This is for register token
     '''
     SECRET = get_Secret()
 
@@ -17,12 +17,12 @@ def generate_register_token(u_id):
 
 
 def generate_token():
-    global login_count 
-    login_count +=1
-    ''' 
-    convert a u_id to token. Encode it with HS256
-    This is for login tokens 
     '''
+    convert a u_id to token. Encode it with HS256
+    This is for login tokens
+    '''
+    global login_count
+    login_count += 1
     SECRET = get_Secret()
 
     encoded = jwt.encode({'count': str(login_count)}, SECRET, algorithm="HS256")
