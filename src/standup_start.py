@@ -77,7 +77,7 @@ def standup_start(token, channel_id, length):
         for standup in standups:
             if standup['channel_id'] == channel_id:
                 standups.remove(standup)
-        
+
     timer = threading.Timer(length, message_send_all, args=(message_id, channel_id, u_id, time_sent))
     timer.start()
     return time_end
