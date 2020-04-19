@@ -1,6 +1,11 @@
 import sys
 import threading
 import pickle
+import random
+import string
+from flask_mail import Mail, Message
+from data import getData
+from check_functions import user_exists_check
 from data import getData
 from json import dumps
 from flask import Flask, request, blueprints
@@ -38,8 +43,8 @@ from standup_start import START
 from standup_active import ACTIVE
 from standup_send import SEND
 from workspace_reset import RESET
-from channel_join import JOIN
 from channel_leave import LEAVE
+from auth_passwordreset_reset import PASSWORDRESET_RESET
 
 
 def defaultHandler(err):
@@ -53,8 +58,18 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-
 APP = Flask(__name__)
+APP.config['MAIL_DEBUG'] = True
+APP.config['MAIL_SUPPRESS_SEND'] = False
+APP.config['MAIL_SERVER'] = 'smtp.gmail.com'
+APP.config['MAIL_PORT'] = 465
+APP.config['MAIL_USE_SSL'] = True
+APP.config['MAIL_USE_TLS'] = False
+APP.config['MAIL_USERNAME'] = 'oneroit7@gmail.com'
+APP.config['MAIL_PASSWORD'] = 'tyzplgibskjdwvtx'
+APP.config['MAIL_DEFAULT_SENDER'] = 'oneroit7@gmail.com'
+mail = Mail(APP)
+
 CORS(APP)
 
 
@@ -93,6 +108,7 @@ APP.register_blueprint(ACTIVE)
 APP.register_blueprint(SEND)
 APP.register_blueprint(PERMISSION)
 APP.register_blueprint(RESET)
+APP.register_blueprint(PASSWORDRESET_RESET)
 
 def save():
     """
@@ -121,6 +137,30 @@ def echo():
     return dumps({
         'data': data
     })
+
+@APP.route('/auth/passwordreset/request', methods=['POST'])
+def reset_request():
+    '''function for route passwordreset/request'''
+    info = request.get_json()
+    email = info['email']
+    return dumps(passwordreset_request(email))
+
+def passwordreset_request(email):
+    '''
+    Given an email address, if the user is a registered user,
+    send's them a an email containing a specific secret code
+    '''
+    if user_exists_check(email):
+        secret_code = ''.join(random.choice(string.digits) for _ in range(5))
+        msg = Message('Slack reset code: ' + secret_code,
+                      sender='from@example.com',
+                      recipients=[email])
+        mail.send(msg)
+        DATA = getData()
+        for user in DATA['users']:
+            if user['email'] == email:
+                user['reset_code'] = secret_code
+    return {}
 
 if __name__ == "__main__":
     
