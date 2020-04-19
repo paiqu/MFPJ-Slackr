@@ -11,7 +11,8 @@ DATA = {
     'standups': [], # a list of standups
     'users_count': 0,
     'channels_count': 0,
-    'messages_count': 0
+    'messages_count': 0,
+    'login_count': 0
 }
 
 if os.path.exists('dataStore.p'):

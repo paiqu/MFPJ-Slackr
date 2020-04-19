@@ -57,17 +57,17 @@ def auth_login(email, password):
 
     if user_exists_check(email) == False:
         raise InputError("Email entered does not belong to a user")
-       
+
     for user in data['users']:
         if user['email'] == email:
                 if user['email'] == email and user['password'] == password:
                     user['is_login'] = True
-                    token = str(generate_token())
-                    token_in_str = token[2:-1]
-                    user['token'] = token_in_str
+                    token = generate_token()
+                    user['token'] = token
+                    real_token = generate_register_token(token)
                     return dumps({
                         'u_id': user['u_id'],
-                        'token' : user['token']   
+                        'token' : real_token  
                     })
                 else: 
                     raise InputError("Password incorrect")

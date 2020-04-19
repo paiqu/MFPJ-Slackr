@@ -26,12 +26,11 @@ def logout():
     This function collects the information/parameters and calls the auth_logout function
     '''
     info = request.get_json()
-    
+
     token = info['token']
-    
+
     # must return { is_success }
     return dumps(auth_logout(token))
-    
 
 def auth_logout(token):
     '''

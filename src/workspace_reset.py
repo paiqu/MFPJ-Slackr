@@ -19,6 +19,7 @@ def reset():
     DATA['users_count'] = 0
     DATA['channels_count'] = 0
     DATA['messages_count'] = 0
+    DATA['login_count'] = 0
 
 
     global HANGMAN_WORD

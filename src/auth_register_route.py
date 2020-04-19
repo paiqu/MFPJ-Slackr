@@ -81,7 +81,6 @@ def auth_register(email, password, name_first, name_last):
     generate_ID = data['users_count']
     user_1 = User(generate_ID, email, name_first, name_last)
     user_1.handle = generateHandle(name_first, name_last)
-    user_1.register_token = str(generate_register_token(generate_ID))
 
     if data['users'] == []:
         user_1.is_slack_owner = True
@@ -92,14 +91,14 @@ def auth_register(email, password, name_first, name_last):
     user_1 = vars(user_1)
     
     
-
+    real_token = generate_register_token(generate_ID)
     data['users'].append(user_1)
     
     
 
     return dumps({
         'u_id' : user_1['u_id'],
-        'token': user_1['register_token']
+        'token': real_token
     })
     
 
