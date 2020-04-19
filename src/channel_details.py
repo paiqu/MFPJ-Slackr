@@ -39,16 +39,17 @@ def channel_details(token, channel_id):
             request_user = user
         
     
+
+    # Checks the Target Channel ID is not invalid 
+    if channel_id_check(channel_id) == False:
+        raise InputError("This is not a valid channel or channel ID")
+
     # Find the channel which the channel ID belongs to 
     for channel in channels:
         if channel['channel_id'] == channel_id:
             target_channel = channel
 
     
-    # Checks the Target Channel ID is not invalid 
-    if channel_id_check(target_channel['channel_id']) == False:
-        raise InputError("This is not a valid channel or channel ID")
-
     # Checks the Invitee/Token User is member of the channel 
     if channel_member_check(channel_id,token )== False:
         raise AccessError("The user requesting channel details is not a member of this channel")
@@ -81,4 +82,3 @@ def channel_details(token, channel_id):
                 'all_members' : all_members_list
 
             }
-

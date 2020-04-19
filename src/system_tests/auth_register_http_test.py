@@ -1,29 +1,33 @@
+'''
+HTTP Tests for the auth_register function
+'''
 import sys
 sys.path.append('..')
 from json import load, dumps
 import urllib.request
 import urllib.parse
 import pytest
-from data import DATA
 
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
-#BASE_URL now is 'http://127.0.0.1:5321'
+#BASE_URL now is 'http://127.0.0.1:5204'
 
 def test_basic():
-
+    '''
+    Tests a working auth_register
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
-    # Register a User 
+    # Register a User
     register_info = dumps({
         'email': 'z5555555@unsw.edu.au',
         'password': 'enigma',
@@ -42,15 +46,8 @@ def test_basic():
 
     assert payload['u_id'] == 1
 
-    '''
-    assert payload['token'] == 
-    global DATA
-    users = DATA['users']
-    user_1 = users[0]
-    '''
 
-
-def invalid_email_test():
+def test_invalid_email():
     '''
     Email entered is not a valid email
     '''
@@ -60,12 +57,12 @@ def invalid_email_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
-    # Register a User 
+    # Register a User
     register_info = dumps({
-        #email is missing @ sign 
+        #email is missing @ sign
         'email': 'z5555555unsw.edu.au',
         'password': 'enigma',
         'name_first': 'Alan',
@@ -83,7 +80,7 @@ def invalid_email_test():
         urllib.request.urlopen(req)
 
 
-def email_used_test():
+def test_email_used():
     '''
     Email address is already being used by another user
     '''
@@ -93,7 +90,7 @@ def email_used_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info = dumps({
@@ -128,7 +125,7 @@ def email_used_test():
         urllib.request.urlopen(req2)
 
 
-def short_password_test():
+def test_short_password():
     '''
     Password entered is less than 6 characters long
     '''
@@ -138,7 +135,7 @@ def short_password_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info1 = dumps({
@@ -159,7 +156,7 @@ def short_password_test():
         urllib.request.urlopen(req)
 
 
-def short_fname_test():
+def test_short_fname():
     '''
     first name is too short
     name_first not is between 1 and 50 characters inclusive in length
@@ -170,7 +167,7 @@ def short_fname_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info = dumps({
@@ -191,7 +188,7 @@ def short_fname_test():
         urllib.request.urlopen(req)
 
 
-def long_fname_test():
+def test_long_fname():
     '''
     first name is too long
     name_first not is between 1 and 50 characters inclusive in length
@@ -202,7 +199,7 @@ def long_fname_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info = dumps({
@@ -222,7 +219,7 @@ def long_fname_test():
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def short_lname_test():
+def test_short_lname():
     '''
     last name is too short
     name_first not is between 1 and 50 characters inclusive in length
@@ -233,7 +230,7 @@ def short_lname_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info = dumps({
@@ -254,9 +251,9 @@ def short_lname_test():
         urllib.request.urlopen(req)
 
 
-def long_lname_test():
+def test_long_lname():
     '''
-    last name is too long 
+    last name is too long
     name_first not is between 1 and 50 characters inclusive in length
     '''
     # RESET
@@ -265,7 +262,7 @@ def long_lname_test():
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
-    
+
     load(urllib.request.urlopen(req))
 
     register_info = dumps({
@@ -284,5 +281,3 @@ def long_lname_test():
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
-
-    
