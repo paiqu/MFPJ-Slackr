@@ -4,9 +4,9 @@ Server implementation for channels/create
 from json import dumps
 from flask import Blueprint, request
 from check_functions import token_to_uid
-from error import InputError
+from error import InputError, AccessError
 from class_file import Channel
-from data import getData
+from data import DATA
 
 
 CREATE = Blueprint('create', __name__)
@@ -35,14 +35,17 @@ def channels_create(token, name, is_public):
     elif not is_public:
         is_private = True
 
-    DATA = getData()
+    global DATA
     users = DATA['users']
 
 
+    found = False
     for user in users:
         if user['u_id'] == token_to_uid(token):
+            found = True
             target_user = user
-
+    if not found:
+        raise AccessError("no user with that token stored")
 
     DATA['channels_count'] += 1
 

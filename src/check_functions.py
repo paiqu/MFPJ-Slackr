@@ -51,12 +51,12 @@ def channel_member_check(channel_id, token):
         if channel['channel_id'] == channel_id:
             target_channel = channel
 
-    for user in users:
-        if user['u_id'] == token_to_uid(token):
-            target_member = user
+    # for user in users:
+    #     if user['u_id'] == token_to_uid(token):
+    #         target_member = user
 
     for member in target_channel['members']:
-        if member['u_id'] == target_member['u_id']:
+        if member['u_id'] == register_token_to_uid(token):
             return True
 
     return False
@@ -81,17 +81,16 @@ def token_to_uid(token):
     login_token only 
     '''    
     token = str(token)
-    token_in_str = token[2:-1]
+    #token_in_str = token[2:-1]
 
     DATA = getData()
 
     users = DATA['users']
     for user in users:
-        if user['token'] == token_in_str:
+        if user['token'] == token:
             user_found = user
-            return user_found['u_id']
-    
-    return False
+            return int(user_found['u_id'])
+
 
 
 def message_id_check(message_id):
