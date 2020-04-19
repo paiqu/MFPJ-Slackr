@@ -11,7 +11,7 @@ PROFILE = Blueprint('profile', __name__)
 def request_get():
     '''function for route user/profile'''
     token = request.args.get('token')
-    u_id = int(request.args.get('u_id'))
+    u_id = request.args.get('u_id')
     return dumps(user_profile(token, u_id))
 
 def user_profile(token, u_id):

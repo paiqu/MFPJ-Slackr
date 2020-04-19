@@ -39,6 +39,8 @@ def reset():
     GUESSED = ''
     HAVE_GUESSED.clear()
 
+    global LOGIN_COUNT
+    LOGIN_COUNT = 0
 
 
 

@@ -14,8 +14,8 @@ DATA = {
     'messages_count': 0
 }
 
-if os.path.exists('dataStore.p'):
-    DATA = pickle.load(open('dataStore.p', 'rb'))
+# if os.path.exists('dataStore.p'):
+#     DATA = pickle.load(open('dataStore.p', 'rb'))
 
 
 SECRET = 'MFPJ'
@@ -37,3 +37,5 @@ CORRECT_TIMES = 0
 WRONG_TIMES = 0
 GUESSED = ''
 HAVE_GUESSED = []
+
+LOGIN_COUNT = 0
