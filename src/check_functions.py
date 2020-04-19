@@ -79,12 +79,15 @@ def token_to_uid(token):
     '''
     This iterates through the user list to find a user with this token 
     login_token only 
-    '''
+    '''    
+    token = str(token)
+    token_in_str = token[2:-1]
+
     DATA = getData()
 
     users = DATA['users']
     for user in users:
-        if user['token'] == token:
+        if user['token'] == token_in_str:
             user_found = user
             return user_found['u_id']
     
