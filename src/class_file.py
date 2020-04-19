@@ -8,6 +8,7 @@ class User:
         self.name_last = name_last
         self.handle = ""
         self.global_permission= 2
+        self.profile_img_url = ""
         self.is_slack_owner = False
         self.is_login = False
          
