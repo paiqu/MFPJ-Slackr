@@ -70,7 +70,10 @@ def standup_start(token, channel_id, length):
                 for i in standup['messages']:
                     message = message + i + '\n'
         DATA['messages'].append(vars(Message(message, message_id, channel_id, u_id, time_sent)))
-
+        for channel in channels:
+            if channel['channel_id'] == channel_id:
+                channel['is_standup_active'] = False
+        
     timer = threading.Timer(length, message_send_all, args=(message_id, channel_id, u_id, time_sent))
     timer.start()
     return time_end
