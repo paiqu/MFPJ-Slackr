@@ -12,24 +12,6 @@ from data import DATA, getData
 LOGIN = Blueprint('login', __name__)
 
 
-
-def sendSuccess(DATA):
-    return dumps(DATA)
-
-def sendError(message):
-    return dumps({
-        '_error' : message,
-    })
-
-def getUserFromToken(token):
-    global SECRET
-    decoded = jwt.decode(token, SECRET, algorithms=['HS256'])
-    return decoded['email']
-'''
-def hashPassword(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-'''
-
 @LOGIN.route('/auth/login', methods=['POST'])
 def login():
     '''
@@ -41,7 +23,7 @@ def login():
     password = info['password']
 
     # must return { u_id, token }
-    return auth_login(email, password)
+    return dumps(auth_login(email, password))
     
 
 
@@ -50,7 +32,7 @@ def auth_login(email, password):
     This function authenticates the token to show the user is logged in
     changes is_login to false
     '''
-    data = getData()
+    global DATA
 
     if check(email) == False:
         raise InputError("This is not a valid email")
@@ -58,18 +40,18 @@ def auth_login(email, password):
     if user_exists_check(email) == False:
         raise InputError("Email entered does not belong to a user")
        
-    for user in data['users']:
-        if user['email'] == email:
-                if user['email'] == email and user['password'] == password:
-                    user['is_login'] = True
-                    token = str(generate_token())
-                    user['login_token'] = token
-                    return dumps({
-                        'u_id': user['u_id'],
-                        'token' : user['login_token']   
-                    })
-                else: 
-                    raise InputError("Password incorrect")
+    for user in DATA['users']:
+        if user['email'] == email and user['password'] == password:
+            user['is_login'] = True
+            token = str(generate_token())
+            user['login_token'] = token
+
+            new_dict = {}
+            new_dict['u_id'] = user['u_id']
+            new_dict['token'] = user['login_token']
+
+            return new_dict
+        
         
             
         

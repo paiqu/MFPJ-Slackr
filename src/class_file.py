@@ -10,7 +10,7 @@ class User:
         self.global_permission = 2
         self.is_slack_owner = False
         self.is_login = False
-        self.register_token = ''
+        self.login_token = ''
         self.token = ''
         self.profile_img_url = ""
         self.reset_code = ""
