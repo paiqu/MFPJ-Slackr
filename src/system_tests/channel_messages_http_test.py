@@ -24,7 +24,7 @@ import urllib.request
 import urllib.parse
 import pytest
 
-PORT_NUMBER = '1231'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 
 @pytest.fixture
