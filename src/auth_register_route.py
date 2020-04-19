@@ -58,7 +58,7 @@ def auth_register(email, password, name_first, name_last):
     '''
     This function creates a new user object and adds it to the user register list/dictionary 
     '''
-    data = getData()
+    global DATA
     users = DATA['users']
     
     if check(email) == False:
@@ -77,8 +77,8 @@ def auth_register(email, password, name_first, name_last):
     if (len(name_last) < 1) or (len(name_last) > 50):
         raise InputError("Last Name must be between 1 and 50 characters")
 
-    data['users_count'] += 1
-    generate_ID = data['users_count']
+    DATA['users_count'] += 1
+    generate_ID = DATA['users_count']
     user_1 = User(generate_ID, email, name_first, name_last)
     user_1.handle = generateHandle(name_first, name_last)
     #user_1.register_token = str(generate_register_token(generate_ID))
@@ -87,7 +87,7 @@ def auth_register(email, password, name_first, name_last):
     user_1.token = str(generate_register_token(generate_ID))
 
 
-    if data['users'] == []:
+    if DATA['users'] == []:
         user_1.is_slack_owner = True
         user_1.global_permission = 1
     
@@ -97,7 +97,7 @@ def auth_register(email, password, name_first, name_last):
     
     
 
-    data['users'].append(user_1)
+    DATA['users'].append(user_1)
     
     
 
