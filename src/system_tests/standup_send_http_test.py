@@ -18,26 +18,23 @@ Steps to test standup/start:
             Raise InputError when message is more than 1000 cahracters
             Raise AccessError when user is not the member of channel
 '''
-
-import time
-import datetime
-from datetime import timezone
 import sys
 sys.path.append('..')
 from json import load, dumps
-import urllib
-import flask
+import urllib.request
+import urllib.parse
 import pytest
-from data import *
-from error import InputError
 
 
-PORT_NUMBER = '5321'
+PORT_NUMBER = '5204'
 BASE_URL = 'http://127.0.0.1:' + PORT_NUMBER
 #BASE_URL now is 'http://127.0.0.1:5321'
 
 @pytest.fixture
 def register_and_login_user_1():
+    '''
+    register and login user one
+    '''
     # RESET
     req = urllib.request.Request(
         f'{BASE_URL}/workspace/reset',
@@ -57,9 +54,9 @@ def register_and_login_user_1():
 
     req = urllib.request.Request(
         f'{BASE_URL}/auth/register',
-        data = register_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=register_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
     # REGISTER user_2
     register_info_2 = dumps({
@@ -107,12 +104,13 @@ def register_and_login_user_1():
 
     load(urllib.request.urlopen(req))
 
-    
 def create_public_channel(register_and_login_user_1):
-
+    '''
+    create a public channel
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     response = register_and_login_user_1
-    
+
     # Create a public channel
     channel_info = dumps({
         'token': user_1_token,
@@ -130,6 +128,9 @@ def create_public_channel(register_and_login_user_1):
     payload = load(urllib.request.urlopen(req))
 
 def test_standup_send(register_and_login_user_1):
+    '''
+    This function is to send_standup whether can store message
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
@@ -143,9 +144,9 @@ def test_standup_send(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
@@ -158,31 +159,23 @@ def test_standup_send(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/send',
-        data = standup_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=standup_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     payload = load(urllib.request.urlopen(req))
-
-    channels = DATA['channels']
-    standups = DATA['standups']
-    
-    for channel in channels:
-        if channel['channel_id'] == channel_id:
-            if channel['is_standup_active'] == True:
-                for standup in standups:
-                    if standup['channel_id'] == channel_id:
-                        assert standup['messages'] == 'You are so smart!'
-    
     assert payload == {}
 
 def test_invalid_channel_id(register_and_login_user_1):
+    '''
+    This function is test whether the channel_id is valid
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
 
-    # Set standup state 
+    # Set standup state
     channel_info = dumps({
         'token': user_1_token,
         'channel_id': 2,
@@ -191,15 +184,18 @@ def test_invalid_channel_id(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
-def test_standup_send_message_lone(register_and_login_user_1):
+def test_standup_send_message_long(register_and_login_user_1):
+    '''
+    This function is to send long message
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
@@ -213,9 +209,9 @@ def test_standup_send_message_lone(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
@@ -228,15 +224,18 @@ def test_standup_send_message_lone(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/send',
-        data = standup_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=standup_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
 def test_standup_send_notrunning_channel(register_and_login_user_1):
+    '''
+    This function is to check the standup whether is running in channel
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
 
     create_public_channel(register_and_login_user_1)
@@ -251,9 +250,9 @@ def test_standup_send_notrunning_channel(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))
@@ -266,18 +265,21 @@ def test_standup_send_notrunning_channel(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/send',
-        data = standup_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=standup_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     with pytest.raises(urllib.error.HTTPError):
         urllib.request.urlopen(req)
 
 def test_for_access_error(register_and_login_user_1):
+    '''
+    This function is check the AccessError
+    '''
     user_1_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg\''
     user_2_token = 'b\'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMiJ9.UNGv0HfSeyM4FtXkAc4HfuOl_HyNLFmRMeLx_4c0Ryg\''
-  
+
     create_public_channel(register_and_login_user_1)
 
     # Set one channel
@@ -289,9 +291,9 @@ def test_for_access_error(register_and_login_user_1):
 
     req = urllib.request.Request(
         f'{BASE_URL}/standup/start',
-        data = channel_info,
-        headers = {'Content-Type': 'application/json'},
-        method = 'POST'
+        data=channel_info,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
     )
 
     load(urllib.request.urlopen(req))

@@ -124,6 +124,18 @@ def user_exists_check(email):
     
     return False
 
+def channel_game_on(channel_id):
+    DATA = getData()
+
+    for channel in DATA['channels']:
+        if channel['channel_id'] == channel_id:
+            target_channel = channel
+    
+    if target_channel['game_on']:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     
     print (register_token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg'))

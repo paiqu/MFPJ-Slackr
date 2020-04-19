@@ -1,10 +1,11 @@
+'''
+Route for standup_active
+'''
 from json import dumps
 from flask import Blueprint, request
-from check_functions import token_check, channel_id_check, token_to_uid
-from error import InputError, AccessError
-from class_file import User
-from data import *
-import datetime
+from check_functions import channel_id_check
+from error import InputError
+from data import getData
 
 ACTIVE = Blueprint('active', __name__)
 
@@ -21,8 +22,7 @@ def standup_active(token, channel_id):
         channel_id is not valid
 
     ASSUME: the token id is valid
-    '''  
-
+    '''
     DATA = getData()
     standups = DATA['standups']
     channels = DATA['channels']
@@ -30,7 +30,7 @@ def standup_active(token, channel_id):
 
     if channel_id_check(channel_id) == False:
         raise InputError("Invalid channel_id")
-    
+
     for channel in channels:
         if channel['channel_id'] == channel_id:
             if channel['is_standup_active'] == True:
@@ -44,5 +44,4 @@ def standup_active(token, channel_id):
     returnlist = {}
     returnlist['is_active'] = is_active
     returnlist['time_finish'] = time_end
-
     return returnlist

@@ -12,7 +12,8 @@ class User:
         self.is_login = False
         self.register_token = ''
         self.token = ''
-         
+        self.profile_img_url = ""
+        self.reset_code = ""
 
 class Channel:
     def __init__(self, channel_id, channel_name):
@@ -24,6 +25,7 @@ class Channel:
         self.owners = []  # a list of users who are owners
         self.is_public = True
         self.is_standup_active = False
+        self.game_on = False
     
 class Message:
     def __init__(self, message_content, message_id, channel_id, sender_id, time):
