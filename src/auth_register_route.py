@@ -52,7 +52,7 @@ def register():
 
 
     #This function will return { u_id, token }
-    return auth_register(email, password, firstName, lastName)
+    return dumps(auth_register(email, password, firstName, lastName))
 
 def auth_register(email, password, name_first, name_last):
     '''
@@ -78,34 +78,39 @@ def auth_register(email, password, name_first, name_last):
         raise InputError("Last Name must be between 1 and 50 characters")
 
     DATA['users_count'] += 1
-    generate_ID = DATA['users_count']
-    user_1 = User(generate_ID, email, name_first, name_last)
-    user_1.handle = generateHandle(name_first, name_last)
+    generate_ID = int(DATA['users_count'])
+    #user_1 = User(generate_ID, email, name_first, name_last)
+
+    user_1 = vars(User(u_id=generate_ID, email=email, name_first=name_first, name_last=name_last))
+    user_1['u_id'] = generate_ID
+    user_1['email'] = email
+    user_1['name_first'] = name_first
+    user_1['name_last'] = name_last
+    user_1['handle'] = generateHandle(name_first, name_last)
     #user_1.register_token = str(generate_register_token(generate_ID))
 
     #change
-    user_1.token = str(generate_register_token(generate_ID))
+    user_1['token'] = str(generate_register_token(generate_ID))
 
 
     if DATA['users'] == []:
-        user_1.is_slack_owner = True
-        user_1.global_permission = 1
+        user_1['is_slack_owner'] = True
+        user_1['global_permission'] = 1
     
 
-    user_1.password = password
-    user_1 = vars(user_1)
+    user_1['password'] = password
+    
     
     
 
     DATA['users'].append(user_1)
     
+    new_dict = {}
+    new_dict['u_id'] = user_1['u_id']
+    new_dict['token'] = user_1['token']
     
 
-    return dumps({
-        'u_id' : user_1['u_id'],
-        'token': user_1['token']
-    })
-    
+    return new_dict
 
     
 

@@ -14,8 +14,8 @@ DATA = {
     'messages_count': 0
 }
 
-# if os.path.exists('dataStore.p'):
-#     DATA = pickle.load(open('dataStore.p', 'rb'))
+if os.path.exists('dataStore.p'):
+    DATA = pickle.load(open('dataStore.p', 'rb'))
 
 
 SECRET = 'MFPJ'

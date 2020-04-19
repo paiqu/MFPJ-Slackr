@@ -2,7 +2,7 @@
 from json import dumps
 from flask import Blueprint, request
 from error import InputError
-from data import getData
+from data import DATA
 
 PROFILE = Blueprint('profile', __name__)
 
@@ -20,7 +20,7 @@ def user_profile(token, u_id):
     first name, last name, and handle
     '''
 
-    DATA = getData()
+    global DATA
     users = DATA['users']
     is_exist = False
 
