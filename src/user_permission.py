@@ -62,8 +62,11 @@ def admin_permission(token, u_id, permission_id):
     for user in users:
         if user['u_id'] == token_to_uid(token):
             admin_user = user
+
+    '''        
     print(token_to_uid(token))
     print(token) 
+    '''
     for user in users:
         if user['u_id'] == u_id:
             sub_user = user         
@@ -80,12 +83,20 @@ def admin_permission(token, u_id, permission_id):
     sub_user['global_permission'] = permission_id
     sub_user['is_slack_owner'] = True
     
+    
+    for channel in channels:
+        for user in channel['members']:
+            if user == sub_user:
+                channel['owners'].append(sub_user)
 
+   
+    
+    '''
     #changes the users permission privileges to owner if they aren't already owner 
     for channel in channels_list(sub_user['token'])['channels']:
         if sub_user not in channel['owners']:
             channel_addowner(admin_user['token'], channel['channel_id'], sub_user['u_id'])
-
+    '''
     return {}
 
     
