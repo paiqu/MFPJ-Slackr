@@ -13,7 +13,7 @@ owner_channel_permission = 3
 member_channel_permission = 4
 '''
 
-from data import *
+from data import getData, get_Secret, SECRET
 import jwt
 import re
 from token_functions import generate_token
@@ -61,13 +61,38 @@ def channel_member_check(channel_id, token):
 
     return False
 
-def token_to_uid(token):
-    ''' Convert a token to u_id '''
+
+def register_token_to_uid(token):
+    
+    #This token to uid function can only be used for the register_token
+    #Convert a token to u_id 
+    
     global SECRET
+    token = str(token)
     token_in_str = token[2:-1]
     token_in_byte = token_in_str.encode()
     decoded = jwt.decode(token_in_str, SECRET, algorithms=['HS256'])
     return int(decoded['u_id'])
+
+
+def token_to_uid(token):
+    '''
+    This iterates through the user list to find a user with this token 
+    login_token only 
+    '''    
+    token = str(token)
+    token_in_str = token[2:-1]
+
+    DATA = getData()
+
+    users = DATA['users']
+    for user in users:
+        if user['token'] == token_in_str:
+            user_found = user
+            return user_found['u_id']
+    
+    return False
+
 
 def message_id_check(message_id):
     ''' Return True is the message_id is valid ''' 
@@ -102,10 +127,22 @@ def user_exists_check(email):
     
     return False
 
+def channel_game_on(channel_id):
+    DATA = getData()
+
+    for channel in DATA['channels']:
+        if channel['channel_id'] == channel_id:
+            target_channel = channel
+    
+    if target_channel['game_on']:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     
-    print (token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg'))
-    print(type(token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg')))
+    print (register_token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg'))
+    print(type(register_token_to_uid(b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1X2lkIjoiMSJ9.N0asY15U0QBAYTAzxGAvdkuWG6CyqzsR_rvNQtWBmLg')))
 
 
 

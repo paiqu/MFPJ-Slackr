@@ -61,13 +61,16 @@ def auth_login(email, password):
     for user in data['users']:
         if user['email'] == email:
                 if user['email'] == email and user['password'] == password:
-                    user['is_login'] = True 
+                    user['is_login'] = True
+                    token = str(generate_token())
+                    token_in_str = token[2:-1]
+                    user['token'] = token_in_str
                     return dumps({
                         'u_id': user['u_id'],
                         'token' : user['token']   
                     })
                 else: 
-                    raise InputError("Email or password incorrect")
+                    raise InputError("Password incorrect")
         
             
         

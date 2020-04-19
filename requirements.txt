@@ -1,2 +1,5 @@
 flask
+pillow
+requests
 flask-cors
+flask-mail
